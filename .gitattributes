@@ -3,7 +3,6 @@
 *.unity  text merge=unityyamlmerge eol=lf
 *.prefab text merge=unityyamlmerge eol=lf
 *.asset  text merge=unityyamlmerge eol=lf
-
 # LFS
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
