@@ -6,6 +6,6 @@ public class SceneChange : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void SceneChangeFunction()
     {
-        SceneManager.LoadScene("ªÃ±‚");
+        SceneManager.LoadScene("¿¸≈ı");
     }
 }
