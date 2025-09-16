@@ -541,7 +541,7 @@ GameObject:
   - component: {fileID: 551459897}
   - component: {fileID: 551459898}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: HpBarSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -613,9 +613,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1959,6 +1959,7 @@ GameObject:
   - component: {fileID: 1894149390}
   - component: {fileID: 1894149392}
   - component: {fileID: 1894149391}
+  - component: {fileID: 1894149393}
   m_Layer: 5
   m_Name: Enemy
   m_TagString: Untagged
@@ -2026,6 +2027,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1894149389}
   m_CullTransparentMesh: 1
+--- !u!114 &1894149393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894149389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c22ab1559e4710b499a8dc81b4676506, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  damage: 10
+  HpBarSlider: {fileID: 551459898}
+  Hpbar: {fileID: 946046436}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
