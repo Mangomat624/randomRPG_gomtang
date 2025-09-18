@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections; // 코루틴 사용
+using System; // System.Action을 사용하기 위해 필요합니다.
 
-public class HeatlhBar : MonoBehaviour
+
+public class HealthBar : MonoBehaviour
 {
     public Slider slider; // 인스펙터 창에서 Slider 컴포넌트를 연결할 변수
 
@@ -17,7 +19,7 @@ public class HeatlhBar : MonoBehaviour
     }
 
     // 현재 체력을 받아서 슬라이더의 값에 반영하는 함수
-    public void SetHealth(int health)
+    public void SetHealth(int health, Action onAnimationComplete = null)
     {
         if (_healthChangeCoroutine != null)
         {
@@ -25,10 +27,10 @@ public class HeatlhBar : MonoBehaviour
         }
 
         // 새로운 체력 변경 코루틴을 시작하고, 변수에 저장해 둡니다.
-        _healthChangeCoroutine = StartCoroutine(ChangeHealthSmoothly(health));
+        _healthChangeCoroutine = StartCoroutine(ChangeHealthSmoothly(health, onAnimationComplete));
     }
 
-    private IEnumerator ChangeHealthSmoothly(int newHealth)
+    private IEnumerator ChangeHealthSmoothly(int newHealth, Action onAnimationComplete)
     {
         float timer = 0f;
         float startHealth = slider.value; // 시작 체력 (현재 슬라이더 값)
@@ -51,5 +53,7 @@ public class HeatlhBar : MonoBehaviour
 
         // 루프가 끝난 후, 정확한 목표 체력 값으로 맞춰줍니다.
         slider.value = newHealth;
+
+        onAnimationComplete?.Invoke();
     }
 }

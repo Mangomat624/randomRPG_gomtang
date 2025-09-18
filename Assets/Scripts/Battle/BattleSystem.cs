@@ -13,13 +13,14 @@ public class BattleSystem : MonoBehaviour
     // AttackMinigame 스크립트를 연결할 변수 추가
     public AttackMinigame attackMinigame;
 
-    private bool isMinigameDone = false;
-    private float damageMultiplier = 0f;
+    private bool isActionDone = false;
+    private AttackResult currentAttackResult;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        attackMinigame.gameObject.SetActive(false);
+        attackMinigame.gameObject.SetActive(true);
         StartCoroutine(SetupBattle());
     }
 
@@ -40,42 +41,52 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log("플레이어의 턴!");
 
-        isMinigameDone = false; // 플래그 초기화
+        isActionDone = false;
 
         // 미니게임을 시작시키고, 결과가 오면 HandleMinigameResult 함수가 실행되도록 연결
-        attackMinigame.StartMinigame(HandleMinigameResult);
+        attackMinigame.StartMinigame(HandleAttackResult);
 
         // isMinigameDone 플래그가 true가 될 때까지 코루틴은 여기서 기다립니다.
-        while (!isMinigameDone)
+        while (!isActionDone)
         {
             yield return null;
         }
 
-        int damage = Mathf.RoundToInt(playerStats.attackPower * damageMultiplier);
-        Debug.Log("플레이어가 " + damage + "의 피해를 입힙니다!");
-        bool isDead = enemyStats.TakeDamage(damage);
+        // 1. 적중률 계산
+        int totalAccuracy = playerStats.baseAccuracy + playerStats.weaponAccuracy + playerStats.enhancementAccuracy + currentAttackResult.accuracyBonus;
+        int hitChance = totalAccuracy - enemyStats.evasionRate;
 
-        yield return new WaitForSeconds(1.5f); // 공격 후 잠시 대기
-
-        if (isDead)
+        // 2. 명중 판정 (랜덤)
+        int roll = Random.Range(1, 101); // 1~100 사이의 랜덤 숫자
+        if (roll <= hitChance)
         {
-            // 적이 쓰러졌다면 전투 상태를 WON으로 바꾸고 전투를 종료합니다.
-            state = BattleState.WON;
-            EndBattle();
+            // 3. 명중 시 데미지 계산 및 적용
+            Debug.Log("명중! (적중률: " + hitChance + "%, 주사위: " + roll + ")");
+            int damage = Mathf.RoundToInt(playerStats.baseDamage * currentAttackResult.damageMultiplier);
+            bool isDead = enemyStats.TakeDamage(damage);
+            if (isDead)
+            {
+                state = BattleState.WON;
+                EndBattle();
+                yield break; // 전투 종료
+            }
         }
         else
         {
-            // 아직 살아있다면, 적의 턴으로 넘어갑니다.
-            state = BattleState.ENEMYTURN;
-            StartCoroutine(EnemyTurn());
+            Debug.Log("빗나감! (적중률: " + hitChance + "%, 주사위: " + roll + ")");
         }
+
+        yield return new WaitForSeconds(1.5f);
+
+        state = BattleState.ENEMYTURN;
+        StartCoroutine(EnemyTurn());
     }
 
     // 미니게임이 끝나면 AttackMinigame 스크립트가 이 함수를 호출합니다.
-    public void HandleMinigameResult(float multiplier)
+    public void HandleAttackResult(AttackResult result)
     {
-        damageMultiplier = multiplier;
-        isMinigameDone = true;
+        currentAttackResult = result;
+        isActionDone = true;
     }
 
     IEnumerator EnemyTurn()
@@ -83,22 +94,38 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("적의 턴!");
         yield return new WaitForSeconds(1f); // 적이 생각하는 시간처럼 잠시 대기
 
-        int damage = enemyStats.attackPower;
-        bool isDead = playerStats.TakeDamage(damage);
+        // 1. 플레이어의 1차 회피 판정
+        int monsterAccuracy = 100; // 몬스터 적중은 100
+                                   // 으로 고정
+        int evasionChance = playerStats.evasionRate;
+        int roll = Random.Range(1, 101);
 
-        yield return new WaitForSeconds(1.5f);
-
-        if (isDead)
+        if (roll <= evasionChance)
         {
-            state = BattleState.LOST;
-            EndBattle();
+            Debug.Log("회피 성공! (회피율: " + evasionChance + "%, 주사위: " + roll + ")");
         }
         else
         {
-            // 플레이어가 살아있다면, 다시 플레이어의 턴으로 돌아갑니다.
-            state = BattleState.PLAYERTURN;
-            StartCoroutine(PlayerTurn());
+            Debug.Log("회피 실패. (회피율: " + evasionChance + "%, 주사위: " + roll + ")");
+            // 2. 1차 회피 실패 시, 회피 미니게임 등장 (현재는 바로 데미지)
+            // TODO: 여기에 매우 어려운 회피 미니게임을 호출하는 로직을 추가해야 합니다.
+            // 성공 시 return; 하여 데미지를 입지 않게 합니다.
+
+            Debug.Log("플레이어가 적의 공격을 받습니다.");
+            bool isDead = playerStats.TakeDamage(enemyStats.baseDamage);
+            if (isDead)
+            {
+                state = BattleState.LOST;
+                EndBattle();
+                yield break; // 전투 종료
+            }
+
         }
+
+        yield return new WaitForSeconds(1.5f);
+
+        state = BattleState.PLAYERTURN;
+        StartCoroutine(PlayerTurn());
     }
 
     void EndBattle()
