@@ -10,8 +10,8 @@ public class BattleSystem : MonoBehaviour
 
     public BattleState state; // 현재 전투 상태
 
-    // AttackMinigame 스크립트를 연결할 변수 추가
-    public AttackMinigame attackMinigame;
+    // undertalegame 스크립트를 연결할 변수 추가
+    public UndetaleAttack undertalegame;
 
     private bool isActionDone = false;
     private AttackResult currentAttackResult;
@@ -20,7 +20,7 @@ public class BattleSystem : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        attackMinigame.gameObject.SetActive(true);
+        undertalegame.gameObject.SetActive(true);
         StartCoroutine(SetupBattle());
     }
 
@@ -44,7 +44,7 @@ public class BattleSystem : MonoBehaviour
         isActionDone = false;
 
         // 미니게임을 시작시키고, 결과가 오면 HandleMinigameResult 함수가 실행되도록 연결
-        attackMinigame.StartMinigame(HandleAttackResult);
+        undertalegame.StartMinigame(HandleAttackResult);
 
         // isMinigameDone 플래그가 true가 될 때까지 코루틴은 여기서 기다립니다.
         while (!isActionDone)
@@ -82,7 +82,7 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(EnemyTurn());
     }
 
-    // 미니게임이 끝나면 AttackMinigame 스크립트가 이 함수를 호출합니다.
+    // 미니게임이 끝나면 undertalegame 스크립트가 이 함수를 호출합니다.
     public void HandleAttackResult(AttackResult result)
     {
         currentAttackResult = result;
