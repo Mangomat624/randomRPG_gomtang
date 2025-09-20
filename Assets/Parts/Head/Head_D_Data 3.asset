@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Head_D_Data 3
   m_EditorClassIdentifier: 
   part: 0
-  grade: 1
+  grade: 0
   hp: 30
   def: 0
   eva: 0
