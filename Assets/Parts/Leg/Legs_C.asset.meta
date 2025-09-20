@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Parts/Torso/Torso_B_Data.asset.meta
+guid: 9635e272c9d76584a9b5954b5580e841
+========
 guid: fcd37d1693f0b714fa4b8e7914e7f51f
+>>>>>>>> d63ca459b1c1beca1f0bb361cb56dd90a587d502:Assets/Parts/Leg/Legs_C.asset.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000

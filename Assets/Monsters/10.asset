@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bbe60e6dea2390479fb21175abd02b3, type: 3}
-  m_Name: Head_D_Data 5
+  m_Script: {fileID: 11500000, guid: 8f1a070dc4d133a4097cd0199e122b8f, type: 3}
+  m_Name: 10
   m_EditorClassIdentifier: 
-  part: 0
-  grade: 1
-  hp: 30
-  def: 0
-  eva: 0
-  atk: 0
-  acc: 0
+  stage: 10
+  monsterName: "\uB9C8\uC655"
+  hp: 1400
+  atk: 110
+  eva: 50
