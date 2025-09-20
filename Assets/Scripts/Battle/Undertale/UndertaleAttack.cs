@@ -8,7 +8,7 @@ public struct AttackResult
     public string judgement;       // 판정 이름 (Perfect, Great 등)
 }
 
-public class UndetaleAttack : MonoBehaviour
+public class UndertaleAttack : MonoBehaviour
 {
     [Header("UI Elements")]
     public RectTransform indicator;

@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections; // 코루틴을 사용하기 위해 꼭 필요해요!
+using System.Collections;
+using Unity.VisualScripting; // 코루틴을 사용하기 위해 꼭 필요해요!
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
@@ -10,8 +11,10 @@ public class BattleSystem : MonoBehaviour
 
     public BattleState state; // 현재 전투 상태
 
-    // undertalegame 스크립트를 연결할 변수 추가
-    public UndetaleAttack undertalegame;
+    [Header("Minigames")]
+    // 두 미니게임을 모두 연결할 변수
+    public UndertaleAttack undertaleGame;
+    public TaikoMinigame taikoMinigame;
 
     private bool isActionDone = false;
     private AttackResult currentAttackResult;
@@ -20,7 +23,8 @@ public class BattleSystem : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        undertalegame.gameObject.SetActive(true);
+        undertaleGame.gameObject.SetActive(false);
+        taikoMinigame.gameObject.SetActive(false);
         StartCoroutine(SetupBattle());
     }
 
@@ -43,8 +47,20 @@ public class BattleSystem : MonoBehaviour
 
         isActionDone = false;
 
-        // 미니게임을 시작시키고, 결과가 오면 HandleMinigameResult 함수가 실행되도록 연결
-        undertalegame.StartMinigame(HandleAttackResult);
+        // --- 랜덤으로 미니게임을 선택하는 로직 ---
+        int minigameType = Random.Range(0, 2); // 0 또는 1이 랜덤으로 나옴
+
+        if (minigameType == 0)
+        {
+            Debug.Log("이번 턴은 언더테일 미니게임!");
+            // 두 게임 모두 동일한 콜백 함수(HandleAttackResult)를 사용합니다.
+            undertaleGame.StartMinigame(HandleAttackResult);
+        }
+        else // minigameType == 1
+        {
+            Debug.Log("이번 턴은 태고 미니게임!");
+            taikoMinigame.StartMinigame(HandleAttackResult);
+        }
 
         // isMinigameDone 플래그가 true가 될 때까지 코루틴은 여기서 기다립니다.
         while (!isActionDone)
