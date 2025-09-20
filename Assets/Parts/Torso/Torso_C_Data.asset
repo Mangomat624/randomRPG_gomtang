@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Torso_C_Data
   m_EditorClassIdentifier: 
   part: 1
-  grade: 4
-  hp: 30
-  def: 0
+  grade: 2
+  hp: 0
+  def: 8
   eva: 0
   atk: 0
   acc: 0

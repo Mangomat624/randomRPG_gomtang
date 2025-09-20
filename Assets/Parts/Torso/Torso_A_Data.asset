@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   part: 1
   grade: 4
-  hp: 30
-  def: 0
+  hp: 0
+  def: 20
   eva: 0
   atk: 0
   acc: 0
