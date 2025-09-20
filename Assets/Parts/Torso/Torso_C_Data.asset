@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bbe60e6dea2390479fb21175abd02b3, type: 3}
-  m_Name: Head_D_Data 6
+  m_Name: Torso_C_Data
   m_EditorClassIdentifier: 
-  part: 0
-  grade: 1
+  part: 1
+  grade: 4
   hp: 30
   def: 0
   eva: 0
