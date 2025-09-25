@@ -4,7 +4,7 @@ using UnityEngine;
 public class EquipmentData : ScriptableObject
 {
     public enum PartType { Head, Torso, Legs, Weapon }
-    public enum Grade { F, D, C, B, A, S, SS, SSS }
+    public enum Grade { F, D, C, B, A, S, SS, SSS, X }
 
     public PartType part;
     public Grade grade;
