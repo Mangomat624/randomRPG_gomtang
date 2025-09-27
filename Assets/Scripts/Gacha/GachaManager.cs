@@ -34,16 +34,8 @@ public class GachaManager : MonoBehaviour
 
         if (GameManager.Instance.GetCurrentTokens() < requiredTokens)
         {
-<<<<<<< Updated upstream
-            WarningUI.Instance.ShowWarning("토큰이 부족합니다!");
-=======
-
             Debug.Log("토큰이 부족합니다.");
             blockingPanel.SetActive(true); // 패널을 활성화해서 입력을 막습니다.
-
-            WarningUI.Instance.ShowWarning("토큰이 부족합니다!");
-
->>>>>>> Stashed changes
             return;
         }
 

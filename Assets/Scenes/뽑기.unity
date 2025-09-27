@@ -230,12 +230,9 @@ RectTransform:
   m_Children:
   - {fileID: 668134909}
   - {fileID: 2109559736}
-  - {fileID: 1420807373}
-<<<<<<< Updated upstream
-  - {fileID: 1936215304}
-=======
   - {fileID: 145661933}
->>>>>>> Stashed changes
+  - {fileID: 1420807373}
+  - {fileID: 1936215304}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -624,52 +621,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b35b380f2714874aa04ae6c9aff8654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &857424792
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 857424794}
-  - component: {fileID: 857424793}
-  m_Layer: 0
-  m_Name: WarningUIController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &857424793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 857424792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc95d23c937ff2e40b786acdf4ee59aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  warningPanel: {fileID: 1936215303}
-  warningText: {fileID: 1602143224}
---- !u!4 &857424794
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 857424792}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 530.8505, y: 289.12726, z: -0.0788341}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &862600376
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -813,11 +764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentStage: 6
-<<<<<<< Updated upstream
-  tokens: 6974
-=======
   tokens: 1
->>>>>>> Stashed changes
 --- !u!4 &948091067
 Transform:
   m_ObjectHideFlags: 0
@@ -1179,11 +1126,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< Updated upstream
-  m_text: "\uD1A0\uD070"
-=======
   m_text: "\uD1A0\uD070: 6974"
->>>>>>> Stashed changes
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
   m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
@@ -1930,4 +1873,3 @@ SceneRoots:
   - {fileID: 348570545}
   - {fileID: 988710432}
   - {fileID: 948091067}
-  - {fileID: 857424794}
