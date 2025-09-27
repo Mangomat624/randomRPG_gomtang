@@ -245,13 +245,14 @@ RectTransform:
 --- !u!1 &337609812
 GameObject:
   m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 337609813}
   m_Layer: 5
-  m_Name: "\uBCC0\uD654"
+  m_Name: "\uBCC0\uD654\u3147\u3147"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
