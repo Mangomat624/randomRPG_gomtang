@@ -30,12 +30,16 @@ public class GachaManager : MonoBehaviour
         foreach (bool locked in locks) { if (locked) lockCount++; }
 
         int requiredTokens = 1;
+
         if (GameManager.Instance.GetCurrentTokens() < requiredTokens)
         {
-            Debug.Log("토큰이 부족합니다.");
+            WarningUI.Instance.ShowWarning("토큰이 부족합니다!");
             return;
         }
+
+        // ▼▼▼▼▼ 이 줄을 추가해주세요 ▼▼▼▼▼
         GameManager.Instance.UseTokens(requiredTokens);
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
         var resultData = new Dictionary<EquipmentData.PartType, EquipmentData>();
         int currentStage = GameManager.Instance.GetCurrentStage();
