@@ -14,7 +14,6 @@ public class BattleSystem : MonoBehaviour
     [Header("Minigames")]
     // 두 미니게임을 모두 연결할 변수
     public UndertaleAttack undertaleGame;
-    public TaikoMinigame taikoMinigame;
 
     private bool isActionDone = false;
     private AttackResult currentAttackResult;
@@ -24,7 +23,6 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
         undertaleGame.gameObject.SetActive(false);
-        taikoMinigame.gameObject.SetActive(false);
         StartCoroutine(SetupBattle());
     }
 
@@ -47,20 +45,10 @@ public class BattleSystem : MonoBehaviour
 
         isActionDone = false;
 
-        // --- 랜덤으로 미니게임을 선택하는 로직 ---
-        int minigameType = Random.Range(0, 2); // 0 또는 1이 랜덤으로 나옴
-
-        if (minigameType == 0)
-        {
             Debug.Log("이번 턴은 언더테일 미니게임!");
             // 두 게임 모두 동일한 콜백 함수(HandleAttackResult)를 사용합니다.
             undertaleGame.StartMinigame(HandleAttackResult);
-        }
-        else // minigameType == 1
-        {
-            Debug.Log("이번 턴은 태고 미니게임!");
-            taikoMinigame.StartMinigame(HandleAttackResult);
-        }
+
 
         // isMinigameDone 플래그가 true가 될 때까지 코루틴은 여기서 기다립니다.
         while (!isActionDone)

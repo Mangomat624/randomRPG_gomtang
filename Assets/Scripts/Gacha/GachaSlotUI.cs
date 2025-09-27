@@ -1,8 +1,10 @@
 // GachaSlotUI.cs
 
+using TMPro; // TextMeshPro를 사용한다면 추가
 using UnityEngine;
 using UnityEngine.UI; // UI 관련 기능을 사용하기 위해 추가
-using TMPro; // TextMeshPro를 사용한다면 추가
+using System.Collections.Generic;
+
 
 public class GachaSlotUI : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class GachaSlotUI : MonoBehaviour
 
     private bool isLocked = false;
     private EquipmentData currentData;
+
+    List<string> highgrades = new List<string> { "S", "SS", "SSS", "X" };
 
     void Start()
     {
@@ -30,7 +34,14 @@ public class GachaSlotUI : MonoBehaviour
         {
             // (가정) 아이템 아이콘은 Resources 폴더나 다른 곳에서 불러옵니다.
             // itemIconImage.sprite = Resources.Load<Sprite>("Icons/" + data.name);
-            gradeText.text = data.grade.ToString();
+            string gradeCurrent = data.grade.ToString();
+            gradeText.text = gradeCurrent;
+                if (highgrades.Contains(gradeCurrent))
+                {
+                    // 5. 포함되어 있다면, 축하 메시지를 출력합니다.
+                    Debug.Log($"축하합니다! {gradeCurrent} 등급을 뽑았습니다!");
+                }
+
             gameObject.SetActive(true);
         }
         else
