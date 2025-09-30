@@ -124,11 +124,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8660833008590390147, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
   m_PrefabInstance: {fileID: 1367281852}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &145661932 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5424657909588942953, guid: 17a20887b54f4224cac807893fdd8d51, type: 3}
-  m_PrefabInstance: {fileID: 8836885556813238581}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &145661933 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6675492419993703908, guid: 17a20887b54f4224cac807893fdd8d51, type: 3}
@@ -771,6 +766,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
+--- !u!1 &916197668
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 916197669}
+  - component: {fileID: 916197670}
+  m_Layer: 0
+  m_Name: FeatureManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &916197669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916197668}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 531.60944, y: 312.96146, z: -456.9311}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &916197670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916197668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79b57ed70f89cac47823af48f925bf01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiSystem: {fileID: 348570544}
+  gradesToCelebrate: 05000000060000000700000008000000020000000300000004000000
 --- !u!1 &948091065
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,7 +842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentStage: 6
-  tokens: 1
+  tokens: 1000
 --- !u!4 &948091067
 Transform:
   m_ObjectHideFlags: 0
@@ -861,7 +902,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6e9d1289aa2424cbb47398f5c3e477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockingPanel: {fileID: 145661932}
   equipmentDatabase: {fileID: 11400000, guid: 323fb730fcd5cb346b0c82a134c7ddff, type: 2}
   startTable: {fileID: 11400000, guid: f338b33a2667e87478a855d442a56c29, type: 2}
   midGameTable: {fileID: 11400000, guid: 7aa542b055be1624ab32442cd85f10c8, type: 2}
@@ -1945,3 +1985,4 @@ SceneRoots:
   - {fileID: 348570545}
   - {fileID: 988710432}
   - {fileID: 948091067}
+  - {fileID: 916197669}
