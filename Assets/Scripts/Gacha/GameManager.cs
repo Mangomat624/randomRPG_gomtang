@@ -34,4 +34,10 @@ public class GameManager : MonoBehaviour
         // ▼▼▼ 4. 토큰 사용 시 신호를 보내는지 확인 ▼▼▼
         OnTokensChanged?.Invoke(tokens);
     }
+    public void AddTokens(int amount)
+    {
+        tokens += amount;
+        OnTokensChanged?.Invoke(tokens);
+        //이거 과금시스템 구현해놓은거임ㅇㅇ 이거 그 뭐냐 debugtokenadder.cs랑 연결시키는거임
+    }
 }
