@@ -12,7 +12,7 @@ public class GachaUISystem : MonoBehaviour
     void Start()
     {
         rerollButton.onClick.AddListener(OnRerollButtonClicked);
-        if (GachaManager.Instance != null) GachaManager.Instance.ExecuteReroll(new bool[4]);
+        //if (GachaManager.Instance != null) GachaManager.Instance.ExecuteReroll(new bool[4]); 이거 실험적 기능..? 넣을필요 없음
     }
     private void OnRerollButtonClicked()
     {
