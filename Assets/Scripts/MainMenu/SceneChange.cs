@@ -1,11 +1,18 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneChange : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void SceneChangeFunction()
+    public SceneAsset targetScene;
+
+
+    public void LoadTargetScene()
     {
-        SceneManager.LoadScene("전투");
+        if (targetScene != null)
+        {
+            // SceneAsset의 이름(파일 이름)을 사용해 씬을 로드합니다.
+            SceneManager.LoadScene(targetScene.name);
+        }
     }
 }
