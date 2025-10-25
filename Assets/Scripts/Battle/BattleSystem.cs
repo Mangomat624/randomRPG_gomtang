@@ -14,6 +14,7 @@ public class BattleSystem : MonoBehaviour
     [Header("Minigames")]
     // 두 미니게임을 모두 연결할 변수
     public UndertaleAttack undertaleGame;
+    public NoteManager pseckaGame;
 
     private bool isActionDone = false;
     private AttackResult currentAttackResult;
@@ -23,6 +24,7 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
         undertaleGame.gameObject.SetActive(false);
+        pseckaGame.gameObject.SetActive(false );
         StartCoroutine(SetupBattle());
     }
 
@@ -45,12 +47,22 @@ public class BattleSystem : MonoBehaviour
 
         isActionDone = false;
 
+
+        // 0 또는 1을 랜덤으로 선택
+        int minigameType = Random.Range(1, 2);
+
+        if (minigameType == 0)
+        {
             Debug.Log("이번 턴은 언더테일 미니게임!");
-            // 두 게임 모두 동일한 콜백 함수(HandleAttackResult)를 사용합니다.
             undertaleGame.StartMinigame(HandleAttackResult);
+        }
+        else
+        {
+            Debug.Log("이번 턴은 프세카 미니게임!");
+            pseckaGame.StartMinigame(HandleAttackResult);
+        }
 
-
-        // isMinigameDone 플래그가 true가 될 때까지 코루틴은 여기서 기다립니다.
+        // 미니게임이 끝날 때까지 대기
         while (!isActionDone)
         {
             yield return null;
