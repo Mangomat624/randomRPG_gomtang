@@ -1031,6 +1031,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1685215159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1685215161}
+  - component: {fileID: 1685215160}
+  m_Layer: 0
+  m_Name: EnchantmentUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1685215160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685215159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d907dec1612b5614d8e45be2df1fc171, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 763473516}
+  levelText: {fileID: 1750904435}
+  bonusAtkText: {fileID: 1346336218}
+  bonusAccText: {fileID: 865632134}
+  enhanceButton: {fileID: 0}
+  startButton: {fileID: 1917341605}
+--- !u!4 &1685215161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685215159}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 574.0335, y: 296.90833, z: -2.8827243}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1750904433
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,7 +1230,7 @@ GameObject:
   - component: {fileID: 1917341606}
   - component: {fileID: 1917341605}
   m_Layer: 5
-  m_Name: Button
+  m_Name: enchantstartbutton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1297,3 +1347,4 @@ SceneRoots:
   - {fileID: 1334167230}
   - {fileID: 205385512}
   - {fileID: 1618263430}
+  - {fileID: 1685215161}
