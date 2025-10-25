@@ -1003,7 +1003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b25f4f82cf0e24493e7bac5a503155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: a54268d592016a045ab0b21ab0f37369, type: 3}
+  targetScene: {fileID: 102900000, guid: a3c1ab7044baa0a4d9485dc75a85ef74, type: 3}
 --- !u!1 &948091065
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,6 +1035,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStage: 6
   tokens: 1000
+  permanentBonusAtk: 0
+  permanentBonusAcc: 0
 --- !u!4 &948091067
 Transform:
   m_ObjectHideFlags: 0
