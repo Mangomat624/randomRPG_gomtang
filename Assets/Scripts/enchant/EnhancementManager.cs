@@ -10,13 +10,15 @@ public class EnhancementManager : MonoBehaviour
 
     [Header("데이터 연결")]
     public EnhancementTable enhancementTable;
-    public SceneChange sceneLoader; // <--- SceneChange 로 수정
+    public SceneChange sceneLoader; // -> SceneChange로 수정해야 할 수 있음
     public string nextSceneName = "GameScene";
 
     [Header("강화 설정")]
     public float totalTimeLimit = 5.0f;
     public float attemptCooldown = 0.1f;
     public float criticalChance = 0.05f;
+    // 실패 페널티 확률 (유지 제거, 하락 확률만 설정)
+    [Range(0f, 100f)] public float dropPenaltyRate = 50f; // 하락(-1) 확률 (나머지는 초기화)
 
     private int currentLevel = 0;
     private int currentBonusAtk = 0;
@@ -45,10 +47,8 @@ public class EnhancementManager : MonoBehaviour
     void Update()
     {
         if (!isPhaseStarted || isFinished) return;
-
         remainingTime -= Time.deltaTime;
         OnTimerUpdated?.Invoke(remainingTime);
-
         if (remainingTime <= 0)
         {
             EndEnhancementPhase();
@@ -65,16 +65,14 @@ public class EnhancementManager : MonoBehaviour
     public void AttemptEnhance()
     {
         if (!canAttempt || isFinished || !isPhaseStarted) return;
-
         if (currentLevel >= 15)
         {
-            WarningUI.Instance.ShowWarning("최대 레벨입니다!");
+            if (WarningUI.Instance != null) WarningUI.Instance.ShowWarning("최대 레벨입니다!");
             return;
         }
 
         StartCoroutine(EnhanceCooldown());
 
-        // ▼▼▼ 1. 수정된 부분 (EnhancementTable.EnhancementStep) ▼▼▼
         EnhancementTable.EnhancementStep nextStep = enhancementTable.GetStepInfo(currentLevel + 1);
         if (nextStep == null) return;
 
@@ -85,22 +83,23 @@ public class EnhancementManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("강화 실패... 레벨이 유지됩니다.");
+            HandleFailure();
         }
     }
 
-    // ▼▼▼ 2. 수정된 부분 (EnhancementTable.EnhancementStep) ▼▼▼
     private void HandleSuccess(EnhancementTable.EnhancementStep successStep)
     {
         float criticalValue = UnityEngine.Random.Range(0f, 1f);
         if (criticalValue <= criticalChance && currentLevel < 14)
         {
             Debug.Log("강화 대성공! 레벨 +2");
-            // ▼▼▼ 3. 수정된 부분 (EnhancementTable.EnhancementStep) ▼▼▼
             EnhancementTable.EnhancementStep criticalStep = enhancementTable.GetStepInfo(currentLevel + 2);
-            currentLevel = criticalStep.level;
-            currentBonusAtk = criticalStep.bonusAtk;
-            currentBonusAcc = criticalStep.bonusAcc;
+            if (criticalStep != null)
+            {
+                currentLevel = criticalStep.level;
+                currentBonusAtk = criticalStep.bonusAtk;
+                currentBonusAcc = criticalStep.bonusAcc;
+            }
         }
         else
         {
@@ -111,6 +110,51 @@ public class EnhancementManager : MonoBehaviour
         }
         UpdateUI();
     }
+
+    // ▼▼▼ 실패 처리 함수 수정 (유지 페널티 제거) ▼▼▼
+    private void HandleFailure()
+    {
+        float penaltyRoll = UnityEngine.Random.Range(0f, 100f);
+
+        if (penaltyRoll <= dropPenaltyRate)
+        {
+            // 하락 (-1)
+            Debug.Log("강화 실패! (하락)");
+            if (currentLevel > 0)
+            {
+                currentLevel--;
+                if (currentLevel == 0)
+                {
+                    currentBonusAtk = 0;
+                    currentBonusAcc = 0;
+                }
+                else
+                {
+                    EnhancementTable.EnhancementStep previousStep = enhancementTable.GetStepInfo(currentLevel);
+                    if (previousStep != null)
+                    {
+                        currentBonusAtk = previousStep.bonusAtk;
+                        currentBonusAcc = previousStep.bonusAcc;
+                    }
+                }
+            }
+            // 레벨 0에서 실패하면 그냥 유지 (변화 없음)
+            else
+            {
+                Debug.Log("강화 실패! (0레벨에서 실패하여 유지)");
+            }
+        }
+        else // 나머지는 모두 초기화
+        {
+            // 초기화 (*0)
+            Debug.Log("강화 실패! (초기화)");
+            currentLevel = 0;
+            currentBonusAtk = 0;
+            currentBonusAcc = 0;
+        }
+        UpdateUI();
+    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     private IEnumerator EnhanceCooldown()
     {
@@ -126,7 +170,11 @@ public class EnhancementManager : MonoBehaviour
         Debug.Log($"강화 종료! 최종 스탯: +{currentBonusAtk} ATK, +{currentBonusAcc}% ACC");
 
         GameManager.Instance.ApplyPermanentEnhancement(currentBonusAtk, currentBonusAcc);
-        sceneLoader.LoadTargetScene(); // 올바른 함수 이름 사용
+
+        if (sceneLoader != null)
+        {
+            sceneLoader.LoadTargetScene();
+        }
     }
 
     private void UpdateUI()
