@@ -15,61 +15,61 @@ MonoBehaviour:
   steps:
   - level: 1
     successRate: 100
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 3
+    bonusAcc: 1
   - level: 2
     successRate: 95
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 6
+    bonusAcc: 2
   - level: 3
     successRate: 90
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 10
+    bonusAcc: 3
   - level: 4
     successRate: 80
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 15
+    bonusAcc: 5
   - level: 5
     successRate: 70
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 18
+    bonusAcc: 7
   - level: 6
     successRate: 50
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 21
+    bonusAcc: 10
   - level: 7
     successRate: 45
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 36
+    bonusAcc: 13
   - level: 8
     successRate: 40
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 45
+    bonusAcc: 17
   - level: 9
     successRate: 40
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 55
+    bonusAcc: 21
   - level: 10
     successRate: 30
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 66
+    bonusAcc: 25
   - level: 11
     successRate: 20
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 81
+    bonusAcc: 30
   - level: 12
     successRate: 15
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 98
+    bonusAcc: 36
   - level: 13
     successRate: 10
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 118
+    bonusAcc: 43
   - level: 14
     successRate: 7
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 140
+    bonusAcc: 51
   - level: 15
     successRate: 5
-    bonusAtk: 0
-    bonusAcc: 0
+    bonusAtk: 200
+    bonusAcc: 60
