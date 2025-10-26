@@ -165,8 +165,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0e7a601b90504459e075ee9bab3652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
-  speed: 800
+  speed: 10
+  laneIndex: 0
 --- !u!1 &7400897544735534344
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,28 +1,21 @@
-// NoteMovement.cs
+// NoteMovement.cs (최종 정리)
 
 using UnityEngine;
 
 public class NoteMovement : MonoBehaviour
 {
-    // (삭제) NoteType enum과 type 변수는 더 이상 필요 없습니다.
-    // public enum NoteType { Normal, Long }
-    // public NoteType type;
+    public float speed = 10f;
+    public int laneIndex; // 0=Up, 1=Middle, 2=Bottom
 
-    public float speed = 800f;
+    // 노트의 파괴는 NoteManager가 전담하므로
+    // noteManager, deleteLineTransform 변수 모두 삭제.
 
-    // (추가) 이 노트가 속한 레인의 인덱스 (0=Up, 1=Middle, 2=Bottom)
-    public int laneIndex;
-
-    private Transform deleteLineTransform;
-
-    private NoteManager noteManager;
-
-    public void SetDeleteLine(Transform deleteLine)
+    void Start()
     {
-        deleteLineTransform = deleteLine;
+        // NoteManager를 찾는 로직도 삭제.
+        // 이 스크립트는 오직 움직이기만 합니다.
     }
 
-    // (추가) NoteManager가 이 노트를 스폰할 때 레인 인덱스를 알려줄 함수
     public void SetLaneIndex(int index)
     {
         laneIndex = index;
@@ -30,17 +23,7 @@ public class NoteMovement : MonoBehaviour
 
     void Update()
     {
+        // 왼쪽으로 이동하는 코드 "만" 남깁니다.
         transform.Translate(Vector2.left * speed * Time.deltaTime);
-
-        if (deleteLineTransform != null)
-        {
-            if (transform.position.x <= deleteLineTransform.position.x)
-            {
-                // (변경) 파괴되기 전에 'Miss' 판정을 알려줘야 합니다.
-                // NoteManager의 RecordResult를 호출하도록 변경합니다.
-                noteManager = FindAnyObjectByType<NoteManager>();
-                Destroy(gameObject);
-            }
-        }
     }
 }

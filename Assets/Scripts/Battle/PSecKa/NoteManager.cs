@@ -1,39 +1,41 @@
-// NoteManager.cs
+// NoteManager.cs (최종 정리)
 
-using System; // Action
+using System;
 using System.Collections;
-using System.Collections.Generic; // List
-using System.Linq; // OrderBy (셔플)
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-// AudioSource 컴포넌트를 강제로 추가
-//[RequireComponent(typeof(AudioSource))]
 public class NoteManager : MonoBehaviour
 {
     [Header("프리팹 및 위치")]
     public GameObject normalNotePrefab;
     public GameObject longNotePrefab;
-    public Transform[] laneSpawnPoints; // Up, Middle, Bottom 연결
+    public Transform[] laneSpawnPoints; // Up(0), Middle(1), Bottom(2) 순서
     public RectTransform canvasRect;
-    public Transform deleteLine; // DelectLine 연결
+
+    // (변경) deleteLine 변수는 NoteManager.Update()에서 사용합니다.
+    public Transform deleteLine;
 
     [Header("판정 설정")]
-    public Transform judgementLine; // 판정선 오브젝트 연결
-    public float perfectRange = 30f;
-    public float greatRange = 60f;
-    public float niceRange = 100f;
+    public Transform judgementLine;
+    public float perfectRange = 0.5f;
+    public float greatRange = 1.3f;
+    public float niceRange = 3.5f;
 
     [Header("게임 설정")]
     public float minWaitTime = 0.3f;
     public float maxWaitTime = 1.0f;
 
-    [Header("사운드")]
+    [Header("사운드 (필요시 주석 해제)")]
     //public AudioClip hitSound;
-
-    // BattleSystem과 통신하기 위한 콜백
-    public Action<AttackResult> OnMinigameFinished;
-
     //private AudioSource audioSource;
+
+    [Header("VFX")]
+    public GameObject effect;
+    public RectTransform effectCanvasRect;
+
+    public Action<AttackResult> OnMinigameFinished;
     private Queue<NoteMovement> activeNotes = new Queue<NoteMovement>();
     private List<string> results = new List<string>();
     private int totalNotes;
@@ -44,27 +46,18 @@ public class NoteManager : MonoBehaviour
         //audioSource = GetComponent<AudioSource>();
     }
 
-    // BattleSystem에서 호출할 미니게임 시작 함수
     public void StartMinigame(Action<AttackResult> callback)
     {
         OnMinigameFinished = callback;
         results.Clear();
-
-        // 큐에 남아있는 노트가 있다면 모두 파괴
         while (activeNotes.Count > 0)
         {
             Destroy(activeNotes.Dequeue().gameObject);
         }
-
-        // 이 오브젝트(패널)를 활성화
         gameObject.SetActive(true);
-
-        // 노트 생성 시작
         spawnCoroutine = StartCoroutine(SpawnNotesSequence());
     }
 
-    // 노트 생성 코루틴 (10개 생성)
-    // (변경) NoteMovement.cs에서 Miss 판정을 호출할 수 있도록 public으로 변경
     IEnumerator SpawnNotesSequence()
     {
         List<GameObject> noteChart = new List<GameObject>();
@@ -75,71 +68,54 @@ public class NoteManager : MonoBehaviour
         }
         totalNotes = noteChart.Count;
 
-        // 리스트 무작위로 섞기
         System.Random rand = new System.Random();
         noteChart = noteChart.OrderBy(x => rand.Next()).ToList();
 
         foreach (GameObject prefab in noteChart)
         {
-            // 1. 레인 랜덤 선택
             int laneIndex = UnityEngine.Random.Range(0, laneSpawnPoints.Length);
             Transform spawnPoint = laneSpawnPoints[laneIndex];
-
-            // 2. 노트 생성 및 설정
             GameObject noteGO = Instantiate(prefab, canvasRect);
             noteGO.transform.position = spawnPoint.position;
 
             NoteMovement noteScript = noteGO.GetComponent<NoteMovement>();
-            noteScript.SetDeleteLine(deleteLine);
 
-            // (추가) 노트에게 자신의 레인 인덱스를 알려줍니다.
+            // (변경) SetDeleteLine 호출 완전 삭제
             noteScript.SetLaneIndex(laneIndex);
-            noteScript.SetDeleteLine(deleteLine);
-
-            // 3. 큐에 추가
             activeNotes.Enqueue(noteScript);
 
-            // 4. 랜덤 시간 대기
             float randomWaitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
             yield return new WaitForSeconds(randomWaitTime);
         }
     }
 
-    // 입력 처리
-    // --- (핵심 변경) 입력 처리 ---
     void Update()
     {
-        // Up 레인 (F키)
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            TryHit(0); // 0번 레인 판정
-        }
-        // Middle 레인 (Space Bar)
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TryHit(1); // 1번 레인 판정
-        }
-        // Bottom 레인 (J키)
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            TryHit(2); // 2번 레인 판정
-        }
+        // (입력 처리 로직은 동일)
+        if (Input.GetKeyDown(KeyCode.F)) TryHit(0);
+        if (Input.GetKeyDown(KeyCode.Space)) TryHit(1);
+        if (Input.GetKeyDown(KeyCode.J)) TryHit(2);
 
-        // --- (핵심 변경) 시간 초과 Miss 판정 ---
+        // --- (변경) 시간 초과 Miss 판정 로직 ---
         if (activeNotes.Count > 0)
         {
             NoteMovement nextNote = activeNotes.Peek();
-            // 판정선을 너무 많이 지나쳤다면
-            if (nextNote.transform.position.x < judgementLine.position.x - niceRange)
+
+            if (nextNote == null)
             {
-                // (변경) NoteMovement.cs가 아닌 NoteManager가 직접 처리
+                activeNotes.Dequeue();
+                return;
+            }
+
+            // (변경) 판정선(judgementLine) 기준이 아닌, deleteLine 기준으로 파괴
+            if (nextNote.transform.position.x <= deleteLine.position.x)
+            {
                 RecordResult("Miss");
                 Destroy(activeNotes.Dequeue().gameObject);
             }
         }
     }
 
-    // (변경) 판정 시도 함수 (KeyType 대신 laneIndex를 받음)
     void TryHit(int keyLaneIndex)
     {
         //if (hitSound != null) audioSource.PlayOneShot(hitSound);
@@ -147,33 +123,66 @@ public class NoteManager : MonoBehaviour
         if (activeNotes.Count > 0)
         {
             NoteMovement nextNote = activeNotes.Peek();
+            // (추가) 유령 노트 방어
+            if (nextNote == null)
+            {
+                activeNotes.Dequeue();
+                return;
+            }
+
             float distance = Mathf.Abs(nextNote.transform.position.x - judgementLine.position.x);
 
-            // 판정 범위 안에 있고,
             if (distance <= niceRange)
             {
-                // (추가) 누른 키의 레인과 노트의 레인이 일치할 때만 판정
                 if (nextNote.laneIndex == keyLaneIndex)
                 {
+                    // (변경) 성공 시, 큐에서 제거하는 로직을 CheckHit으로 이동
                     CheckHit(nextNote);
                 }
+                // (주석) 유저 요청대로 잘못된 키는 무시 (아무것도 안 함)
             }
         }
     }
 
-    // (변경) 판정 실행 함수
     void CheckHit(NoteMovement note)
     {
         string judgement;
         float distance = Mathf.Abs(note.transform.position.x - judgementLine.position.x);
 
-        // (변경) 키와 노트 타입 비교 로직 삭제 (이미 TryHit에서 처리함)
-        if (distance <= perfectRange) judgement = "Perfect";
-        else if (distance <= greatRange) judgement = "Great";
-        else judgement = "Nice";
+        if (distance <= perfectRange)
+        {
+            judgement = "Perfect";
+            Debug.Log("Perfect");
+        }
+        else if (distance <= greatRange) { 
+            judgement = "Great";
+            Debug.Log("Great");
+        }
+
+        else { 
+            judgement = "Nice";
+            Debug.Log("Nice");
+        }
+
+        if (effect != null)
+        {
+            GameObject effectGO = Instantiate(effect, effectCanvasRect);
+            Vector3 effectPos = new Vector3(
+                judgementLine.position.x,
+                note.transform.position.y,
+                judgementLine.position.z - 1
+            );
+            effectGO.transform.position = effectPos;
+
+            ParticleSystem ps = effectGO.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Play();
+        }
 
         RecordResult(judgement);
-        Destroy(activeNotes.Dequeue().gameObject);
+
+        // (변경) 성공한 노트를 큐에서 제거하고 파괴
+        activeNotes.Dequeue();
+        Destroy(note.gameObject);
     }
 
 

@@ -49,7 +49,7 @@ public class BattleSystem : MonoBehaviour
 
 
         // 0 또는 1을 랜덤으로 선택
-        int minigameType = Random.Range(1, 2);
+        int minigameType = Random.Range(0, 2);
 
         if (minigameType == 0)
         {
