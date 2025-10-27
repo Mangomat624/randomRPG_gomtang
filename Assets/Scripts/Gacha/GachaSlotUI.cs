@@ -35,6 +35,12 @@ public class GachaSlotUI : MonoBehaviour
         }
     }
 
+    public EquipmentData GetCurrentData()
+    {
+        return currentData;
+    }
+
+
     private void OnLockButtonClicked()
     {
         isLocked = !isLocked;
