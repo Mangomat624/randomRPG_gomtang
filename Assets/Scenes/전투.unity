@@ -3439,7 +3439,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1584008641}
-  - component: {fileID: 1584008640}
+  - component: {fileID: 1584008642}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -3447,31 +3447,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1584008640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1584008639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c466f44411df03442a6ad7e66b14481a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  equipmentDB: {fileID: 0}
-  playerType: 1
-  unitName: Enemy
-  currentHP: 0
-  baseDamage: 10
-  maxHP: 100
-  baseAccuracy: 80
-  weaponAccuracy: 0
-  enhancementAccuracy: 0
-  evasionRate: 10
-  defensivePower: 0
-  healthBar: {fileID: 2035989796}
-  squashDuration: 1
 --- !u!4 &1584008641
 Transform:
   m_ObjectHideFlags: 0
@@ -3488,6 +3463,31 @@ Transform:
   - {fileID: 978177913}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1584008642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584008639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c466f44411df03442a6ad7e66b14481a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equipmentDB: {fileID: 11400000, guid: 323fb730fcd5cb346b0c82a134c7ddff, type: 2}
+  playerType: 1
+  unitName: Enemy
+  currentHP: 0
+  baseDamage: 5
+  maxHP: 100
+  baseAccuracy: 30
+  weaponAccuracy: 0
+  enhancementAccuracy: 0
+  evasionRate: 1
+  defensivePower: 0
+  healthBar: {fileID: 0}
+  squashDuration: 1
 --- !u!1 &1621433230
 GameObject:
   m_ObjectHideFlags: 0
@@ -3857,7 +3857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStats: {fileID: 1339930859}
-  enemyStats: {fileID: 1584008640}
+  enemyStats: {fileID: 0}
   state: 0
   undertaleGame: {fileID: 1272176377}
   pseckaGame: {fileID: 1545153406}
