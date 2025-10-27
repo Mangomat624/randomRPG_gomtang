@@ -72,4 +72,4 @@ MonoBehaviour:
   - level: 15
     successRate: 5
     bonusAtk: 200
-    bonusAcc: 60
+    bonusAcc: 75
