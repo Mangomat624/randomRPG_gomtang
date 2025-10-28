@@ -1,10 +1,12 @@
 using System.Collections; // 코루틴 사용
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
     public EquipmentDatabase equipmentDB;
     public static GachaManager Instance { get; private set; }
+    public MonsterDatabase monsterDB;
 
     public enum PlayerType { Player , Enemy }
 
@@ -25,7 +27,7 @@ public class CharacterStats : MonoBehaviour
     public int defensivePower = 0;
 
     [Header("UI")]
-    public HealthBar healthBar;
+    public BattleUISystem uisysytem;
 
     [Header("Visual Effect")]
     public float squashDuration = 1f; // 찌그러지는 데 걸리는 시간
@@ -33,8 +35,15 @@ public class CharacterStats : MonoBehaviour
 
     void Awake()
     {
+        if (playerType == PlayerType.Player) {  
+            LoadAllPartsStats_P(); 
+        }
+        else {
+            LoadAllPartsStats_E(); 
+        }
+
         currentHP = maxHP;
-        healthBar.SetMaxHealth(maxHP);
+        uisysytem.SetMaxHealth(playerType, maxHP);
     }
 
     public void LoadAllPartsStats_P()
@@ -87,10 +96,6 @@ public class CharacterStats : MonoBehaviour
                         break;
                 }
             }
-            else
-            {
-                Debug.LogWarning($"데이터베이스에 {currentPartGrade} 등급 {part} 부위 아이템이 없습니다.");
-            }
         }
         
 
@@ -99,62 +104,16 @@ public class CharacterStats : MonoBehaviour
 
     public void LoadAllPartsStats_E()
     {
-        foreach (EquipmentData.PartType part in System.Enum.GetValues(typeof(EquipmentData.PartType)))
+        int currentStage = GameManager.Instance.currentStage;
+
+        MonsterData monsterdata = monsterDB.GetMonstersByStage(currentStage);
+
+        if (monsterdata != null)
         {
-            EquipmentData.Grade currentPartGrade; // 이 부위의 현재 등급을 저장할 변수
-
-            // 6. (핵심) 부위(part)에 맞는 GameManager의 등급 변수를 가져옵니다.
-            switch (part)
-            {
-                case EquipmentData.PartType.Head:
-                    currentPartGrade = GameManager.Instance.CurrentHeadGrade;
-                    break;
-                case EquipmentData.PartType.Torso:
-                    currentPartGrade = GameManager.Instance.CurrentTorsoGrade;
-                    break;
-                case EquipmentData.PartType.Legs:
-                    currentPartGrade = GameManager.Instance.CurrentLegsGrade;
-                    break;
-                case EquipmentData.PartType.Weapon:
-                    currentPartGrade = GameManager.Instance.CurrentWeaponGrade;
-                    break;
-                default:
-                    // 혹시 모를 예외 처리
-                    currentPartGrade = EquipmentData.Grade.F;
-                    break;
-            }
-            EquipmentData data = equipmentDB.GetData(part, currentPartGrade);
-
-            if (data != null)
-            {
-                switch (part)
-                {
-                    case EquipmentData.PartType.Head:
-                        maxHP = data.hp;
-                        break;
-
-                    case EquipmentData.PartType.Torso:
-                        defensivePower = data.def;
-                        break;
-
-                    case EquipmentData.PartType.Legs:
-                        evasionRate = data.eva;
-                        break;
-
-                    case EquipmentData.PartType.Weapon:
-                        baseDamage = data.atk;
-                        baseAccuracy = data.acc;
-                        break;
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"데이터베이스에 {currentPartGrade} 등급 {part} 부위 아이템이 없습니다.");
-            }
+            maxHP = monsterdata.hp;
+            baseDamage = monsterdata.atk;
+            evasionRate = monsterdata.eva;
         }
-
-
-
     }
 
     public bool TakeDamage(int damage)
@@ -168,7 +127,7 @@ public class CharacterStats : MonoBehaviour
         {
             Debug.Log(unitName + "이(가) 쓰러졌습니다.");
 
-            healthBar.SetHealth(currentHP, () => {
+            uisysytem.SetHealth(playerType,currentHP, () => {
                 StartCoroutine(SquashEffect());
             });
 
@@ -178,7 +137,7 @@ public class CharacterStats : MonoBehaviour
         {
             // HP가 0보다 클 때:
             // 이전과 같이 콜백 없이 SetHealth만 호출합니다.
-            healthBar.SetHealth(currentHP);
+            uisysytem.SetHealth(playerType,currentHP);
             Debug.Log(unitName + "이(가) " + damage + "의 피해를 입었습니다. 남은 체력: " + currentHP);
             return false; // 아직 쓰러지지 않았음을 알림
         }

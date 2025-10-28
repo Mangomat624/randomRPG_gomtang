@@ -301,7 +301,6 @@ Transform:
   - {fileID: 1894149390}
   - {fileID: 873440136}
   - {fileID: 275204299}
-  - {fileID: 1621433231}
   - {fileID: 2035989795}
   m_Father: {fileID: 197080660}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1947,7 +1946,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1021000292}
   - component: {fileID: 1021000293}
-  - component: {fileID: 1021000294}
   m_Layer: 5
   m_Name: Hpbar_player
   m_TagString: Untagged
@@ -1970,6 +1968,7 @@ RectTransform:
   - {fileID: 1111771008}
   - {fileID: 976684584}
   - {fileID: 777689827}
+  - {fileID: 1100973200}
   m_Father: {fileID: 1491333728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2028,20 +2027,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1021000294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1021000291}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c22ab1559e4710b499a8dc81b4676506, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 1021000293}
-  changeSpeed: 0.5
 --- !u!1 &1100973199
 GameObject:
   m_ObjectHideFlags: 0
@@ -2069,14 +2054,14 @@ RectTransform:
   m_GameObject: {fileID: 1100973199}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.26597822, y: 0.49897537, z: 1.1458362}
+  m_LocalScale: {x: 0.30090043, y: 0.30090046, z: 0.3009004}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1491333728}
+  m_Father: {fileID: 1021000292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60.166912, y: -185.20284}
+  m_AnchoredPosition: {x: -40.40001, y: -13.399979}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1100973201
@@ -2957,9 +2942,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c466f44411df03442a6ad7e66b14481a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equipmentDB: {fileID: 0}
+  equipmentDB: {fileID: 11400000, guid: 323fb730fcd5cb346b0c82a134c7ddff, type: 2}
+  monsterDB: {fileID: 11400000, guid: 390701aadb2ee8646b18293248ebe9c0, type: 2}
   playerType: 0
-  unitName: Player
+  unitName: ASDF
   currentHP: 0
   baseDamage: 10
   maxHP: 100
@@ -2968,7 +2954,7 @@ MonoBehaviour:
   enhancementAccuracy: 0
   evasionRate: 10
   defensivePower: 0
-  healthBar: {fileID: 1021000294}
+  uisysytem: {fileID: 1959311392}
   squashDuration: 1
 --- !u!4 &1339930860
 Transform:
@@ -3275,7 +3261,6 @@ RectTransform:
   - {fileID: 1307323715}
   - {fileID: 1332223159}
   - {fileID: 1021000292}
-  - {fileID: 1100973200}
   m_Father: {fileID: 197080660}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3476,6 +3461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equipmentDB: {fileID: 11400000, guid: 323fb730fcd5cb346b0c82a134c7ddff, type: 2}
+  monsterDB: {fileID: 11400000, guid: 390701aadb2ee8646b18293248ebe9c0, type: 2}
   playerType: 1
   unitName: Enemy
   currentHP: 0
@@ -3486,7 +3472,7 @@ MonoBehaviour:
   enhancementAccuracy: 0
   evasionRate: 1
   defensivePower: 0
-  healthBar: {fileID: 0}
+  uisysytem: {fileID: 1959311392}
   squashDuration: 1
 --- !u!1 &1621433230
 GameObject:
@@ -3515,14 +3501,14 @@ RectTransform:
   m_GameObject: {fileID: 1621433230}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7878101, y: 0.7878101, z: 0.7878101}
+  m_LocalScale: {x: 0.33333337, y: 0.33333337, z: 0.33333337}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 62264796}
+  m_Father: {fileID: 2035989795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 16.544022, y: -107.799324}
+  m_AnchoredPosition: {x: -35.99999, y: -13.300018}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1621433232
@@ -3857,10 +3843,62 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStats: {fileID: 1339930859}
-  enemyStats: {fileID: 0}
+  enemyStats: {fileID: 1584008642}
   state: 0
+  battleUI: {fileID: 1959311392}
   undertaleGame: {fileID: 1272176377}
   pseckaGame: {fileID: 1545153406}
+--- !u!1 &1959311391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1959311393}
+  - component: {fileID: 1959311392}
+  m_Layer: 0
+  m_Name: BattleUISystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1959311392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959311391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c22ab1559e4710b499a8dc81b4676506, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  P_Healthbar: {fileID: 1021000293}
+  P_HPText: {fileID: 1100973201}
+  PlayerText: {fileID: 1307323716}
+  E_Healthbar: {fileID: 2035989797}
+  E_HPText: {fileID: 1621433232}
+  EnemyText: {fileID: 873440137}
+  changeSpeed: 0.5
+--- !u!4 &1959311393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959311391}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.10480134, y: 0.6683559, z: -0.016260486}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2035989794
 GameObject:
   m_ObjectHideFlags: 0
@@ -3871,7 +3909,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2035989795}
   - component: {fileID: 2035989797}
-  - component: {fileID: 2035989796}
   m_Layer: 5
   m_Name: Hpbar_enemy
   m_TagString: Untagged
@@ -3894,6 +3931,7 @@ RectTransform:
   - {fileID: 61798214}
   - {fileID: 347863379}
   - {fileID: 958952663}
+  - {fileID: 1621433231}
   m_Father: {fileID: 62264796}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3901,20 +3939,6 @@ RectTransform:
   m_AnchoredPosition: {x: -87.4469, y: -100}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &2035989796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2035989794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c22ab1559e4710b499a8dc81b4676506, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 2035989797}
-  changeSpeed: 0.5
 --- !u!114 &2035989797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4023,3 +4047,4 @@ SceneRoots:
   - {fileID: 912704036}
   - {fileID: 1942777539}
   - {fileID: 160134085}
+  - {fileID: 1959311393}

@@ -11,6 +11,9 @@ public class BattleSystem : MonoBehaviour
 
     public BattleState state; // 현재 전투 상태
 
+    [Header("UI")]
+    public BattleUISystem battleUI;
+
     [Header("Minigames")]
     // 두 미니게임을 모두 연결할 변수
     public UndertaleAttack undertaleGame;
@@ -32,6 +35,20 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.START;
         Debug.Log("전투 준비!");
+
+        if (battleUI != null)
+        {
+            // 1. 플레이어와 적의 이름을 UI에 설정
+            battleUI.ChangeName(playerStats.unitName, enemyStats.unitName);
+
+            // 2. 플레이어와 적의 최대 체력바를 UI에 설정 (maxHP 사용)
+            //battleUI.SetMaxHealth(CharacterStats.PlayerType.Player, playerStats.maxHP);
+            //battleUI.SetMaxHealth(CharacterStats.PlayerType.Enemy, enemyStats.maxHP);
+        }
+        else
+        {
+            Debug.LogWarning("BattleUI가 BattleSystem에 연결되지 않았습니다!");
+        }
 
         Debug.Log(playerStats.unitName + " (HP: " + playerStats.currentHP + ") vs " + enemyStats.unitName + " (HP: " + enemyStats.currentHP + ")");
 
