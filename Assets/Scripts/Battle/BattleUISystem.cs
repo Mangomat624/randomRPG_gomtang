@@ -1,5 +1,6 @@
 using System; // System.Action을 사용하기 위해 필요합니다.
 using System.Collections; // 코루틴 사용
+using System.Collections.Generic;
 using System.Xml.Schema;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,14 @@ using static CharacterStats;
 
 public class BattleUISystem : MonoBehaviour
 {
+    [Header("Default Settings")]
+    public float changeSpeed = 0.5f;
+    public CharacterStats playerStats; // 플레이어의 CharacterStats 컴포넌트
+    public CharacterStats enemyStats;  // 적의 CharacterStats 컴포넌트
+
+    public SpriteRenderer backgroundRenderer;
+    public List<Sprite> stageBackgrounds;
+
     [Header("Player")]
 
     public Slider P_Healthbar; // 인스펙터 창에서 Slider 컴포넌트를 연결할 변수
@@ -21,8 +30,57 @@ public class BattleUISystem : MonoBehaviour
     public TextMeshProUGUI E_HPText;
     public TextMeshProUGUI EnemyText;
 
-    public float changeSpeed = 0.5f;
+
     private Coroutine _healthChangeCoroutine;
+
+    void Awake()
+    {
+        ChangeName(playerStats.unitName, enemyStats.unitName);
+
+        int currentStage = GameManager.Instance.GetCurrentStage(); // 예시 호출
+        SetBackgroundForStage(currentStage);
+    }
+
+    public void SetBackgroundForStage(int stageNumber)
+    {
+        Sprite backgroundToSet = null; // 설정할 배경 스프라이트
+
+        // 스테이지 범위에 따라 배경 선택
+        switch (stageNumber) // 예: 1~3 스테이지
+        {
+            case >= 1 and <= 3:
+                // 리스트의 첫 번째(인덱스 0) 배경 사용
+                if (stageBackgrounds.Count > 0)
+                    backgroundToSet = stageBackgrounds[0];
+                break;
+            case >= 4 and <= 6:
+                // 리스트의 두 번째(인덱스 1) 배경 사용
+                if (stageBackgrounds.Count > 1)
+                    backgroundToSet = stageBackgrounds[1];
+                break;
+            // (필요하다면) else if (...) 로 더 많은 범위 추가 가능
+            default:
+                // 리스트에 배경이 있다면 마지막 배경을 기본값으로 사용하거나,
+                // 특정 인덱스(예: 0)를 기본값으로 사용할 수 있습니다.
+                if (stageBackgrounds.Count > 0)
+                    backgroundToSet = stageBackgrounds[0]; // 예시: 첫 번째 배경을 기본값으로
+                break;
+        }
+
+        // 선택된 배경이 있고, 렌더러가 연결되어 있다면 적용
+        if (backgroundRenderer != null && backgroundToSet != null)
+        {
+            backgroundRenderer.sprite = backgroundToSet;
+        }
+        else if (backgroundRenderer == null)
+        {
+            Debug.LogWarning("Background Renderer가 연결되지 않았습니다!");
+        }
+        else
+        {
+            Debug.LogWarning($"스테이지 {stageNumber}에 해당하는 배경 이미지를 찾을 수 없습니다!");
+        }
+    }
 
     // 체력바의 최대값을 설정하는 함수
     public void SetMaxHealth(CharacterStats.PlayerType type, int health)

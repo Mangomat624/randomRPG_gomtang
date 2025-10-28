@@ -4,7 +4,7 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -5659740982602760028
-    second: Firefly 20250914223605_0
+    second: Forest
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Firefly 20250914223605_0
+      name: Forest
       rect:
         serializedVersion: 2
         x: 0
@@ -136,6 +136,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Firefly 20250914223605_0: -5659740982602760028
+      Forest: -5659740982602760028
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

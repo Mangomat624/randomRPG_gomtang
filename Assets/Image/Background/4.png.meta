@@ -4,7 +4,7 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 5901885843121491298
-    second: Firefly 20250914225704_0
+    second: Castle
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Firefly 20250914225704_0
+      name: Castle
       rect:
         serializedVersion: 2
         x: 0
@@ -135,6 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      Castle: 5901885843121491298
       Firefly 20250914225704_0: 5901885843121491298
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

@@ -4,7 +4,7 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -2685694164560239212
-    second: Firefly 20250914223824_0
+    second: Temple
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Firefly 20250914223824_0
+      name: Temple
       rect:
         serializedVersion: 2
         x: 0
@@ -136,6 +136,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Firefly 20250914223824_0: -2685694164560239212
+      Temple: -2685694164560239212
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
