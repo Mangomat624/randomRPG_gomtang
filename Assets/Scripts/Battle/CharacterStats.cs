@@ -1,7 +1,7 @@
 using System.Collections; // 코루틴 사용
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-
+using System; // Action 사용
 public class CharacterStats : MonoBehaviour
 {
     public EquipmentDatabase equipmentDB;
@@ -31,6 +31,9 @@ public class CharacterStats : MonoBehaviour
 
     [Header("Visual Effect")]
     public float squashDuration = 1f; // 찌그러지는 데 걸리는 시간
+
+
+    public Action OnDeathAnimationFinished;
 
 
     void Awake()
@@ -128,7 +131,7 @@ public class CharacterStats : MonoBehaviour
             Debug.Log(unitName + "이(가) 쓰러졌습니다.");
 
             uisysytem.SetHealth(playerType,currentHP, () => {
-                StartCoroutine(SquashEffect());
+                StartCoroutine(SquashEffect(() => OnDeathAnimationFinished?.Invoke()));
             });
 
             return true; // 쓰러졌음을 알림
@@ -144,7 +147,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     // 캐릭터가 찌그러지는 효과를 연출하는 코루틴
-    private IEnumerator SquashEffect()
+    private IEnumerator SquashEffect(Action onComplete)
     {
         Vector3 startScale = transform.localScale; // 현재 크기
         Vector3 endScale = new Vector3(startScale.x, 0, startScale.z); // 목표 크기 (Y축만 0)
@@ -164,6 +167,8 @@ public class CharacterStats : MonoBehaviour
 
         // 정확한 목표 크기로 설정
         transform.localScale = endScale;
+
+        onComplete?.Invoke();
 
         // 애니메이션이 끝난 후 캐릭터 오브젝트를 비활성화.
         gameObject.SetActive(false);

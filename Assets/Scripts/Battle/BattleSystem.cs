@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting; // 코루틴을 사용하기 위해 꼭 필요해요!
+using UnityEngine.SceneManagement;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
@@ -34,6 +35,14 @@ public class BattleSystem : MonoBehaviour
     IEnumerator SetupBattle()
     {
         state = BattleState.START;
+
+        // --- (추가) 각 캐릭터의 사망 애니메이션 완료 이벤트 구독 ---
+        // 플레이어가 쓰러지면 HandleCharacterDeath 함수 호출
+        playerStats.OnDeathAnimationFinished += HandleCharacterDeath;
+        // 적이 쓰러지면 HandleCharacterDeath 함수 호출
+        enemyStats.OnDeathAnimationFinished += HandleCharacterDeath;
+        // --- 여기까지 ---
+
         Debug.Log("전투 준비!");
 
 
@@ -46,6 +55,21 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PLAYERTURN;
         StartCoroutine(PlayerTurn());
     }
+
+    void OnDestroy()
+    {
+        if (playerStats != null)
+            playerStats.OnDeathAnimationFinished -= HandleCharacterDeath;
+        if (enemyStats != null)
+            enemyStats.OnDeathAnimationFinished -= HandleCharacterDeath;
+    }
+
+    private void HandleCharacterDeath()
+    {
+        // EndBattle 코루틴을 시작시킵니다.
+        StartCoroutine(EndBattleSequence());
+    }
+
     IEnumerator PlayerTurn()
     {
         Debug.Log("플레이어의 턴!");
@@ -88,7 +112,6 @@ public class BattleSystem : MonoBehaviour
             if (isDead)
             {
                 state = BattleState.WON;
-                EndBattle();
                 yield break; // 전투 종료
             }
         }
@@ -116,9 +139,8 @@ public class BattleSystem : MonoBehaviour
         yield return new WaitForSeconds(1f); // 적이 생각하는 시간처럼 잠시 대기
 
         // 1. 플레이어의 1차 회피 판정
-        int monsterAccuracy = 100; // 몬스터 적중은 100
-                                   // 으로 고정
-        int evasionChance = playerStats.evasionRate;
+        int monsterAccuracy = 100; // 몬스터 적중은 100으로 고정
+        int evasionChance = monsterAccuracy-playerStats.evasionRate; //회피율
         int roll = Random.Range(1, 101);
 
         if (roll <= evasionChance)
@@ -133,11 +155,10 @@ public class BattleSystem : MonoBehaviour
             // 성공 시 return; 하여 데미지를 입지 않게 합니다.
 
             Debug.Log("플레이어가 적의 공격을 받습니다.");
-            bool isDead = playerStats.TakeDamage(enemyStats.baseDamage);
+            bool isDead = playerStats.TakeDamage(enemyStats.baseDamage-playerStats.defensivePower);
             if (isDead)
             {
                 state = BattleState.LOST;
-                EndBattle();
                 yield break; // 전투 종료
             }
 
@@ -149,16 +170,23 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(PlayerTurn());
     }
 
-    void EndBattle()
+    IEnumerator EndBattleSequence()
     {
         if (state == BattleState.WON)
         {
             Debug.Log("승리했습니다!");
+            GameManager.Instance.currentStage += 1;
         }
         else if (state == BattleState.LOST)
         {
             Debug.Log("패배했습니다...");
         }
+
+        // 1초 기다립니다.
+        yield return new WaitForSeconds(1f);
+
+        // "뽑기" 씬을 로드합니다.
+        SceneManager.LoadScene("뽑기");
     }
 
 }

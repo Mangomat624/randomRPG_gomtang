@@ -452,12 +452,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 054a6acc2785ba246abc79947b112363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 1
+  currentStage: 4
   tokens: 1000
-  CurrentHeadGrade: 0
-  CurrentTorsoGrade: 0
-  CurrentLegsGrade: 0
-  CurrentWeaponGrade: 0
+  CurrentHeadGrade: 3
+  CurrentTorsoGrade: 3
+  CurrentLegsGrade: 3
+  CurrentWeaponGrade: 3
   permanentBonusAtk: 0
   permanentBonusAcc: 0
 --- !u!4 &160134085
@@ -1668,7 +1668,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2685694164560239212, guid: 1b898bdcab87dac4b97441afb3eacc39, type: 3}
+  m_Sprite: {fileID: -5659740982602760028, guid: 557a0d0aafb19f74eaa222e5131f5fc7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3877,13 +3877,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c22ab1559e4710b499a8dc81b4676506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  changeSpeed: 0.5
+  playerStats: {fileID: 1339930859}
+  enemyStats: {fileID: 1584008642}
+  backgroundRenderer: {fileID: 912704035}
+  stageBackgrounds:
+  - {fileID: -5659740982602760028, guid: 557a0d0aafb19f74eaa222e5131f5fc7, type: 3}
+  - {fileID: -2685694164560239212, guid: 1b898bdcab87dac4b97441afb3eacc39, type: 3}
+  - {fileID: 3487297593698772712, guid: 7c10901c246dea3479a1195810d46b1b, type: 3}
+  - {fileID: 5901885843121491298, guid: 9d9aa193d62b9324dbb248f5eae8459b, type: 3}
   P_Healthbar: {fileID: 1021000293}
   P_HPText: {fileID: 1100973201}
   PlayerText: {fileID: 1307323716}
   E_Healthbar: {fileID: 2035989797}
   E_HPText: {fileID: 1621433232}
   EnemyText: {fileID: 873440137}
-  changeSpeed: 0.5
 --- !u!4 &1959311393
 Transform:
   m_ObjectHideFlags: 0

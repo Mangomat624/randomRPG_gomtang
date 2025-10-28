@@ -58,7 +58,15 @@ public class BattleUISystem : MonoBehaviour
                 if (stageBackgrounds.Count > 1)
                     backgroundToSet = stageBackgrounds[1];
                 break;
-            // (필요하다면) else if (...) 로 더 많은 범위 추가 가능
+            case >= 7 and <= 9:
+                // 리스트의 두 번째(인덱스 1) 배경 사용
+                if (stageBackgrounds.Count > 2)
+                    backgroundToSet = stageBackgrounds[2];
+                break;
+            case >= 10:
+                if (stageBackgrounds.Count > 3)
+                    backgroundToSet = stageBackgrounds[3];
+                break;
             default:
                 // 리스트에 배경이 있다면 마지막 배경을 기본값으로 사용하거나,
                 // 특정 인덱스(예: 0)를 기본값으로 사용할 수 있습니다.

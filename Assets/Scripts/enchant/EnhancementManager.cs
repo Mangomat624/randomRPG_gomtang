@@ -10,8 +10,6 @@ public class EnhancementManager : MonoBehaviour
 
     [Header("데이터 연결")]
     public EnhancementTable enhancementTable;
-    public SceneChange sceneLoader; // -> SceneChange로 수정해야 할 수 있음
-    public string nextSceneName = "GameScene";
 
     [Header("강화 설정")]
     public float totalTimeLimit = 5.0f;
@@ -170,11 +168,6 @@ public class EnhancementManager : MonoBehaviour
         Debug.Log($"강화 종료! 최종 스탯: +{currentBonusAtk} ATK, +{currentBonusAcc}% ACC");
 
         GameManager.Instance.ApplyPermanentEnhancement(currentBonusAtk, currentBonusAcc);
-
-        if (sceneLoader != null)
-        {
-            sceneLoader.LoadTargetScene();
-        }
     }
 
     private void UpdateUI()
