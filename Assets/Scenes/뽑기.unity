@@ -1033,8 +1033,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 054a6acc2785ba246abc79947b112363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 6
+  currentStage: 1
   tokens: 1000
+  CurrentHeadGrade: 1
+  CurrentTorsoGrade: 2
+  CurrentLegsGrade: 3
+  CurrentWeaponGrade: 4
   permanentBonusAtk: 0
   permanentBonusAcc: 0
 --- !u!4 &948091067

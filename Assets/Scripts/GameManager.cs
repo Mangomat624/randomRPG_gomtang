@@ -43,7 +43,8 @@ public class GameManager : MonoBehaviour
     {
         // 게임 시작 시, 현재 토큰 개수로 UI를 업데이트하도록 신호를 보냄
         OnTokensChanged?.Invoke(tokens);
-        //tokens = 4;
+        tokens = 4;
+        currentStage = 1;
     }
 
     // --- 1. 이벤트 구독 신청 ---
