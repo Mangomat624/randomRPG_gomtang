@@ -11,11 +11,13 @@ public class NoteManager : MonoBehaviour
     [Header("프리팹 및 위치")]
     public GameObject normalNotePrefab;
     public GameObject longNotePrefab;
-    public Transform[] laneSpawnPoints; // Up(0), Middle(1), Bottom(2) 순서
     public RectTransform canvasRect;
-
-    // (변경) deleteLine 변수는 NoteManager.Update()에서 사용합니다.
     public Transform deleteLine;
+
+    [Header("스테이지별 스폰 포인트 그룹")]
+    public List<Transform> stage1_3SpawnPoints; // 1~3 스테이지용 (2개 예상)
+    public List<Transform> stage4_6SpawnPoints; // 4~6 스테이지용 (3개 예상)
+    public List<Transform> stage7_10SpawnPoints; // 7~10 스테이지용 (4개 예상)
 
     [Header("판정 설정")]
     public Transform judgementLine;
@@ -40,6 +42,7 @@ public class NoteManager : MonoBehaviour
     private List<string> results = new List<string>();
     private int totalNotes;
     private Coroutine spawnCoroutine;
+    private int activeLaneCount = 0; // 기본값
 
     void Awake()
     {
@@ -60,23 +63,65 @@ public class NoteManager : MonoBehaviour
 
     IEnumerator SpawnNotesSequence()
     {
-        List<GameObject> noteChart = new List<GameObject>();
-        for (int i = 0; i < 5; i++)
-        {
-            noteChart.Add(normalNotePrefab);
-            noteChart.Add(longNotePrefab);
-        }
-        totalNotes = noteChart.Count;
+        int currentStage = GameManager.Instance.GetCurrentStage(); // GameManager 구조에 맞게 수정 필요
 
+        if (currentStage <= 3) activeLaneCount = 2;
+        else if (currentStage <= 6) activeLaneCount = 3;
+        else if (currentStage <= 10) activeLaneCount = 4;
+        else activeLaneCount = GetMaxLaneCount();
+
+        List<Transform> currentActiveSpawners = GetCurrentSpawners(currentStage);
+
+        Debug.Log($"스테이지 {currentStage}: {activeLaneCount}개의 레인 사용 (지정된 그룹 사용)");
+
+        int bigNoteCount = 5;
+        int smallNoteCount = 5;
+        totalNotes = bigNoteCount + smallNoteCount;
+
+        // ... (노트 차트 생성 및 셔플 로직은 동일) ...
+        List<GameObject> noteChart = new List<GameObject>();
+        for (int i = 0; i < bigNoteCount; i++) noteChart.Add(normalNotePrefab);
+        for (int i = 0; i < smallNoteCount; i++) noteChart.Add(longNotePrefab);
         System.Random rand = new System.Random();
         noteChart = noteChart.OrderBy(x => rand.Next()).ToList();
 
         foreach (GameObject prefab in noteChart)
         {
-            int laneIndex = UnityEngine.Random.Range(0, laneSpawnPoints.Length);
-            Transform spawnPoint = laneSpawnPoints[laneIndex];
+            int laneIndex = UnityEngine.Random.Range(0, activeLaneCount);
+            Transform spawnPoint = currentActiveSpawners[laneIndex];
             GameObject noteGO = Instantiate(prefab, canvasRect);
             noteGO.transform.position = spawnPoint.position;
+
+            RectTransform noteRectTransform = noteGO.GetComponent<RectTransform>();
+
+            // 2. RectTransform이 있는지 확인합니다 (안전 장치).
+            if (noteRectTransform != null)
+            {
+                float targetHeight = 50f; // 기본 높이 값 (예시)
+
+                // 3. activeLaneCount 값에 따라 목표 Height 결정
+                switch (activeLaneCount)
+                {
+                    case 2:
+                        targetHeight = 75f;
+                        break;
+                    case 3:
+                        targetHeight = 50f;
+                        break;
+                    case 4:
+                        targetHeight = 37.5f;
+                        break;
+                    default:
+                        // 예외 처리: 기본 높이 유지
+                        targetHeight = noteRectTransform.sizeDelta.y; // 현재 높이 유지
+                        break;
+                }
+
+                // 4. RectTransform의 sizeDelta를 변경합니다.
+                // sizeDelta는 Width와 Height를 함께 가지는 Vector2 값입니다.
+                // Width는 그대로 두고 Height만 변경합니다.
+                noteRectTransform.sizeDelta = new Vector2(noteRectTransform.sizeDelta.x, targetHeight);
+            }
 
             NoteMovement noteScript = noteGO.GetComponent<NoteMovement>();
 
@@ -89,12 +134,48 @@ public class NoteManager : MonoBehaviour
         }
     }
 
+    private List<Transform> GetCurrentSpawners(int stage)
+    {
+        if (stage <= 3) return stage1_3SpawnPoints;
+        else if (stage <= 6) return stage4_6SpawnPoints;
+        else return stage7_10SpawnPoints; // 7 이상은 모두 이 리스트 사용
+    }
+    private int GetMaxLaneCount()
+    {
+        int max = 0;
+        if (stage1_3SpawnPoints != null) max = Mathf.Max(max, stage1_3SpawnPoints.Count);
+        if (stage4_6SpawnPoints != null) max = Mathf.Max(max, stage4_6SpawnPoints.Count);
+        if (stage7_10SpawnPoints != null) max = Mathf.Max(max, stage7_10SpawnPoints.Count);
+        return max;
+    }
+
     void Update()
     {
-        // (입력 처리 로직은 동일)
-        if (Input.GetKeyDown(KeyCode.F)) TryHit(0);
-        if (Input.GetKeyDown(KeyCode.Space)) TryHit(1);
-        if (Input.GetKeyDown(KeyCode.J)) TryHit(2);
+        // activeLaneCount 값에 따라 입력받을 키를 다르게 처리
+        switch (activeLaneCount)
+        {
+            case 2: // 레인 2개 (1~3 스테이지)
+                if (Input.GetKeyDown(KeyCode.F)) TryHit(0); // 첫 번째 레인
+                if (Input.GetKeyDown(KeyCode.J)) TryHit(1); // 두 번째 레인
+                break;
+            case 3: // 레인 3개 (4~6 스테이지)
+                if (Input.GetKeyDown(KeyCode.F)) TryHit(0); // 첫 번째 레인
+                if (Input.GetKeyDown(KeyCode.Space)) TryHit(1); // 두 번째 레인
+                if (Input.GetKeyDown(KeyCode.J)) TryHit(2); // 세 번째 레인
+                break;
+            case 4: // 레인 4개 (7~10 스테이지)
+                if (Input.GetKeyDown(KeyCode.D)) TryHit(0); // 첫 번째 레인
+                if (Input.GetKeyDown(KeyCode.F)) TryHit(1); // 두 번째 레인
+                if (Input.GetKeyDown(KeyCode.J)) TryHit(2); // 세 번째 레인
+                if (Input.GetKeyDown(KeyCode.K)) TryHit(3); // 네 번째 레인
+                break;
+            default:
+                // 혹시 모를 예외 처리 (모든 레인을 F, Space, J로 처리)
+                if (Input.GetKeyDown(KeyCode.F)) TryHit(0);
+                if (Input.GetKeyDown(KeyCode.Space)) TryHit(1);
+                if (Input.GetKeyDown(KeyCode.J)) TryHit(2);
+                break;
+        }
 
         // --- (변경) 시간 초과 Miss 판정 로직 ---
         if (activeNotes.Count > 0)

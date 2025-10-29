@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Game State")]
-    public int currentStage = 1;
+    public int currentStage;
     public int tokens = 4;
 
     [Header("Player Equipment")]
@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour
     {
         // 게임 시작 시, 현재 토큰 개수로 UI를 업데이트하도록 신호를 보냄
         OnTokensChanged?.Invoke(tokens);
-        currentStage = 1;
         //tokens = 4;
     }
 

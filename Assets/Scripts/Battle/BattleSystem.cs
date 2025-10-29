@@ -78,7 +78,13 @@ public class BattleSystem : MonoBehaviour
 
 
         // 0 또는 1을 랜덤으로 선택
-        int minigameType = Random.Range(0, 2);
+        //int minigameType = Random.Range(0, 2);
+
+        //언더테일 테스트
+        //int minigameType = Random.Range(0, 1);
+
+        //프세카 테스트
+        int minigameType = Random.Range(1, 2);
 
         if (minigameType == 0)
         {
@@ -99,7 +105,14 @@ public class BattleSystem : MonoBehaviour
 
         // 1. 적중률 계산
         int totalAccuracy = playerStats.baseAccuracy + playerStats.weaponAccuracy + playerStats.enhancementAccuracy + currentAttackResult.accuracyBonus;
-        int hitChance = totalAccuracy - enemyStats.evasionRate;
+        int hitChance = 50;
+        if (totalAccuracy < enemyStats.evasionRate) {
+            hitChance = 0;
+        }
+        else
+        {
+            hitChance = totalAccuracy - enemyStats.evasionRate;
+        }
 
         // 2. 명중 판정 (랜덤)
         int roll = Random.Range(1, 101); // 1~100 사이의 랜덤 숫자
