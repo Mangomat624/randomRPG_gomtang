@@ -1,7 +1,6 @@
 using System; // System.Action을 사용하기 위해 필요합니다.
 using System.Collections; // 코루틴 사용
 using System.Collections.Generic;
-using System.Xml.Schema;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -75,19 +74,7 @@ public class BattleUISystem : MonoBehaviour
                 break;
         }
 
-        // 선택된 배경이 있고, 렌더러가 연결되어 있다면 적용
-        if (backgroundRenderer != null && backgroundToSet != null)
-        {
-            backgroundRenderer.sprite = backgroundToSet;
-        }
-        else if (backgroundRenderer == null)
-        {
-            Debug.LogWarning("Background Renderer가 연결되지 않았습니다!");
-        }
-        else
-        {
-            Debug.LogWarning($"스테이지 {stageNumber}에 해당하는 배경 이미지를 찾을 수 없습니다!");
-        }
+        backgroundRenderer.sprite = backgroundToSet;
     }
 
     // 체력바의 최대값을 설정하는 함수

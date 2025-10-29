@@ -1,13 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-public struct AttackResult
-{
-    public float damageMultiplier; // 최종 대미지 계산 배율
-    public int accuracyBonus;      // 적중률 보너스
-    public string judgement;       // 판정 이름 (Perfect, Great 등)
-}
-
 public class UndertaleAttack : MonoBehaviour
 {
     [Header("UI Elements")]

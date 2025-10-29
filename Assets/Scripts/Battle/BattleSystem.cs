@@ -5,6 +5,13 @@ using UnityEngine.SceneManagement;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
+public struct AttackResult
+{
+    public float damageMultiplier; // 최종 대미지 계산 배율
+    public int accuracyBonus;      // 적중률 보너스
+    public string judgement;       // 판정 이름 (Perfect, Great 등)
+}
+
 public class BattleSystem : MonoBehaviour
 {
     public CharacterStats playerStats; // 플레이어의 CharacterStats 컴포넌트
@@ -78,13 +85,13 @@ public class BattleSystem : MonoBehaviour
 
 
         // 0 또는 1을 랜덤으로 선택
-        //int minigameType = Random.Range(0, 2);
+        int minigameType = Random.Range(0, 2);
 
         //언더테일 테스트
         //int minigameType = Random.Range(0, 1);
 
         //프세카 테스트
-        int minigameType = Random.Range(1, 2);
+        // minigameType = Random.Range(1, 2);
 
         if (minigameType == 0)
         {
@@ -104,8 +111,8 @@ public class BattleSystem : MonoBehaviour
         }
 
         // 1. 적중률 계산
-        int totalAccuracy = playerStats.baseAccuracy + playerStats.weaponAccuracy + playerStats.enhancementAccuracy + currentAttackResult.accuracyBonus;
-        int hitChance = 50;
+        int totalAccuracy = playerStats.baseAccuracy + playerStats.weaponAccuracy + playerStats.enhancementAccuracy + currentAttackResult.accuracyBonus+GameManager.Instance.permanentBonusAcc;
+        int hitChance = 50; // 기본값
         if (totalAccuracy < enemyStats.evasionRate) {
             hitChance = 0;
         }
@@ -120,7 +127,7 @@ public class BattleSystem : MonoBehaviour
         {
             // 3. 명중 시 데미지 계산 및 적용
             Debug.Log("명중! (적중률: " + hitChance + "%, 주사위: " + roll + ")");
-            int damage = Mathf.RoundToInt(playerStats.baseDamage * currentAttackResult.damageMultiplier);
+            int damage = Mathf.RoundToInt((playerStats.baseDamage+GameManager.Instance.permanentBonusAtk) * currentAttackResult.damageMultiplier);
             bool isDead = enemyStats.TakeDamage(damage);
             if (isDead)
             {
@@ -153,7 +160,7 @@ public class BattleSystem : MonoBehaviour
 
         // 1. 플레이어의 1차 회피 판정
         int monsterAccuracy = 100; // 몬스터 적중은 100으로 고정
-        int evasionChance = monsterAccuracy-playerStats.evasionRate; //회피율
+        int evasionChance = monsterAccuracy-(playerStats.evasionRate); //회피율
         int roll = Random.Range(1, 101);
 
         if (roll <= evasionChance)
