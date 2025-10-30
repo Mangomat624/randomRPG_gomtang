@@ -3237,6 +3237,7 @@ GameObject:
   - component: {fileID: 1387523670}
   - component: {fileID: 1387523669}
   - component: {fileID: 1387523668}
+  - component: {fileID: 1387523672}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3338,6 +3339,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1387523672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387523667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f91d742f3be083418c26878ab8255c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionMaterial: {fileID: 2100000, guid: 7624d611bd330e44b80ef65275598a16, type: 2}
 --- !u!1 &1429794817
 GameObject:
   m_ObjectHideFlags: 0
@@ -4234,6 +4248,9 @@ MonoBehaviour:
   battleUI: {fileID: 1959311392}
   undertaleGame: {fileID: 1272176377}
   pseckaGame: {fileID: 1545153406}
+  transitionMaterial: {fileID: 2100000, guid: 7624d611bd330e44b80ef65275598a16, type: 2}
+  transitionSpeed: 1
+  openingPatternTexture: {fileID: 2800000, guid: ed5355cd5f09dcb4c9f33267d904d07a, type: 3}
 --- !u!1 &1959311391
 GameObject:
   m_ObjectHideFlags: 0

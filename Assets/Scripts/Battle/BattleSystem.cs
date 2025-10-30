@@ -30,6 +30,11 @@ public class BattleSystem : MonoBehaviour
     private bool isActionDone = false;
     private AttackResult currentAttackResult;
 
+    public Material transitionMaterial;
+    public float transitionSpeed = 1f; // 전환 속도
+
+    public Texture openingPatternTexture;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,6 +46,23 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle()
     {
+
+        if (openingPatternTexture != null)
+        {
+            transitionMaterial.SetTexture("_TransitionTex", openingPatternTexture);
+        }
+
+        transitionMaterial.SetFloat("_Cutoff", 1f);
+
+        float t = 1;
+        while (t > 0)
+        {
+            t -= Time.deltaTime * transitionSpeed;
+            // 2. 셰이더의 _Cutoff 값을 1에서 0으로 변경
+            transitionMaterial.SetFloat("_Cutoff", t);
+            yield return null;
+        }
+
         state = BattleState.START;
 
         // --- (추가) 각 캐릭터의 사망 애니메이션 완료 이벤트 구독 ---

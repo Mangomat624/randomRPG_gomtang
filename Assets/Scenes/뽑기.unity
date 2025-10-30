@@ -370,8 +370,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 945924803}
-        m_TargetAssemblyTypeName: SceneChange, Assembly-CSharp
-        m_MethodName: LoadTargetScene
+        m_TargetAssemblyTypeName: BattleSceneLoader, Assembly-CSharp
+        m_MethodName: LoadBattleScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -683,6 +683,7 @@ GameObject:
   - component: {fileID: 712746314}
   - component: {fileID: 712746313}
   - component: {fileID: 712746316}
+  - component: {fileID: 712746317}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -784,6 +785,19 @@ MonoBehaviour:
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0
+--- !u!114 &712746317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712746312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f91d742f3be083418c26878ab8255c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionMaterial: {fileID: 2100000, guid: 7624d611bd330e44b80ef65275598a16, type: 2}
 --- !u!224 &833426526 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8660833008590390147, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
@@ -1000,10 +1014,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 945924801}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b25f4f82cf0e24493e7bac5a503155, type: 3}
+  m_Script: {fileID: 11500000, guid: 835d38d075899224fadd5fc897d59d48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: a3c1ab7044baa0a4d9485dc75a85ef74, type: 3}
+  transitionMaterial: {fileID: 2100000, guid: 7624d611bd330e44b80ef65275598a16, type: 2}
+  transitionSpeed: 1.5
+  closingPatternTexture: {fileID: 2800000, guid: ba6a1098712f522418697e7a4893fb62, type: 3}
 --- !u!1 &948091065
 GameObject:
   m_ObjectHideFlags: 0
