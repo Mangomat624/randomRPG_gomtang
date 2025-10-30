@@ -132,7 +132,7 @@ public class BattleSystem : MonoBehaviour
             yield return null;
         }
 
-        // 1. 적중률 계산
+        // 1. 적중률 계산    
         int totalAccuracy = playerStats.baseAccuracy + playerStats.weaponAccuracy + playerStats.enhancementAccuracy + currentAttackResult.accuracyBonus+GameManager.Instance.permanentBonusAcc;
         int hitChance = 50; // 기본값
         if (totalAccuracy < enemyStats.evasionRate) {
@@ -182,7 +182,7 @@ public class BattleSystem : MonoBehaviour
 
         // 1. 플레이어의 1차 회피 판정
         int monsterAccuracy = 100; // 몬스터 적중은 100으로 고정
-        int evasionChance = monsterAccuracy-(playerStats.evasionRate); //회피율
+        int evasionChance = (100 + playerStats.evasionRate) - monsterAccuracy; //회피율
         int roll = Random.Range(1, 101);
 
         if (roll <= evasionChance)
