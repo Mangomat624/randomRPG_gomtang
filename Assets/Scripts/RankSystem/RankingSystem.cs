@@ -66,24 +66,31 @@ public class RankingSystem : MonoBehaviour
 
     private void DisplayRankings(List<RankingEntry> rankingList)
     {
-        // 기존에 있던 UI 항목들 삭제 (새로고침을 위해)
+        // 1. 기존 UI 항목들 삭제
         foreach (Transform child in contentParent)
         {
             Destroy(child.gameObject);
         }
 
-        // 랭킹 리스트를 순회하며 UI 생성
+        // 2. 정렬된 리스트를 순회하며 UI 생성
         int rank = 1;
         foreach (RankingEntry entry in rankingList)
         {
+            // 3. 프리팹 생성 (동일)
             GameObject entryGO = Instantiate(rankingEntryPrefab, contentParent);
-            TextMeshProUGUI entryText = entryGO.GetComponent<TextMeshProUGUI>();
 
-            if (entryText != null)
+            // 4. (변경) TextMeshProUGUI 대신 RankingEntryUI 스크립트를 가져옵니다.
+            RankingEntryUI entryScript = entryGO.GetComponent<RankingEntryUI>();
+
+            // 5. 스크립트를 찾았다면, SetData 함수를 호출하여 값 전달
+            if (entryScript != null)
             {
-                // "1. 구준모 - 2147483647" 형식으로 텍스트 설정
-                entryText.text = $"{rank}. {entry.playerName} - {entry.score}";
-                rank++;
+                entryScript.SetData(rank, entry.playerName, entry.score);
+                rank++; // 다음 등수
+            }
+            else
+            {
+                Debug.LogError("RankingEntryPrefab에 RankingEntryUI 스크립트가 없습니다!");
             }
         }
     }
