@@ -1,8 +1,8 @@
-using UnityEngine;
-using UnityEngine.Networking; // UnityWebRequest를 사용하기 위해 꼭 필요합니다.
 using System.Collections;
 using System.Collections.Generic;
 using TMPro; // TextMeshPro를 사용하기 위해 꼭 필요합니다.
+using UnityEngine;
+using UnityEngine.Networking; // UnityWebRequest를 사용하기 위해 꼭 필요합니다.
 
 public class RankingSystem : MonoBehaviour
 {
@@ -85,7 +85,7 @@ public class RankingSystem : MonoBehaviour
             // 5. 스크립트를 찾았다면, SetData 함수를 호출하여 값 전달
             if (entryScript != null)
             {
-                entryScript.SetData(rank, entry.playerName, entry.score);
+                entryScript.SetData(rank, entry.playerName, entry.score, entry.isEnd);
                 rank++; // 다음 등수
             }
             else

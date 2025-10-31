@@ -9,4 +9,5 @@ public class RankingEntry
     public string playerName;
     public long score; // int의 최대값을 초과할 수 있으므로 long이 안전합니다.
     public string createdAt;
+    public int isEnd;
 }
