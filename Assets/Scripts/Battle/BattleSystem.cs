@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting; // 코루틴을 사용하기 위해 꼭 필요해요!
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
+using System.Text;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
@@ -150,6 +152,13 @@ public class BattleSystem : MonoBehaviour
             // 3. 명중 시 데미지 계산 및 적용
             Debug.Log("명중! (적중률: " + hitChance + "%, 주사위: " + roll + ")");
             int damage = Mathf.RoundToInt((playerStats.baseDamage+GameManager.Instance.permanentBonusAtk) * currentAttackResult.damageMultiplier);
+
+            // --- (추가) GameManager에 입힌 대미지 기록 ---
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddDamageDealt(damage);
+            }
+
             bool isDead = enemyStats.TakeDamage(damage);
             if (isDead)
             {
@@ -197,7 +206,12 @@ public class BattleSystem : MonoBehaviour
             // 성공 시 return; 하여 데미지를 입지 않게 합니다.
 
             Debug.Log("플레이어가 적의 공격을 받습니다.");
-            bool isDead = playerStats.TakeDamage(enemyStats.baseDamage-playerStats.defensivePower);
+            int enemydamage = enemyStats.baseDamage - playerStats.defensivePower;
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddDamageTaken(enemydamage);
+            }
+            bool isDead = playerStats.TakeDamage(enemydamage);
             if (isDead)
             {
                 state = BattleState.LOST;
@@ -214,10 +228,35 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EndBattleSequence()
     {
+        bool isClear = (state == BattleState.WON);
+
+        // 1. 점수 계산
+        long finalScore = CalculateFinalScore(isClear);
+
+        string playerName = "Player"; // TODO: 실제 플레이어 이름 가져오기
+        yield return StartCoroutine(PostScoreCoroutine(playerName, finalScore, isClear));
+
         if (state == BattleState.WON)
         {
             Debug.Log("승리했습니다!");
             GameManager.Instance.currentStage += 1;
+            switch (GameManager.Instance.currentStage)
+            {
+                case 4:
+                    SceneManager.LoadScene("뽑기");
+                    GameManager.Instance.tokens += 6;
+                    break;
+                case 7:
+                    SceneManager.LoadScene("뽑기");
+                    GameManager.Instance.tokens += 8;
+                    break;
+                case 10:
+                    SceneManager.LoadScene("뽑기");
+                    GameManager.Instance.tokens += 8;
+                    break;
+                default:
+                    break;
+            }
         }
         else if (state == BattleState.LOST)
         {
@@ -226,9 +265,101 @@ public class BattleSystem : MonoBehaviour
 
         // 1초 기다립니다.
         yield return new WaitForSeconds(1f);
+    }
+    private long CalculateFinalScore(bool isClear)
+    {
+        if (GameManager.Instance == null) return 0;
 
-        // "뽑기" 씬을 로드합니다.
-        SceneManager.LoadScene("뽑기");
+        // 1. 기본 점수: 게임 전체에서 입힌 총 대미지 (누적됨)
+        long score = GameManager.Instance.GetTotalDamageDealt();
+
+        if (isClear)
+        {
+            score += 3000;
+
+            // 2. 시간 보너스: (게임 전체 플레이 시간)
+            float playTime = GameManager.Instance.GetGamePlayTime(); // <- 함수 이름 변경
+            int timeBonus = Mathf.Max(0, 1000 - Mathf.RoundToInt(playTime * 3));
+            score += timeBonus;
+
+            // 3. 완벽주의자: (게임 전체에서 받은 총 대미지) (누적됨)
+            if (GameManager.Instance.GetTotalDamageTaken() <= 777)
+            {
+                score += 777;
+            }
+        }
+
+        // 세트 보너스 (F등급 제외)
+        var gm = GameManager.Instance;
+        var head = gm.CurrentHeadGrade;
+        if (head != EquipmentData.Grade.F &&
+            head == gm.CurrentTorsoGrade &&
+            head == gm.CurrentLegsGrade &&
+            head == gm.CurrentWeaponGrade)
+        {
+            switch (head)
+            {
+                case EquipmentData.Grade.D: score += 200; break;
+                case EquipmentData.Grade.C: score += 400; break;
+                case EquipmentData.Grade.B: score += 500; break;
+                case EquipmentData.Grade.A: score += 700; break;
+                case EquipmentData.Grade.S: score += 1000; break;
+                case EquipmentData.Grade.SS: score += 2000; break;
+                case EquipmentData.Grade.SSS: score += 3000; break;
+                    // X등급은 세트 보너스가 있는지 불명확하여 제외
+            }
+        }
+
+        // ??? 보너스 (X등급)
+        score += (gm.xGradeCount * 500);
+
+        return score;
     }
 
+    [System.Serializable]
+    private class PostRankingData
+    {
+        public string playerName;
+        public long score;
+        public int isEnd;
+    }
+
+    private IEnumerator PostScoreCoroutine(string playerName, long finalScore, bool didClear) // <- isClear 파라미터 추가
+    {
+        string url = "https://server-mango.kro.kr/db/ranking";
+        string apiKey = "MangoKey_43f83185-67e3-4f77-83a9-35b951e0af8d";
+
+        // 1. 보낼 데이터 JSON으로 생성 (isClear 포함)
+        PostRankingData data = new PostRankingData
+        {
+            playerName = playerName,
+            score = finalScore,
+            isEnd = System.Convert.ToInt32(didClear)
+        };
+        string jsonBody = JsonUtility.ToJson(data);
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
+
+        // 2. UnityWebRequest (POST) 생성
+        UnityWebRequest www = new UnityWebRequest(url, "POST");
+        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        www.downloadHandler = new DownloadHandlerBuffer();
+
+        // 3. 헤더 설정
+        www.SetRequestHeader("Content-Type", "application/json");
+        www.SetRequestHeader("X-Api-Key", apiKey);
+
+        // 4. 요청 보내기
+        Debug.Log($"랭킹 점수 전송 시도... Player: {playerName}, Score: {finalScore}, Clear: {didClear}");
+        yield return www.SendWebRequest();
+
+        // 5. 결과 확인
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log("랭킹 전송 성공! 응답: " + www.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogWarning("랭킹 전송 실패: " + www.error + "\n응답: " + www.downloadHandler.text);
+        }
+    }
 }
