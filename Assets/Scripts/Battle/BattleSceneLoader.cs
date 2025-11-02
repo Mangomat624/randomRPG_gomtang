@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using Unity.VisualScripting; // 코루틴 사용
 using UnityEngine.UI; // Image를 사용하기 위해 이 줄을 추가합니다.
 
 public class BattleSceneLoader : MonoBehaviour

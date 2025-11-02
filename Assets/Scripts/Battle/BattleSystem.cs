@@ -1,10 +1,8 @@
 using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting; // 코루틴을 사용하기 위해 꼭 필요해요!
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System.Text;
-using UnityEngine.UI;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
