@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -7,7 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Game State")]
-    public int currentStage = 1;
+    public int currentStage;
     public int tokens = 4;
 
     [Header("Player Equipment")]
@@ -16,11 +17,19 @@ public class GameManager : MonoBehaviour
     public EquipmentData.Grade CurrentTorsoGrade;
     public EquipmentData.Grade CurrentLegsGrade;
     public EquipmentData.Grade CurrentWeaponGrade;
+    private bool[] gachaLockStates = new bool[4] { false, false, false, false };
 
     [Header("Player Permanent Stats")]
     // 강화 씬에서 얻은 영구 스탯을 저장할 변수
     public int permanentBonusAtk = 0;
     public int permanentBonusAcc = 0;
+    public bool isEnd = false;
+
+    [Header("누적 전투 기록 (게임 세션)")]
+    private float gameStartTime; // 게임 시작 시간
+    private int cumulativeTotalDamageDealt; // 누적 총 입힌 대미지
+    private int cumulativeTotalDamageTaken; // 누적 총 받은 대미지 (완벽주의자용)
+    public int xGradeCount = 0;
 
     // 토큰 개수 변경 시 UI 스크립트에 알려줄 이벤트
     public static event Action<int> OnTokensChanged;
@@ -32,6 +41,8 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            InitializeGameSession();
         }
         else
         {
@@ -43,8 +54,20 @@ public class GameManager : MonoBehaviour
     {
         // 게임 시작 시, 현재 토큰 개수로 UI를 업데이트하도록 신호를 보냄
         OnTokensChanged?.Invoke(tokens);
+        tokens = 4;
         currentStage = 1;
-        //tokens = 4;
+        isEnd = false;
+    }
+
+    /// <summary>
+    /// 게임 세션이 처음 시작될 때 타이머와 누적 대미지를 0으로 설정합니다.
+    /// </summary>
+    public void InitializeGameSession()
+    {
+        gameStartTime = Time.time;
+        cumulativeTotalDamageDealt = 0;
+        cumulativeTotalDamageTaken = 0;
+        // xGradeCount는 게임 전체에서 누적되므로 여기서 초기화하지 않습니다.
     }
 
     // --- 1. 이벤트 구독 신청 ---
@@ -69,6 +92,50 @@ public class GameManager : MonoBehaviour
 
     public int GetCurrentStage() => currentStage;
     public int GetCurrentTokens() => tokens;
+
+    /// <GachaUISystem>이 잠금 상태를 저장할 때 호출합니다.
+    public void UpdateGachaLocks(bool[] locks)
+    {
+        if (locks.Length == 4)
+        {
+            gachaLockStates = locks;
+        }
+    }
+
+    /// <GachaUISystem>이 씬에 다시 로드될 때 잠금 상태를 불러오기 위해 호출합니다.
+    public bool[] GetGachaLocks()
+    {
+        return gachaLockStates;
+    }
+
+    /// <summary>
+    /// 플레이어가 적에게 입힌 대미지를 누적합니다.
+    /// </summary>
+    public void AddDamageDealt(int amount)
+    {
+        cumulativeTotalDamageDealt += amount;
+    }
+
+    /// <summary>
+    /// 플레이어가 적에게 받은 대미지를 누적합니다.
+    /// </summary>
+    public void AddDamageTaken(int amount)
+    {
+        cumulativeTotalDamageTaken += amount;
+    }
+
+
+    public int GetTotalDamageDealt() { return cumulativeTotalDamageDealt; }
+    public int GetTotalDamageTaken() { return cumulativeTotalDamageTaken; }
+
+    /// <summary>
+    /// 전투에 소요된 시간을 초(float) 단위로 반환합니다.
+    /// </summary>
+    public float GetGamePlayTime()
+    {
+        // 전투가 아직 안 끝났을 수도 있으니 현재 시간으로 계산
+        return Time.time - gameStartTime;
+    }
 
     /// <summary>
     /// 토큰을 사용하고, 변경된 개수를 UI에 알립니다.

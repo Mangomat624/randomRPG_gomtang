@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e381f0914a268bb43b6579f21e7e4638
+guid: 8f19f594fc5ce6f439859ed4f91ca8c6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8678927149493966203
-    second: "\uD14C\uACE0\uB2EC\uC778\uBC30\uACBD_0"
+      213: 6764707825347140516
+    second: Knife_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -73,9 +73,9 @@ TextureImporter:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
-    resizeAlgorithm: 1
+    resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\uD14C\uACE0\uB2EC\uC778\uBC30\uACBD_0"
+      name: Knife_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 700
-        height: 100
+        x: 37
+        y: 57
+        width: 185
+        height: 186
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b75d411724eb17870800000000000000
-      internalID: 8678927149493966203
+      spriteID: 4ab1f1b1de111ed50800000000000000
+      internalID: 6764707825347140516
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\uD14C\uACE0\uB2EC\uC778\uBC30\uACBD_0": 8678927149493966203
+      Knife_0: 6764707825347140516
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,13 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-public struct AttackResult
-{
-    public float damageMultiplier; // 최종 대미지 계산 배율
-    public int accuracyBonus;      // 적중률 보너스
-    public string judgement;       // 판정 이름 (Perfect, Great 등)
-}
-
 public class UndertaleAttack : MonoBehaviour
 {
     [Header("UI Elements")]
@@ -71,25 +64,25 @@ public class UndertaleAttack : MonoBehaviour
         if (IsHit(indicatorPos, perfectZone))
         {
             result.judgement = "Perfect";
-            result.accuracyBonus = 30;
+            result.accuracyBonus = 42;
             result.damageMultiplier = 1.2f;
         }
         else if (IsHit(indicatorPos, greatZone))
         {
             result.judgement = "Great";
-            result.accuracyBonus = 15;
+            result.accuracyBonus = 21;
             result.damageMultiplier = 1.1f;
         }
         else if (IsHit(indicatorPos, niceZone))
         {
             result.judgement = "Nice";
-            result.accuracyBonus = 7;
+            result.accuracyBonus = 12;
             result.damageMultiplier = 1.05f;
         }
         else if (IsHit(indicatorPos, normalZone))
         {
             result.judgement = "Normal";
-            result.accuracyBonus = 0;
+            result.accuracyBonus = 6;
             result.damageMultiplier = 1.0f;
         }
         else

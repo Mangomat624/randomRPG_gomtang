@@ -7,6 +7,11 @@ public class TokenTextUI : MonoBehaviour
 {
     public TextMeshProUGUI tokenText;
 
+    void Start()
+    {
+        UpdateText(GameManager.Instance.tokens);
+    }
+
     void OnEnable()
     {
         GameManager.OnTokensChanged += UpdateText;

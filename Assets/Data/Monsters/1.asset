@@ -15,5 +15,5 @@ MonoBehaviour:
   stage: 1
   monsterName: "\uCD08\uC2EC\uC790\uC6A9 \uD5C8\uC218\uC544\uBE44"
   hp: 100
-  atk: 25
+  atk: 5
   eva: 5
