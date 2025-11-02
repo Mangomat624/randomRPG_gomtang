@@ -7,27 +7,63 @@ public class GachaUISystem : MonoBehaviour
     public GachaSlotUI[] slots;
     public Button rerollButton;
 
-    void OnEnable() { GachaManager.OnGachaFinished += UpdateAllSlots; }
-    void OnDisable() { GachaManager.OnGachaFinished -= UpdateAllSlots; }
+    void OnEnable() { 
+        GachaManager.OnGachaFinished += UpdateAllSlots;
+        GachaSlotUI.OnLockStateChanged += SaveCurrentLockStates;
+    }
+    void OnDisable() { 
+        GachaManager.OnGachaFinished -= UpdateAllSlots;
+        GachaSlotUI.OnLockStateChanged += SaveCurrentLockStates;
+    }
     void Start()
     {
         rerollButton.onClick.AddListener(OnRerollButtonClicked);
         //if (GachaManager.Instance != null) GachaManager.Instance.ExecuteReroll(new bool[4]); 이거 실험적 기능..? 넣을필요 없음
+        InitializeSlotsWithCurrentGear();
+    }
 
-        if (GameManager.Instance.currentStage != 1)
+    // --- (추가) GachaSlotUI가 잠길 때마다 GameManager에 상태를 저장하는 함수 ---
+    private void SaveCurrentLockStates()
+    {
+        if (slots == null) return;
+        bool[] locks = new bool[4];
+        for (int i = 0; i < slots.Length; i++)
         {
-            InitializeSlotsWithCurrentGear();
+            if (slots[i] != null) locks[i] = slots[i].IsLocked();
         }
-        else
+
+        if (GameManager.Instance != null)
         {
-            Debug.Log("GachaUISystem: 스테이지 1이므로 장비 슬롯 초기화를 건너뜁니다.");
-            // (선택 사항) 스테이지 1일 때 슬롯을 비우거나 기본 상태로 만들 수 있습니다.
-            // ClearAllSlots(); // 예시: 슬롯 비우는 함수 호출
+            GameManager.Instance.UpdateGachaLocks(locks);
         }
     }
 
+
     private void InitializeSlotsWithCurrentGear()
     {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("GachaUISystem: GameManager 인스턴스를 찾을 수 없습니다!");
+            return;
+        }
+
+        // 1. 스테이지 1이면 초기화하지 않음 (이전 로직)
+        int currentStage = GameManager.Instance.GetCurrentStage();
+        if (currentStage == 1)
+        {
+            Debug.Log("GachaUISystem: 스테이지 1이므로 장비 슬롯 초기화를 건너뜁니다.");
+            return;
+        }
+
+        if (GachaManager.Instance == null || GachaManager.Instance.equipmentDatabase == null)
+        {
+            Debug.LogError("GachaUISystem: GachaManager 인스턴스 또는 EquipmentDatabase를 찾을 수 없습니다!");
+            return;
+        }
+
+        // 2. (추가) GameManager에서 저장된 "잠금 상태"를 불러옵니다.
+        bool[] savedLocks = GameManager.Instance.GetGachaLocks();
+
         // 4개의 부위 (Head, Torso, Legs, Weapon)를 순회합니다.
         for (int i = 0; i < 4; i++)
         {
@@ -68,6 +104,7 @@ public class GachaUISystem : MonoBehaviour
                     slots[i].UpdateSlot(data);
                     // (선택 사항) 시작 시에는 모든 슬롯을 잠금 해제 상태로 만들 수 있습니다.
                     // slots[i].Unlock(); // GachaSlotUI에 Unlock() 함수가 필요
+                    slots[i].SetLockState(savedLocks[i]);
                 }
                 else
                 {
@@ -85,6 +122,12 @@ public class GachaUISystem : MonoBehaviour
         {
             if (slots[i] != null) locks[i] = slots[i].IsLocked();
         }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateGachaLocks(locks);
+        }
+
         if (GachaManager.Instance != null) GachaManager.Instance.ExecuteReroll(locks);
     }
     // 파라미터 타입을 'EquipmentData.PartType'으로 명확히 지정

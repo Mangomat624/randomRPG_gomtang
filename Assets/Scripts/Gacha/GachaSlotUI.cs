@@ -1,8 +1,10 @@
-// GachaSlotUI.cs (정리된 버전)
+
 
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System; // Action을 사용하기 위해 추가
+
 
 public class GachaSlotUI : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class GachaSlotUI : MonoBehaviour
 
     private bool isLocked = false;
     private EquipmentData currentData;
+
+    public static event Action OnLockStateChanged;
 
     void Start()
     {
@@ -45,6 +49,8 @@ public class GachaSlotUI : MonoBehaviour
     {
         isLocked = !isLocked;
         UpdateLockVisual();
+
+        OnLockStateChanged?.Invoke();
     }
 
     public bool IsLocked() { return isLocked; }
@@ -63,4 +69,13 @@ public class GachaSlotUI : MonoBehaviour
         isLocked = true;
         UpdateLockVisual();
     }
+
+    // --- (변경) ForceLock 대신 SetLockState 함수 ---
+    // GachaUISystem이 씬 로드 시 저장된 상태를 강제로 적용하기 위해 사용
+    public void SetLockState(bool state)
+    {
+        isLocked = state;
+        UpdateLockVisual();
+    }
+    // --- 여기까지 변경 ---
 }

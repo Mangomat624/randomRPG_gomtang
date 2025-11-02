@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -16,11 +17,13 @@ public class GameManager : MonoBehaviour
     public EquipmentData.Grade CurrentTorsoGrade;
     public EquipmentData.Grade CurrentLegsGrade;
     public EquipmentData.Grade CurrentWeaponGrade;
+    private bool[] gachaLockStates = new bool[4] { false, false, false, false };
 
     [Header("Player Permanent Stats")]
     // 강화 씬에서 얻은 영구 스탯을 저장할 변수
     public int permanentBonusAtk = 0;
     public int permanentBonusAcc = 0;
+    public bool isEnd = false;
 
     [Header("누적 전투 기록 (게임 세션)")]
     private float gameStartTime; // 게임 시작 시간
@@ -53,6 +56,7 @@ public class GameManager : MonoBehaviour
         OnTokensChanged?.Invoke(tokens);
         tokens = 4;
         currentStage = 1;
+        isEnd = false;
     }
 
     /// <summary>
@@ -88,6 +92,21 @@ public class GameManager : MonoBehaviour
 
     public int GetCurrentStage() => currentStage;
     public int GetCurrentTokens() => tokens;
+
+    /// <GachaUISystem>이 잠금 상태를 저장할 때 호출합니다.
+    public void UpdateGachaLocks(bool[] locks)
+    {
+        if (locks.Length == 4)
+        {
+            gachaLockStates = locks;
+        }
+    }
+
+    /// <GachaUISystem>이 씬에 다시 로드될 때 잠금 상태를 불러오기 위해 호출합니다.
+    public bool[] GetGachaLocks()
+    {
+        return gachaLockStates;
+    }
 
     /// <summary>
     /// 플레이어가 적에게 입힌 대미지를 누적합니다.

@@ -116,6 +116,7 @@ public class CharacterStats : MonoBehaviour
             maxHP = monsterdata.hp;
             baseDamage = monsterdata.atk;
             evasionRate = monsterdata.eva;
+            unitName = monsterdata.monsterName;
         }
     }
 

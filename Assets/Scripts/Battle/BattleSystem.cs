@@ -4,6 +4,7 @@ using Unity.VisualScripting; // 코루틴을 사용하기 위해 꼭 필요해요!
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System.Text;
+using UnityEngine.UI;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
@@ -37,12 +38,16 @@ public class BattleSystem : MonoBehaviour
 
     public Texture openingPatternTexture;
 
+    private long finalScore;
+    public GameObject nextbutton;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         undertaleGame.gameObject.SetActive(false);
         pseckaGame.gameObject.SetActive(false );
+        nextbutton.gameObject.SetActive(false);
         StartCoroutine(SetupBattle());
     }
 
@@ -226,45 +231,63 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(PlayerTurn());
     }
 
-    IEnumerator EndBattleSequence()
+    IEnumerator GameEndSequence()
     {
-        bool isClear = (state == BattleState.WON);
+        if (state == BattleState.LOST)
+        {
+            GameManager.Instance.isEnd = false;
+        }
+        else { GameManager.Instance.isEnd = true; }
 
         // 1. 점수 계산
-        long finalScore = CalculateFinalScore(isClear);
+        finalScore = CalculateFinalScore(GameManager.Instance.isEnd);
 
-        string playerName = "Player"; // TODO: 실제 플레이어 이름 가져오기
-        yield return StartCoroutine(PostScoreCoroutine(playerName, finalScore, isClear));
+        yield break;
+    }
 
+    IEnumerator EndBattleSequence()
+    {
         if (state == BattleState.WON)
         {
             Debug.Log("승리했습니다!");
             GameManager.Instance.currentStage += 1;
-            switch (GameManager.Instance.currentStage)
+            if (GameManager.Instance.currentStage >= 11)
             {
-                case 4:
-                    SceneManager.LoadScene("뽑기");
-                    GameManager.Instance.tokens += 6;
-                    break;
-                case 7:
-                    SceneManager.LoadScene("뽑기");
-                    GameManager.Instance.tokens += 8;
-                    break;
-                case 10:
-                    SceneManager.LoadScene("뽑기");
-                    GameManager.Instance.tokens += 8;
-                    break;
-                default:
-                    break;
+                Debug.Log("클리어");
+                StartCoroutine(GameEndSequence());
+                yield return StartCoroutine(PostScoreCoroutine(playerStats.unitName, finalScore));
+            }
+            else
+            {
+                yield return new WaitForSeconds(1f);
+                switch (GameManager.Instance.currentStage)
+                {
+                    case 4:
+                        SceneManager.LoadScene("뽑기");
+                        GameManager.Instance.tokens += 6;
+                        break;
+                    case 7:
+                        SceneManager.LoadScene("뽑기");
+                        GameManager.Instance.tokens += 8;
+                        break;
+                    case 10:
+                        SceneManager.LoadScene("뽑기");
+                        GameManager.Instance.tokens += 8;
+                        break;
+                    default:
+                        nextbutton.SetActive(true);
+                        break;
+
+                        
+                }
             }
         }
         else if (state == BattleState.LOST)
-        {
+        {   
             Debug.Log("패배했습니다...");
+            StartCoroutine(GameEndSequence());
+            yield return StartCoroutine(PostScoreCoroutine(playerStats.unitName, finalScore));
         }
-
-        // 1초 기다립니다.
-        yield return new WaitForSeconds(1f);
     }
     private long CalculateFinalScore(bool isClear)
     {
@@ -324,10 +347,12 @@ public class BattleSystem : MonoBehaviour
         public int isEnd;
     }
 
-    private IEnumerator PostScoreCoroutine(string playerName, long finalScore, bool didClear) // <- isClear 파라미터 추가
+    private IEnumerator PostScoreCoroutine(string playerName, long finalScore) // <- isClear 파라미터 추가
     {
         string url = "https://server-mango.kro.kr/db/ranking";
         string apiKey = "MangoKey_43f83185-67e3-4f77-83a9-35b951e0af8d";
+
+        bool didClear = GameManager.Instance.isEnd;
 
         // 1. 보낼 데이터 JSON으로 생성 (isClear 포함)
         PostRankingData data = new PostRankingData

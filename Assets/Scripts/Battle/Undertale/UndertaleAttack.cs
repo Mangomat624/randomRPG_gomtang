@@ -64,25 +64,25 @@ public class UndertaleAttack : MonoBehaviour
         if (IsHit(indicatorPos, perfectZone))
         {
             result.judgement = "Perfect";
-            result.accuracyBonus = 30;
+            result.accuracyBonus = 42;
             result.damageMultiplier = 1.2f;
         }
         else if (IsHit(indicatorPos, greatZone))
         {
             result.judgement = "Great";
-            result.accuracyBonus = 15;
+            result.accuracyBonus = 21;
             result.damageMultiplier = 1.1f;
         }
         else if (IsHit(indicatorPos, niceZone))
         {
             result.judgement = "Nice";
-            result.accuracyBonus = 7;
+            result.accuracyBonus = 12;
             result.damageMultiplier = 1.05f;
         }
         else if (IsHit(indicatorPos, normalZone))
         {
             result.judgement = "Normal";
-            result.accuracyBonus = 0;
+            result.accuracyBonus = 6;
             result.damageMultiplier = 1.0f;
         }
         else

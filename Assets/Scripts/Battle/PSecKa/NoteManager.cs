@@ -288,7 +288,6 @@ public class NoteManager : MonoBehaviour
     {
         AttackResult finalResult = new AttackResult();
         int successCount = 0;
-        finalResult.accuracyBonus = 0; // 적중률 보너스 없음
 
         foreach (string r in results)
         {
@@ -299,12 +298,36 @@ public class NoteManager : MonoBehaviour
         }
 
         // 10개 노트 기준 데미지 배율 (기존 5개 기준에서 확장)
-        if (successCount <= 0) finalResult.damageMultiplier = 0f;
-        else if (successCount <= 2) finalResult.damageMultiplier = 0.5f;
-        else if (successCount <= 4) finalResult.damageMultiplier = 0.7f;
-        else if (successCount <= 6) finalResult.damageMultiplier = 1.0f;
-        else if (successCount <= 8) finalResult.damageMultiplier = 1.2f;
-        else finalResult.damageMultiplier = 1.5f; // 9~10개 성공
+        if (successCount <= 0)
+        {
+            finalResult.damageMultiplier = 0f;
+            finalResult.accuracyBonus = 0; // 적중률 보너스 없음
+        }
+        else if (successCount <= 2)
+        {
+            finalResult.damageMultiplier = 0.5f;
+            finalResult.accuracyBonus = 3; // 적중률 보너스 없음
+        }
+        else if (successCount <= 4)
+        {
+            finalResult.damageMultiplier = 0.7f;
+            finalResult.accuracyBonus = 6; 
+        }
+        else if (successCount <= 6)
+        {
+            finalResult.damageMultiplier = 1.0f;
+            finalResult.accuracyBonus = 12;
+        }
+        else if (successCount <= 8)
+        {
+            finalResult.accuracyBonus = 21;
+            finalResult.damageMultiplier = 1.2f;
+        }
+        else
+        {
+            finalResult.damageMultiplier = 1.5f; // 9~10개 성공
+            finalResult.accuracyBonus = 42; 
+        }
 
         finalResult.judgement = $"{successCount} Hits!";
 
