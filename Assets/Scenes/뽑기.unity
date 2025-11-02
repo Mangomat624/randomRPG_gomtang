@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b25f4f82cf0e24493e7bac5a503155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: a3c1ab7044baa0a4d9485dc75a85ef74, type: 3}
+  targetSceneName: "\uAC15\uD654"
 --- !u!1 &948091065
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,6 +1111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStage: 1
   tokens: 1000
+  playerName: "\uD50C\uB808\uC774\uC5B4"
   CurrentHeadGrade: 7
   CurrentTorsoGrade: 7
   CurrentLegsGrade: 7
