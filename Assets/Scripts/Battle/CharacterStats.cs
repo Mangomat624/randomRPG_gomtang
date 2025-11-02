@@ -1,5 +1,4 @@
 using System.Collections; // 코루틴 사용
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using System; // Action 사용
 public class CharacterStats : MonoBehaviour
@@ -51,6 +50,7 @@ public class CharacterStats : MonoBehaviour
 
     public void LoadAllPartsStats_P()
     {
+        unitName = GameManager.Instance.playerName;
         foreach (EquipmentData.PartType part in System.Enum.GetValues(typeof(EquipmentData.PartType)))
         {
             EquipmentData.Grade currentPartGrade; // 이 부위의 현재 등급을 저장할 변수

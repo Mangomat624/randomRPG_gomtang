@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,6 +9,7 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     public int currentStage;
     public int tokens = 4;
+    public string playerName = "플레이어"; // 기본 이름
 
     [Header("Player Equipment")]
 
