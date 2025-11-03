@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 74f933e2efd6aa147b6b8b0fa7c4c28a
+guid: 6248cf40627c46d4e839afc0d74f634f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4139863120071149577
-    second: "\uC2AC\uB77C\uC784idle_0"
+      213: 2530564911472380330
+    second: button_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\uC2AC\uB77C\uC784idle_0"
+      name: button_0
       rect:
         serializedVersion: 2
-        x: 179
-        y: 248
-        width: 674
-        height: 513
+        x: 91
+        y: 267
+        width: 843
+        height: 504
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 15, y: 16, z: 18, w: 19}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7f73b6d1d604c86c0800000000000000
-      internalID: -4139863120071149577
+      spriteID: aa90165216f5e1320800000000000000
+      internalID: 2530564911472380330
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 91106c5e877f9cb4aac8ae5bfb385fd9
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\uC2AC\uB77C\uC784idle_0": -4139863120071149577
+      button_0: 2530564911472380330
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

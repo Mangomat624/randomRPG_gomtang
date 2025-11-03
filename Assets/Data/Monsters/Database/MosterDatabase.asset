@@ -12,4 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aab5cdc30111bae47ba00b73f9cafca7, type: 3}
   m_Name: MosterDatabase
   m_EditorClassIdentifier: 
-  allMonsters: []
+  allMonsters:
+  - {fileID: 11400000, guid: 55c31dff86315054f8221148e37ae4c0, type: 2}
+  - {fileID: 11400000, guid: ceccabc500b1865488446065b367783b, type: 2}
+  - {fileID: 11400000, guid: 4b394c10b554bad4a9ebc6a578a6de8b, type: 2}
+  - {fileID: 11400000, guid: 2a0ff49b7fe22ba43a90f0894df35a1a, type: 2}
+  - {fileID: 11400000, guid: 945350fcd6c07b94782866927287ab6f, type: 2}
+  - {fileID: 11400000, guid: 147e9f47122a37b458977e1fcdb9fb01, type: 2}
+  - {fileID: 11400000, guid: f16ef99906cfb0f4f8697dbf893c2d90, type: 2}
+  - {fileID: 11400000, guid: f9028a739aabb0c488141680dba902ce, type: 2}
+  - {fileID: 11400000, guid: 023a2be781aca984c8f637e5d285f049, type: 2}
+  - {fileID: 11400000, guid: 8685ad955a2f33440a8b284b964ba6ad, type: 2}
+  - {fileID: 11400000, guid: dcf0aab79e7d2454395ffdc042330d11, type: 2}
