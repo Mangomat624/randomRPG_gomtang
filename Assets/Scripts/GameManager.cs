@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
     // 토큰 개수 변경 시 UI 스크립트에 알려줄 이벤트
     public static event Action<int> OnTokensChanged;
 
+    public bool hasNewRankToShow = false;
+
     void Awake()
     {
         // 싱글톤 패턴 설정

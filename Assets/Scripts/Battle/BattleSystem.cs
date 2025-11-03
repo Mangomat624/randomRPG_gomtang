@@ -210,17 +210,23 @@ public class BattleSystem : MonoBehaviour
 
             Debug.Log("플레이어가 적의 공격을 받습니다.");
             int enemydamage = enemyStats.baseDamage - playerStats.defensivePower;
-            if (GameManager.Instance != null)
+            if (enemydamage < 0)
             {
-                GameManager.Instance.AddDamageTaken(enemydamage);
+                enemydamage = 0;
             }
-            bool isDead = playerStats.TakeDamage(enemydamage);
-            if (isDead)
+            else 
             {
-                state = BattleState.LOST;
-                yield break; // 전투 종료
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.AddDamageTaken(enemydamage);
+                }
+                bool isDead = playerStats.TakeDamage(enemydamage);
+                if (isDead)
+                {
+                    state = BattleState.LOST;
+                    yield break; // 전투 종료
+                }
             }
-
         }
 
         yield return new WaitForSeconds(1.5f);
@@ -254,6 +260,7 @@ public class BattleSystem : MonoBehaviour
                 Debug.Log("클리어");
                 StartCoroutine(GameEndSequence());
                 yield return StartCoroutine(PostScoreCoroutine(playerStats.unitName, finalScore));
+                GameManager.Instance.hasNewRankToShow = true;
             }
             else
             {
@@ -285,6 +292,7 @@ public class BattleSystem : MonoBehaviour
             Debug.Log("패배했습니다...");
             StartCoroutine(GameEndSequence());
             yield return StartCoroutine(PostScoreCoroutine(playerStats.unitName, finalScore));
+            GameManager.Instance.hasNewRankToShow = true;
         }
     }
     private long CalculateFinalScore(bool isClear)

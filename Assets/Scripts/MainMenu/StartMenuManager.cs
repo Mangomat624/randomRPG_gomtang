@@ -1,27 +1,43 @@
-using UnityEngine;
-using UnityEngine.UI; // Button, Image »ç¿ë
-using TMPro; // TextMeshPro InputField »ç¿ë
-using UnityEngine.SceneManagement; // Scene ÀüÈ¯
+// StartMenuManager.cs (¼öÁ¤µÈ ÀüÃ¼ ÄÚµå)
 
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro; // TextMeshPro
+using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions; // Á¤±Ô½Ä(Regex)
+using System.Collections; // ÄÚ·çÆ¾
 
 public class StartMenuManager : MonoBehaviour
 {
     [Header("UI ¿ä¼Ò ¿¬°á")]
-    public Button startButton; // "°ÔÀÓ ½ÃÀÛ" ¹öÆ°
-    public GameObject nameInputPanel; // "ÀÌ¸§ ÀÔ·ÂÃ¢" ÆĞ³Î
-    public TMP_InputField nameInputField; // ÀÌ¸§ ÀÔ·Â ÇÊµå
-    public Button confirmButton; // ÀÌ¸§ ÀÔ·ÂÃ¢ÀÇ "È®ÀÎ" ¹öÆ°
+    public Button startButton;
+    public GameObject nameInputPanel;
+    public TMP_InputField nameInputField;
+    public Button confirmButton;
+    public TextMeshProUGUI warningText; // °æ°í ÅØ½ºÆ®
 
-    public string nextSceneName = "»Ì±â"; // ÀÌ¸§ ÀÔ·Â ÈÄ ³Ñ¾î°¥ ¾À ÀÌ¸§
+    [Header("¼³Á¤")]
+    public string nextSceneName = "ChapterSelect";
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private const string NameValidationPattern = @"^[a-zA-Z0-9°¡-ÆR]{2,10}$";
+    private const string WarningMessage = "ÀÌ¸§Àº ÃÖ¼Ò 2ÀÚ¿¡¼­ ÃÖ´ë 10ÀÚ±îÁö °¡´ÉÇÏ¸ç ¿µ¹® ¶Ç´Â ÇÑ±Û°ú ¼ıÀÚ Á¶ÇÕ¸¸ °¡´ÉÇÕ´Ï´Ù.";
+
+    private Coroutine warningCoroutine;
+    private Color defaultWarningColor = Color.white; // ±âº» »ö»ó(Èò»ö) ÀúÀå
+
     void Start()
     {
-        // 1. ½ÃÀÛ ½Ã ÀÌ¸§ ÀÔ·ÂÃ¢Àº ¹«Á¶°Ç ¼û±é´Ï´Ù.
         if (nameInputPanel != null)
             nameInputPanel.SetActive(false);
 
-        // 2. °¢ ¹öÆ°¿¡ Å¬¸¯ ÀÌº¥Æ®¸¦ ¿¬°áÇÕ´Ï´Ù.
+        // (º¯°æ) WarningText¸¦ ¼û±âÁö ¾Ê°í, ±âº» ¸Ş½ÃÁö¿Í »ö»óÀ¸·Î ¼³Á¤ÇÕ´Ï´Ù.
+        if (warningText != null)
+        {
+            warningText.text = WarningMessage;
+            warningText.color = defaultWarningColor;
+            warningText.gameObject.SetActive(false); // ÀÌ¸§ ÀÔ·ÂÃ¢ÀÌ ¶ã ¶§±îÁö´Â ¼û±è
+        }
+
         if (startButton != null)
             startButton.onClick.AddListener(OnStartButtonClicked);
 
@@ -29,43 +45,84 @@ public class StartMenuManager : MonoBehaviour
             confirmButton.onClick.AddListener(OnConfirmButtonClicked);
     }
 
-    /// <summary>
-    /// '°ÔÀÓ ½ÃÀÛ' ¹öÆ°À» ´­·¶À» ¶§ È£ÃâµË´Ï´Ù.
-    /// </summary>
     private void OnStartButtonClicked()
     {
-        // ÀÌ¸§ ÀÔ·ÂÃ¢À» ÄÕ´Ï´Ù.
         if (nameInputPanel != null)
             nameInputPanel.SetActive(true);
 
-        // (¼±ÅÃ) ½ÃÀÛ ¹öÆ°Àº ¼û±é´Ï´Ù.
+        // (º¯°æ) ÀÌ¸§ ÀÔ·ÂÃ¢À» ÄÓ ¶§ WarningTextµµ ÇÔ²² ÄÕ´Ï´Ù.
+        if (warningText != null)
+        {
+            // È¤½Ã ÀÌÀü¿¡ »¡°£»öÀ¸·Î ³²¾ÆÀÖ¾ú´Ù¸é Èò»öÀ¸·Î ¸®¼Â
+            if (warningCoroutine != null)
+            {
+                StopCoroutine(warningCoroutine);
+                warningCoroutine = null;
+            }
+            warningText.text = WarningMessage;
+            warningText.color = defaultWarningColor;
+            warningText.gameObject.SetActive(true); // ÅØ½ºÆ®¸¦ ÄÔ
+        }
+
         if (startButton != null)
             startButton.gameObject.SetActive(false);
     }
-    /// <summary>
-    /// ÀÌ¸§ ÀÔ·ÂÃ¢ÀÇ 'È®ÀÎ' ¹öÆ°À» ´­·¶À» ¶§ È£ÃâµË´Ï´Ù.
-    /// </summary>
+
     private void OnConfirmButtonClicked()
     {
-        // 1. ÀÔ·ÂµÈ ÀÌ¸§À» °¡Á®¿É´Ï´Ù.
         string newName = nameInputField.text;
 
-        // 2. ÀÌ¸§ÀÌ ºñ¾îÀÖÁö ¾ÊÀºÁö È®ÀÎÇÕ´Ï´Ù.
-        if (string.IsNullOrEmpty(newName))
+        if (Regex.IsMatch(newName, NameValidationPattern))
         {
-            // (¼±ÅÃ) ¿©±â¿¡ "ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä!" °°Àº °æ°í UI¸¦ ¶ç¿ï ¼ö ÀÖ½À´Ï´Ù.
-            Debug.LogWarning("ÀÌ¸§ÀÌ ºñ¾îÀÖ½À´Ï´Ù!");
-            return;
-        }
+            // --- À¯È¿¼º °Ë»ç ¼º°ø ---
+            if (warningText != null)
+            {
+                if (warningCoroutine != null) // È¤½Ã ±ôºıÀÌ´Â ÁßÀÌ¾ú´Ù¸é ÁßÁö
+                {
+                    StopCoroutine(warningCoroutine);
+                    warningCoroutine = null;
+                }
+                warningText.gameObject.SetActive(false); // ¼º°øÇßÀ¸´Ï ¼û±è
+            }
 
-        // 3. (ÇÙ½É) GameManager¿¡ ÀÌ¸§À» ÀúÀåÇÕ´Ï´Ù.
-        if (GameManager.Instance != null)
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.playerName = newName;
+            }
+            SceneManager.LoadScene(nextSceneName);
+        }
+        else
         {
-            GameManager.Instance.playerName = newName;
-            Debug.Log($"ÇÃ·¹ÀÌ¾î ÀÌ¸§ÀÌ '{newName}'(À¸)·Î ÀúÀåµÇ¾ú½À´Ï´Ù.");
+            // --- À¯È¿¼º °Ë»ç ½ÇÆĞ ---
+            if (warningText != null)
+            {
+                // (º¯°æ) ÀÌ¹Ì ½ÇÇà ÁßÀÎ ÄÚ·çÆ¾ÀÌ ÀÖ´Ù¸é ¸ØÃß°í »õ·Î ½ÃÀÛ
+                if (warningCoroutine != null)
+                {
+                    StopCoroutine(warningCoroutine);
+                }
+                warningCoroutine = StartCoroutine(ShowWarningBlink());
+            }
+            Debug.LogWarning($"ÀÌ¸§ À¯È¿¼º °Ë»ç ½ÇÆĞ: {newName}");
         }
+    }
 
-        // 4. ´ÙÀ½ ¾À(¿¹: ChapterSelect)À¸·Î ³Ñ¾î°©´Ï´Ù.
-        SceneManager.LoadScene(nextSceneName);
+    // (º¯°æ) °æ°í ÅØ½ºÆ®¸¦ "±ôºı"ÀÌ°Ô ÇÏ´Â ÄÚ·çÆ¾
+    private IEnumerator ShowWarningBlink()
+    {
+        // 1. ÅØ½ºÆ®°¡ ÄÑÁ® ÀÖ´ÂÁö È®ÀÎ (ÀÌ¹Ì ÄÑÁ® ÀÖÀ½)
+        warningText.text = WarningMessage;
+
+        // 2. »¡°£»öÀ¸·Î º¯°æ
+        warningText.color = Color.red;
+
+        // 3. 1ÃÊ µ¿¾È ±â´Ù¸³´Ï´Ù.
+        yield return new WaitForSeconds(1f);
+
+        // 4. 1ÃÊ°¡ Áö³ª¸é ´Ù½Ã ±âº» »ö»ó(Èò»ö)À¸·Î º¯°æÇÕ´Ï´Ù.
+        warningText.color = defaultWarningColor;
+
+        // 5. ÄÚ·çÆ¾ÀÌ ³¡³µÀ½À» ¾Ë¸³´Ï´Ù.
+        warningCoroutine = null;
     }
 }

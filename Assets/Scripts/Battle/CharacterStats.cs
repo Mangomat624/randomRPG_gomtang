@@ -31,6 +31,8 @@ public class CharacterStats : MonoBehaviour
     [Header("Visual Effect")]
     public float squashDuration = 1f; // 찌그러지는 데 걸리는 시간
 
+    [Header("Only Enemy")]
+    public string enemyDesc; // 적 설명
 
     public Action OnDeathAnimationFinished;
 
@@ -117,6 +119,7 @@ public class CharacterStats : MonoBehaviour
             baseDamage = monsterdata.atk;
             evasionRate = monsterdata.eva;
             unitName = monsterdata.monsterName;
+            enemyDesc = monsterdata.des;
         }
     }
 

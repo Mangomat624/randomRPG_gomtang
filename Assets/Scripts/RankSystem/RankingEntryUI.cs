@@ -77,15 +77,32 @@ public class RankingEntryUI : MonoBehaviour
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    /// <summary>
+    /// (새 함수) "내 랭킹" UI 전용 표시 함수
+    /// </summary>
+    public void SetMyData(RankingEntry myEntry)
     {
-        
-    }
+        // 1. "등수" 텍스트 대신 "내 기록" 등으로 변경
+        if (rankText != null)
+            rankText.text = "내 기록";
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (nameText != null)
+            nameText.text = myEntry.playerName;
+
+        if (scoreText != null)
+            scoreText.text = myEntry.score.ToString("N0");
+
+        // 2. 1,2,3등 배경색 로직은 필요 없으므로 기본색으로 설정
+        if (backgroundImage != null)
+            backgroundImage.color = defaultColor;
+
+        // 3. isEnd 이미지 색상 설정
+        if (isEndImage != null)
+        {
+            if (myEntry.isEnd == 1)
+                isEndImage.color = Color.white;
+            else
+                isEndImage.color = isEndGrayColor;
+        }
     }
 }

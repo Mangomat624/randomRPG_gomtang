@@ -28,13 +28,15 @@ public class BattleUISystem : MonoBehaviour
     public Slider E_Healthbar; // 인스펙터 창에서 Slider 컴포넌트를 연결할 변수
     public TextMeshProUGUI E_HPText;
     public TextMeshProUGUI EnemyText;
-
+    public TextMeshProUGUI EnemyDesc;
 
     private Coroutine _healthChangeCoroutine;
 
     void Awake()
     {
         ChangeName(playerStats.unitName, enemyStats.unitName);
+        ChangeEnemyDesc(enemyStats.enemyDesc);
+
 
         int currentStage = GameManager.Instance.GetCurrentStage(); // 예시 호출
         SetBackgroundForStage(currentStage);
@@ -171,5 +173,10 @@ public class BattleUISystem : MonoBehaviour
     {
         PlayerText.text = P_name;
         EnemyText.text = E_name;
+    }
+
+    public void ChangeEnemyDesc(string E_desc)
+    {
+        EnemyDesc.text = E_desc;
     }
 }

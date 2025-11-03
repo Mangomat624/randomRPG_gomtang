@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: 5
   m_EditorClassIdentifier: 
   stage: 5
-  monsterName: "\uACE0\uC2B4\uB3C4\uCE58(\uD06C\uAE30 50m) "
+  monsterName: "\uACE0\uC2B4\uB3C4\uCE58"
   hp: 500
   atk: 50
   eva: 20
+  des: "\uD06C\uAE30\uAC00 50m\uB098 \uB41C\uB2E4."

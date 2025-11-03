@@ -25,7 +25,7 @@ public class RankingSystem : MonoBehaviour
     }
     private IEnumerator GetRankingsCoroutine()
     {
-        if (statusText != null) statusText.text = "랭킹을 불러오는 중...";
+        if (statusText != null) statusText.text = "랭킹을 불러오는 중..."   ;
 
         // 1. UnityWebRequest 객체 생성
         UnityWebRequest www = UnityWebRequest.Get(rankingUrl);

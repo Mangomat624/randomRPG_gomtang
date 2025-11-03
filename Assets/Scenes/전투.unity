@@ -498,6 +498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStage: 7
   tokens: 1000
+  playerName: "\uD50C\uB808\uC774\uC5B4"
   CurrentHeadGrade: 3
   CurrentTorsoGrade: 3
   CurrentLegsGrade: 3
@@ -3185,7 +3186,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC124\uBA85\uC124\uBA85\uC124\uBA85\uC124\uBA85\uC124\uBA85"
+  m_text: "\uC8FC\uC778\uACF5\uC774\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
   m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
@@ -3307,6 +3308,7 @@ MonoBehaviour:
   defensivePower: 0
   uisysytem: {fileID: 1959311392}
   squashDuration: 1
+  enemyDesc: 
 --- !u!4 &1339930860
 Transform:
   m_ObjectHideFlags: 0
@@ -3981,6 +3983,7 @@ MonoBehaviour:
   defensivePower: 0
   uisysytem: {fileID: 1959311392}
   squashDuration: 1
+  enemyDesc: 
 --- !u!1 &1613118581
 GameObject:
   m_ObjectHideFlags: 0
@@ -4620,6 +4623,7 @@ MonoBehaviour:
   E_Healthbar: {fileID: 2035989797}
   E_HPText: {fileID: 1621433232}
   EnemyText: {fileID: 873440137}
+  EnemyDesc: {fileID: 275204300}
 --- !u!4 &1959311393
 Transform:
   m_ObjectHideFlags: 0
