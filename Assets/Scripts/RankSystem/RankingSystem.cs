@@ -9,6 +9,7 @@ public class RankingSystem : MonoBehaviour
     [Header("서버 설정")]
     private string rankingUrl = "https://server-mango.kro.kr/db/ranking";
     private string apiKey = "MangoKey_43f83185-67e3-4f77-83a9-35b951e0af8d";
+    private string myRankingBaseUrl = "https://server-mango.kro.kr/db/ranking?playerName="; // (새 API 주소)
 
     [Header("UI 설정")]
     // 랭킹 항목 1줄을 표시할 UI 프리팹 (예: TextMeshProUGUI 컴포넌트만 있는 오브젝트)
@@ -16,52 +17,106 @@ public class RankingSystem : MonoBehaviour
 
     public Transform contentParent;
 
+    public RankingEntryUI myRankDisplay; // 'MyRankDisplay' 오브젝트 연결
+
     [Header("UI 표시 (로딩/에러)")]
     public TextMeshProUGUI statusText; // "로딩 중..." 또는 "에러 발생"을 표시할 텍스트
     void Start()
     {
         // 씬이 시작되면 랭킹을 불러오는 코루틴을 실행합니다.
-        StartCoroutine(GetRankingsCoroutine());
+        StartCoroutine(GetRankingsCoroutine(rankingUrl, DisplayRankings));
+
+        CheckAndDisplayMyRank();
     }
-    private IEnumerator GetRankingsCoroutine()
+
+    private void CheckAndDisplayMyRank()
     {
-        if (statusText != null) statusText.text = "랭킹을 불러오는 중..."   ;
+        if (GameManager.Instance == null || myRankDisplay == null) return;
 
-        // 1. UnityWebRequest 객체 생성
-        UnityWebRequest www = UnityWebRequest.Get(rankingUrl);
-
-        // 2. (핵심) 커스텀 헤더 추가
-        www.SetRequestHeader("x-api-key", apiKey);
-
-        // 3. 웹 요청 보내고 응답 기다리기
-        yield return www.SendWebRequest();
-
-        // 4. 결과 확인
-        if (www.result == UnityWebRequest.Result.Success)
+        // 1. GameManager에 "새 랭킹" 깃발이 켜져 있는지 확인
+        if (GameManager.Instance.hasNewRankToShow)
         {
-            // 5. 성공: JSON 데이터 파싱
-            string rawJson = www.downloadHandler.text;
+            // 2. 깃발이 켜져 있으면, "내 랭킹"을 서버에서 가져오는 코루틴 시작
+            string myName = GameManager.Instance.playerName;
+            string myRankUrl = myRankingBaseUrl + UnityWebRequest.EscapeURL(myName);
 
-            // 6. JsonUtility가 배열을 읽을 수 있도록 수동으로 Wrapper 씌우기
-            string wrappedJson = "{\"items\":" + rawJson + "}";
+            StartCoroutine(GetMyRankCoroutine(myRankUrl));
 
-            // 7. JSON을 RankingListWrapper 클래스로 변환
-            RankingListWrapper wrapper = JsonUtility.FromJson<RankingListWrapper>(wrappedJson);
-
-            // 8. (선택 사항) 점수(score) 기준으로 내림차순 정렬
-            //wrapper.items.Sort((a, b) => b.score.CompareTo(a.score));
-
-            // 9. UI 생성
-            if (statusText != null) statusText.text = "랭킹"; // 로딩 완료
-            DisplayRankings(wrapper.items);
+            // 3. 깃발을 다시 내리기 (중복 실행 방지)
+            GameManager.Instance.hasNewRankToShow = false;
         }
         else
         {
-            // 10. 실패: 에러 메시지 표시
+            // 4. 깃발이 꺼져 있으면 "내 랭킹" UI를 숨깁니다.
+            myRankDisplay.gameObject.SetActive(false);
+        }
+    }
+
+    // --- (추가) "내 랭킹"만 가져오는 코루틴 ---
+    private IEnumerator GetMyRankCoroutine(string url)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        www.SetRequestHeader("x-api-key", apiKey);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            string rawJson = www.downloadHandler.text;
+
+            // (중요) 서버가 배열 [...]로 반환한다고 가정
+            string wrappedJson = "{\"items\":" + rawJson + "}";
+            RankingListWrapper wrapper = JsonUtility.FromJson<RankingListWrapper>(wrappedJson);
+
+            // 1. 배열에서 첫 번째 항목(내 랭킹)을 찾습니다.
+            if (wrapper.items != null && wrapper.items.Count > 0)
+            {
+                RankingEntry myEntry = wrapper.items[0];
+
+                // 2. 'MyRankDisplay' UI에 데이터 채우기 (새로 만든 함수 호출)
+                myRankDisplay.SetMyData(myEntry);
+                myRankDisplay.gameObject.SetActive(true); // UI 켜기
+            }
+            else
+            {
+                Debug.LogWarning("내 랭킹을 GET했으나 데이터가 비어있습니다: " + rawJson);
+                myRankDisplay.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("내 랭킹 GET 실패: " + www.error);
+            myRankDisplay.gameObject.SetActive(false);
+        }
+    }
+
+    // --- (변경) 기존 랭킹 리스트 코루틴 (재사용 가능하도록 수정) ---
+    private IEnumerator GetRankingsCoroutine(string url, System.Action<List<RankingEntry>> onComplete)
+    {
+        if (statusText != null) statusText.text = "랭킹을 불러오는 중...";
+
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        www.SetRequestHeader("x-api-key", apiKey);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            string rawJson = www.downloadHandler.text;
+            string wrappedJson = "{\"items\":" + rawJson + "}";
+            RankingListWrapper wrapper = JsonUtility.FromJson<RankingListWrapper>(wrappedJson);
+
+            // (정렬)
+            wrapper.items.Sort((a, b) => b.score.CompareTo(a.score));
+
+            if (statusText != null) statusText.text = "랭킹";
+
+            // (콜백 실행)
+            onComplete?.Invoke(wrapper.items);
+        }
+        else
+        {
             Debug.LogError("랭킹 로드 실패: " + www.error);
             if (statusText != null) statusText.text = "랭킹을 불러올 수 없습니다.\n" + www.error;
         }
-
     }
 
     private void DisplayRankings(List<RankingEntry> rankingList)
