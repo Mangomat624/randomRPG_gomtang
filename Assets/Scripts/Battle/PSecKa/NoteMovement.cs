@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NoteMovement : MonoBehaviour
 {
-    public float speed = 10f;
+    public float speed = 15f;
     public int laneIndex; // 0=Up, 1=Middle, 2=Bottom
 
     // 노트의 파괴는 NoteManager가 전담하므로
