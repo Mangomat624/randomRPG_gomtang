@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d88d0edc177f4f844ad2c7ea4da72adb
+guid: 0a9d61d95e797fb479ec958144d57220
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -103,13 +103,13 @@ TextureImporter:
       name: longbutton3_0
       rect:
         serializedVersion: 2
-        x: 9
+        x: 10
         y: 137
-        width: 2030
-        height: 246
+        width: 2028
+        height: 245
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 10, y: 9, z: 10, w: 10}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 141ab09404ddf2442a21998f0850e119
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
