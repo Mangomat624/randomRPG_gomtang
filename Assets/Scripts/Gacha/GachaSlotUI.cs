@@ -21,6 +21,7 @@ public class GachaSlotUI : MonoBehaviour
 
     void Start()
     {
+        itemIconImage.sprite = null;
         lockButton.onClick.AddListener(OnLockButtonClicked);
         UpdateLockVisual();
     }
@@ -31,6 +32,7 @@ public class GachaSlotUI : MonoBehaviour
         if (currentData != null)
         {
             gradeText.text = data.grade.ToString();
+            itemIconImage.sprite = data.itemIcon;
             gameObject.SetActive(true);
         }
         else

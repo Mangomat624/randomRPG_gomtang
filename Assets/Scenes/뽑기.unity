@@ -2107,25 +2107,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 668134909}
     m_Modifications:
-    - target: {fileID: 3714951376635886473, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-    - target: {fileID: 3714951376635886473, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4268540927559201546, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
       propertyPath: m_Name
       value: Slot_Prefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 5540056040817737917, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-    - target: {fileID: 5540056040817737917, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8660833008590390147, guid: a3e50d4995ebf984ebb942b925a3d341, type: 3}
       propertyPath: m_Pivot.x

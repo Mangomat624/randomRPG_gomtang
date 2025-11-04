@@ -19,3 +19,4 @@ MonoBehaviour:
   eva: 0
   atk: 15
   acc: 11
+  itemIcon: {fileID: -8527808689296755452, guid: 891e6b276f20ae34eb14e6f2bd959b45, type: 3}

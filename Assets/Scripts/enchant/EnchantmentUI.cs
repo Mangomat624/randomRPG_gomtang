@@ -12,6 +12,7 @@ public class EnhancementUI : MonoBehaviour
     public TextMeshProUGUI bonusAtkText;
     public TextMeshProUGUI bonusAccText;
     public Button enhanceButton; // 강화 시도 버튼
+    public GameObject enhanceObject; // 강화 시도 버튼
 
     // ▼▼▼ '강화 시작' 버튼 변수 추가 ▼▼▼
     public Button startButton;
@@ -30,6 +31,8 @@ public class EnhancementUI : MonoBehaviour
 
     void Start()
     {
+        enhanceObject.SetActive(false);
+        enhanceButton.gameObject.SetActive(false);
         // 강화 버튼을 누르면 AttemptEnhance 함수 호출
         enhanceButton.onClick.AddListener(EnhancementManager.Instance.AttemptEnhance);
 
@@ -48,6 +51,8 @@ public class EnhancementUI : MonoBehaviour
 
         // 2. 시작 버튼은 한 번만 누를 수 있도록 비활성화
         startButton.gameObject.SetActive(false);
+        enhanceObject.SetActive(true);
+        enhanceButton.gameObject.SetActive(true);
     }
 
     private void UpdateStatText(int level, int atk, int acc)
