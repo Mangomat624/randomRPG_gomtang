@@ -17,8 +17,7 @@ MonoBehaviour:
   hp: 600
   atk: 55
   eva: 25
-  des: "\uB3CC\uB85C \uB418\uC5B4 \uCCB4\uB825\uC740 \uB192\uC9C0\uB9CC \uC6C0\uC9C1\uC784\uC774
-    \uB454\uD558\uB2E4."
+  des: "\uCCB4\uB825/600.\uACF5\uACA9\uB825/55.\uD68C\uD53C/25"
   idle: {fileID: 3787115329016898437, guid: 677aa85d4c163c0428d157938c9d3651, type: 3}
   fight: {fileID: -253868714458461122, guid: f29b907c0aec15441bf6b6f57379b8a4, type: 3}
   died: {fileID: 6870040872498654305, guid: 4ae09500e71cd7342ab270e79235ceea, type: 3}
