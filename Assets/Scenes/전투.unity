@@ -496,7 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 054a6acc2785ba246abc79947b112363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 7
+  currentStage: 1
   tokens: 1000
   playerName: "\uD50C\uB808\uC774\uC5B4"
   CurrentHeadGrade: 3
@@ -771,7 +771,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -44.90515}
+  m_AnchoredPosition: {x: 0, y: -46}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &275204300
@@ -796,8 +796,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC124\uBA85\uC124\uBA85\uC124\uBA85\uC124\uBA85\uC124\uBA85"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1711,8 +1711,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC801 \uC774\uB984"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2267,8 +2267,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'HP : 1234'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3053,8 +3053,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB098\uC758 \uCE90\uB9AD\uD130 \uC774\uB984"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3164,7 +3164,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -62.46517, y: -140.53343}
+  m_AnchoredPosition: {x: -62.46517, y: -143.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1332223160
@@ -3189,8 +3189,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC8FC\uC778\uACF5\uC774\uB2E4."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3309,8 +3309,15 @@ MonoBehaviour:
   defensivePower: 0
   uisysytem: {fileID: 1959311392}
   characterImage: {fileID: 0}
+  characterIdle: {fileID: 0}
+  characterAttack: {fileID: 0}
+  characterDied: {fileID: 0}
   squashDuration: 1
   enemyDesc: 
+  shakeDuration: 0.3
+  shakeMagnitude: 0.1
+  evadeDistance: 0.8
+  evadeDuration: 0.3
 --- !u!4 &1339930860
 Transform:
   m_ObjectHideFlags: 0
@@ -3878,8 +3885,8 @@ MonoBehaviour:
   perfectRange: 0.5
   greatRange: 1.3
   niceRange: 3.5
-  minWaitTime: 0.3
-  maxWaitTime: 1
+  minWaitTime: 0.175
+  maxWaitTime: 0.7
   effect: {fileID: 665056785729304871, guid: 040f6a232f553af4ab5738235b1dcb18, type: 3}
   effectCanvasRect: {fileID: 257509780}
 --- !u!1 &1551927512
@@ -3985,8 +3992,15 @@ MonoBehaviour:
   defensivePower: 0
   uisysytem: {fileID: 1959311392}
   characterImage: {fileID: 978177912}
+  characterIdle: {fileID: 0}
+  characterAttack: {fileID: 0}
+  characterDied: {fileID: 0}
   squashDuration: 1
   enemyDesc: 
+  shakeDuration: 0.5
+  shakeMagnitude: 0.3
+  evadeDistance: 0.8
+  evadeDuration: 0.3
 --- !u!1 &1613118581
 GameObject:
   m_ObjectHideFlags: 0
@@ -4090,8 +4104,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'HP : 1234'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4338,8 +4352,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB2E4\uC74C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -67,15 +67,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC7A0\uAE08"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -325,8 +325,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB4F1\uAE09"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
-  m_sharedMaterial: {fileID: -572200284503950888, guid: c27f6d39f4ad5984b945ec56088ed58d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
+  m_sharedMaterial: {fileID: -5377808256340478212, guid: 4b10345f168b9bb43b35f4168fae29cd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

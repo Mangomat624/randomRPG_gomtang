@@ -65,6 +65,6 @@ public class EnhancementUI : MonoBehaviour
     private void UpdateTimerText(float time)
     {
         if (time < 0) time = 0;
-        timerText.text = $"남은 시간: {time:F2}";
+        timerText.text = $"{time:F2}";
     }
 }
