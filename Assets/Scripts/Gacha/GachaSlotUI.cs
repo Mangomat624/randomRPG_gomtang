@@ -12,16 +12,21 @@ public class GachaSlotUI : MonoBehaviour
     public Image itemIconImage;
     public TextMeshProUGUI gradeText;
     public Button lockButton;
+    public Image lockButtonImage;
     public GameObject lockOverlay;
 
     private bool isLocked = false;
     private EquipmentData currentData;
 
     public static event Action OnLockStateChanged;
+    public Sprite invisiableSprite;
+
+    public Color lockedcolor = new Color(0.623f, 0.623f, 0.623f, 1f); // ±Ý»ö (RGB: 255, 215, 0)
+    public Color notlocked = new Color(1f,1f, 1f, 1f);
 
     void Start()
     {
-        itemIconImage.sprite = null;
+        itemIconImage.sprite = invisiableSprite;
         lockButton.onClick.AddListener(OnLockButtonClicked);
         UpdateLockVisual();
     }
@@ -62,6 +67,15 @@ public class GachaSlotUI : MonoBehaviour
         if (lockOverlay != null)
         {
             lockOverlay.SetActive(isLocked);
+            if (isLocked)
+            {
+                lockButtonImage.color = lockedcolor;
+            }
+            else
+            {
+                lockButtonImage.color = notlocked;
+            }
+
         }
     }
 

@@ -19,3 +19,6 @@ MonoBehaviour:
   eva: 50
   des: "\uC774\uC81C\uAE4C\uC9C0 \uC8FD\uC5C8\uB358 \uBAA8\uB4E0 \uC774\uB4E4\uC758
     \uC601\uD63C\uC744 \uD761\uC218\uD55C \uBD88\uBA78\uC758 \uC655\uC774\uB2E4."
+  idle: {fileID: 8861761981297831471, guid: 06a4793774d68f647a1e21a6df238186, type: 3}
+  fight: {fileID: -6051048674933063453, guid: 2969dbc7de3f4204a94860364a1d2bc1, type: 3}
+  died: {fileID: 0}

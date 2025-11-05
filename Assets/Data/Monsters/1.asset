@@ -18,3 +18,6 @@ MonoBehaviour:
   atk: 5
   eva: 5
   des: "\uD5C8\uC218\uC544\uBE44\uB2E4."
+  idle: {fileID: -8575073425769600924, guid: f3828fe769997344e992337cb501f88e, type: 3}
+  fight: {fileID: 3858304853544474064, guid: 5fb38ef6c2ade98439c6bfe128b4a53f, type: 3}
+  died: {fileID: -941287842171545678, guid: 5c31788c680e4004686e91b2066e575f, type: 3}

@@ -166,12 +166,14 @@ public class BattleSystem : MonoBehaviour
             if (isDead)
             {
                 state = BattleState.WON;
-                yield break; // 전투 종료
+                yield break;
             }
         }
         else
         {
             Debug.Log("빗나감! (적중률: " + hitChance + "%, 주사위: " + roll + ")");
+
+            enemyStats.PlayEvadeAnimation();
         }
 
         yield return new WaitForSeconds(1.5f);
@@ -189,6 +191,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EnemyTurn()
     {
+        enemyStats.AttackImage();
         Debug.Log("적의 턴!");
         yield return new WaitForSeconds(1f); // 적이 생각하는 시간처럼 잠시 대기
 
@@ -196,10 +199,12 @@ public class BattleSystem : MonoBehaviour
         int monsterAccuracy = 100; // 몬스터 적중은 100으로 고정
         int evasionChance = (100 + playerStats.evasionRate) - monsterAccuracy; //회피율
         int roll = Random.Range(1, 101);
-
+        
         if (roll <= evasionChance)
         {
             Debug.Log("회피 성공! (회피율: " + evasionChance + "%, 주사위: " + roll + ")");
+
+            playerStats.PlayEvadeAnimation();
         }
         else
         {
@@ -207,7 +212,6 @@ public class BattleSystem : MonoBehaviour
             // 2. 1차 회피 실패 시, 회피 미니게임 등장 (현재는 바로 데미지)
             // TODO: 여기에 매우 어려운 회피 미니게임을 호출하는 로직을 추가해야 합니다.
             // 성공 시 return; 하여 데미지를 입지 않게 합니다.
-
             Debug.Log("플레이어가 적의 공격을 받습니다.");
             int enemydamage = enemyStats.baseDamage - playerStats.defensivePower;
             if (enemydamage < 0)
@@ -223,6 +227,7 @@ public class BattleSystem : MonoBehaviour
                 bool isDead = playerStats.TakeDamage(enemydamage);
                 if (isDead)
                 {
+                    enemyStats.IdleImage();
                     state = BattleState.LOST;
                     yield break; // 전투 종료
                 }
@@ -231,7 +236,8 @@ public class BattleSystem : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        state = BattleState.PLAYERTURN;
+        enemyStats.IdleImage();
+        state = BattleState.PLAYERTURN;;
         StartCoroutine(PlayerTurn());
     }
 
