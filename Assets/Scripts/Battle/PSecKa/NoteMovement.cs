@@ -1,4 +1,4 @@
-// NoteMovement.cs (ÃÖÁ¾ Á¤¸®)
+// NoteMovement.cs (ìµœì¢… ì •ë¦¬)
 
 using UnityEngine;
 
@@ -7,13 +7,20 @@ public class NoteMovement : MonoBehaviour
     public float speed = 15f;
     public int laneIndex; // 0=Up, 1=Middle, 2=Bottom
 
-    // ³ëÆ®ÀÇ ÆÄ±«´Â NoteManager°¡ Àü´ãÇÏ¹Ç·Î
-    // noteManager, deleteLineTransform º¯¼ö ¸ğµÎ »èÁ¦.
+    // ë…¸íŠ¸ì˜ íŒŒê´´ëŠ” NoteManagerê°€ ì „ë‹´í•˜ë¯€ë¡œ
+    // noteManager, deleteLineTransform ë³€ìˆ˜ ëª¨ë‘ ì‚­ì œ.
+
+    void OnEnable()
+    {
+        if (GameManager.Instance.currentStage >= 7)
+        {
+            HarderSpped();
+        }
+    }
 
     void Start()
     {
-        // NoteManager¸¦ Ã£´Â ·ÎÁ÷µµ »èÁ¦.
-        // ÀÌ ½ºÅ©¸³Æ®´Â ¿ÀÁ÷ ¿òÁ÷ÀÌ±â¸¸ ÇÕ´Ï´Ù.
+
     }
 
     public void SetLaneIndex(int index)
@@ -21,9 +28,14 @@ public class NoteMovement : MonoBehaviour
         laneIndex = index;
     }
 
+    public void HarderSpped()
+    {
+        speed = speed * 1.5f;
+    }
+
     void Update()
     {
-        // ¿ŞÂÊÀ¸·Î ÀÌµ¿ÇÏ´Â ÄÚµå "¸¸" ³²±é´Ï´Ù.
+        // ì™¼ìª½ìœ¼ë¡œ ì´ë™í•˜ëŠ” ì½”ë“œ "ë§Œ" ë‚¨ê¹ë‹ˆë‹¤.
         transform.Translate(Vector2.left * speed * Time.deltaTime);
     }
 }

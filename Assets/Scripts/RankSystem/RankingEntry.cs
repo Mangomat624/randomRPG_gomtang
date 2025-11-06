@@ -4,10 +4,10 @@ using System;
 [Serializable]
 public class RankingEntry
 {
-    // JSON Å°¿Í º¯¼ö ÀÌ¸§À» Á¤È®È÷ ÀÏÄ¡½ÃÄÑ¾ß ÇÕ´Ï´Ù.
+    // JSON í‚¤ì™€ ë³€ìˆ˜ ì´ë¦„ì„ ì •í™•íˆ ì¼ì¹˜ì‹œì¼œì•¼ í•©ë‹ˆë‹¤.
     public int rankingId;
     public string playerName;
-    public long score; // intÀÇ ÃÖ´ë°ªÀ» ÃÊ°úÇÒ ¼ö ÀÖÀ¸¹Ç·Î longÀÌ ¾ÈÀüÇÕ´Ï´Ù.
+    public long score; // intì˜ ìµœëŒ€ê°’ì„ ì´ˆê³¼í•  ìˆ˜ ìˆìœ¼ë¯€ë¡œ longì´ ì•ˆì „í•©ë‹ˆë‹¤.
     public string createdAt;
     public int isEnd;
 }

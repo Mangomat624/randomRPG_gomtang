@@ -7,10 +7,10 @@ public class MonsterDatabase : ScriptableObject
 {
     public List<MonsterData> allMonsters;
 
-    // ÆÄ¶ó¹ÌÅÍ Å¸ÀÔÀ» 'EquipmentData.PartType', 'EquipmentData.Grade'·Î ¸íÈ®È÷ ÁöÁ¤
+    // íŒŒë¼ë¯¸í„° íƒ€ì…ì„ 'EquipmentData.PartType', 'EquipmentData.Grade'ë¡œ ëª…í™•íˆ ì§€ì •
     public MonsterData GetMonstersByStage(int stage)
     {
-        // Where¸¦ »ç¿ëÇØ stage°¡ ÀÏÄ¡ÇÏ´Â ¸ó½ºÅÍ¸¦ Ã£¾Æ ¹İÈ¯
+        // Whereë¥¼ ì‚¬ìš©í•´ stageê°€ ì¼ì¹˜í•˜ëŠ” ëª¬ìŠ¤í„°ë¥¼ ì°¾ì•„ ë°˜í™˜
         return allMonsters.FirstOrDefault(data => data.stage == stage);
     }
 }

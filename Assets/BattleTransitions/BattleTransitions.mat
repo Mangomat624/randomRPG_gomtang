@@ -37,10 +37,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: -0.0019398187
+    - _Cutoff: -0.00010157109
     - _Distort: 0
     - _Fade: 1
     m_Colors:
-    - _Color: {r: 0.07525954, g: 0.08823532, b: 0.08447682, a: 1}
+    - _Color: {r: 0.0753, g: 0.0882, b: 0.0845, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

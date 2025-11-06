@@ -5,6 +5,6 @@ using System.Collections.Generic;
 [Serializable]
 public class RankingListWrapper
 {
-    // "items"´Â ¿ì¸®°¡ ÀÓÀÇ·Î Á¤ÇÑ '¹è¿­ÀÇ ÀÌ¸§'ÀÔ´Ï´Ù.
+    // "items"ëŠ” ìš°ë¦¬ê°€ ì„ì˜ë¡œ ì •í•œ 'ë°°ì—´ì˜ ì´ë¦„'ì…ë‹ˆë‹¤.
     public List<RankingEntry> items;
 }

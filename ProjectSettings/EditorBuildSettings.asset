@@ -18,7 +18,10 @@ EditorBuildSettings:
     path: "Assets/Scenes/\uAC15\uD654.unity"
     guid: a3c1ab7044baa0a4d9485dc75a85ef74
   - enabled: 1
-    path: "Assets/Scenes/\uB7AD\uD0B9.unity"
+    path: Assets/Scenes/Ranking.unity
     guid: 653b05d5ab8ffc440ae795638012cbdf
+  - enabled: 1
+    path: "Assets/Scenes/\uB9C8\uC6552\uD398\uC774\uC988.unity"
+    guid: abb5d213bf9d5d9488bcb03a2c90df43
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

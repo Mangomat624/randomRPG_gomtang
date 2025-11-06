@@ -1,41 +1,41 @@
-// StartMenuManager.cs (¼öÁ¤µÈ ÀüÃ¼ ÄÚµå)
+// StartMenuManager.cs (ìˆ˜ì •ëœ ì „ì²´ ì½”ë“œ)
 
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro; // TextMeshPro
 using UnityEngine.SceneManagement;
-using System.Text.RegularExpressions; // Á¤±Ô½Ä(Regex)
-using System.Collections; // ÄÚ·çÆ¾
+using System.Text.RegularExpressions; // ì •ê·œì‹(Regex)
+using System.Collections; // ì½”ë£¨í‹´
 
 public class StartMenuManager : MonoBehaviour
 {
-    [Header("UI ¿ä¼Ò ¿¬°á")]
+    [Header("UI ìš”ì†Œ ì—°ê²°")]
     public Button startButton;
     public GameObject nameInputPanel;
     public TMP_InputField nameInputField;
     public Button confirmButton;
-    public TextMeshProUGUI warningText; // °æ°í ÅØ½ºÆ®
+    public TextMeshProUGUI warningText; // ê²½ê³  í…ìŠ¤íŠ¸
 
-    [Header("¼³Á¤")]
+    [Header("ì„¤ì •")]
     public string nextSceneName = "ChapterSelect";
 
-    private const string NameValidationPattern = @"^[a-zA-Z0-9°¡-ÆR]{2,10}$";
-    private const string WarningMessage = "ÀÌ¸§Àº ÃÖ¼Ò 2ÀÚ¿¡¼­ ÃÖ´ë 10ÀÚ±îÁö °¡´ÉÇÏ¸ç ¿µ¹® ¶Ç´Â ÇÑ±Û°ú ¼ıÀÚ Á¶ÇÕ¸¸ °¡´ÉÇÕ´Ï´Ù.";
+    private const string NameValidationPattern = @"^[a-zA-Z0-9ê°€-í£]{2,10}$";
+    private const string WarningMessage = "ì´ë¦„ì€ ìµœì†Œ 2ìì—ì„œ ìµœëŒ€ 10ìê¹Œì§€ ê°€ëŠ¥í•˜ë©° ì˜ë¬¸ ë˜ëŠ” í•œê¸€ê³¼ ìˆ«ì ì¡°í•©ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.";
 
     private Coroutine warningCoroutine;
-    private Color defaultWarningColor = Color.white; // ±âº» »ö»ó(Èò»ö) ÀúÀå
+    private Color defaultWarningColor = Color.white; // ê¸°ë³¸ ìƒ‰ìƒ(í°ìƒ‰) ì €ì¥
 
     void Start()
     {
         if (nameInputPanel != null)
             nameInputPanel.SetActive(false);
 
-        // (º¯°æ) WarningText¸¦ ¼û±âÁö ¾Ê°í, ±âº» ¸Ş½ÃÁö¿Í »ö»óÀ¸·Î ¼³Á¤ÇÕ´Ï´Ù.
+        // (ë³€ê²½) WarningTextë¥¼ ìˆ¨ê¸°ì§€ ì•Šê³ , ê¸°ë³¸ ë©”ì‹œì§€ì™€ ìƒ‰ìƒìœ¼ë¡œ ì„¤ì •í•©ë‹ˆë‹¤.
         if (warningText != null)
         {
             warningText.text = WarningMessage;
             warningText.color = defaultWarningColor;
-            warningText.gameObject.SetActive(false); // ÀÌ¸§ ÀÔ·ÂÃ¢ÀÌ ¶ã ¶§±îÁö´Â ¼û±è
+            warningText.gameObject.SetActive(false); // ì´ë¦„ ì…ë ¥ì°½ì´ ëœ° ë•Œê¹Œì§€ëŠ” ìˆ¨ê¹€
         }
 
         if (startButton != null)
@@ -50,10 +50,10 @@ public class StartMenuManager : MonoBehaviour
         if (nameInputPanel != null)
             nameInputPanel.SetActive(true);
 
-        // (º¯°æ) ÀÌ¸§ ÀÔ·ÂÃ¢À» ÄÓ ¶§ WarningTextµµ ÇÔ²² ÄÕ´Ï´Ù.
+        // (ë³€ê²½) ì´ë¦„ ì…ë ¥ì°½ì„ ì¼¤ ë•Œ WarningTextë„ í•¨ê»˜ ì¼­ë‹ˆë‹¤.
         if (warningText != null)
         {
-            // È¤½Ã ÀÌÀü¿¡ »¡°£»öÀ¸·Î ³²¾ÆÀÖ¾ú´Ù¸é Èò»öÀ¸·Î ¸®¼Â
+            // í˜¹ì‹œ ì´ì „ì— ë¹¨ê°„ìƒ‰ìœ¼ë¡œ ë‚¨ì•„ìˆì—ˆë‹¤ë©´ í°ìƒ‰ìœ¼ë¡œ ë¦¬ì…‹
             if (warningCoroutine != null)
             {
                 StopCoroutine(warningCoroutine);
@@ -61,7 +61,7 @@ public class StartMenuManager : MonoBehaviour
             }
             warningText.text = WarningMessage;
             warningText.color = defaultWarningColor;
-            warningText.gameObject.SetActive(true); // ÅØ½ºÆ®¸¦ ÄÔ
+            warningText.gameObject.SetActive(true); // í…ìŠ¤íŠ¸ë¥¼ ì¼¬
         }
 
         if (startButton != null)
@@ -74,15 +74,15 @@ public class StartMenuManager : MonoBehaviour
 
         if (Regex.IsMatch(newName, NameValidationPattern))
         {
-            // --- À¯È¿¼º °Ë»ç ¼º°ø ---
+            // --- ìœ íš¨ì„± ê²€ì‚¬ ì„±ê³µ ---
             if (warningText != null)
             {
-                if (warningCoroutine != null) // È¤½Ã ±ôºıÀÌ´Â ÁßÀÌ¾ú´Ù¸é ÁßÁö
+                if (warningCoroutine != null) // í˜¹ì‹œ ê¹œë¹¡ì´ëŠ” ì¤‘ì´ì—ˆë‹¤ë©´ ì¤‘ì§€
                 {
                     StopCoroutine(warningCoroutine);
                     warningCoroutine = null;
                 }
-                warningText.gameObject.SetActive(false); // ¼º°øÇßÀ¸´Ï ¼û±è
+                warningText.gameObject.SetActive(false); // ì„±ê³µí–ˆìœ¼ë‹ˆ ìˆ¨ê¹€
             }
 
             if (GameManager.Instance != null)
@@ -93,36 +93,36 @@ public class StartMenuManager : MonoBehaviour
         }
         else
         {
-            // --- À¯È¿¼º °Ë»ç ½ÇÆĞ ---
+            // --- ìœ íš¨ì„± ê²€ì‚¬ ì‹¤íŒ¨ ---
             if (warningText != null)
             {
-                // (º¯°æ) ÀÌ¹Ì ½ÇÇà ÁßÀÎ ÄÚ·çÆ¾ÀÌ ÀÖ´Ù¸é ¸ØÃß°í »õ·Î ½ÃÀÛ
+                // (ë³€ê²½) ì´ë¯¸ ì‹¤í–‰ ì¤‘ì¸ ì½”ë£¨í‹´ì´ ìˆë‹¤ë©´ ë©ˆì¶”ê³  ìƒˆë¡œ ì‹œì‘
                 if (warningCoroutine != null)
                 {
                     StopCoroutine(warningCoroutine);
                 }
                 warningCoroutine = StartCoroutine(ShowWarningBlink());
             }
-            Debug.LogWarning($"ÀÌ¸§ À¯È¿¼º °Ë»ç ½ÇÆĞ: {newName}");
+            Debug.LogWarning($"ì´ë¦„ ìœ íš¨ì„± ê²€ì‚¬ ì‹¤íŒ¨: {newName}");
         }
     }
 
-    // (º¯°æ) °æ°í ÅØ½ºÆ®¸¦ "±ôºı"ÀÌ°Ô ÇÏ´Â ÄÚ·çÆ¾
+    // (ë³€ê²½) ê²½ê³  í…ìŠ¤íŠ¸ë¥¼ "ê¹œë¹¡"ì´ê²Œ í•˜ëŠ” ì½”ë£¨í‹´
     private IEnumerator ShowWarningBlink()
     {
-        // 1. ÅØ½ºÆ®°¡ ÄÑÁ® ÀÖ´ÂÁö È®ÀÎ (ÀÌ¹Ì ÄÑÁ® ÀÖÀ½)
+        // 1. í…ìŠ¤íŠ¸ê°€ ì¼œì ¸ ìˆëŠ”ì§€ í™•ì¸ (ì´ë¯¸ ì¼œì ¸ ìˆìŒ)
         warningText.text = WarningMessage;
 
-        // 2. »¡°£»öÀ¸·Î º¯°æ
+        // 2. ë¹¨ê°„ìƒ‰ìœ¼ë¡œ ë³€ê²½
         warningText.color = Color.red;
 
-        // 3. 1ÃÊ µ¿¾È ±â´Ù¸³´Ï´Ù.
+        // 3. 1ì´ˆ ë™ì•ˆ ê¸°ë‹¤ë¦½ë‹ˆë‹¤.
         yield return new WaitForSeconds(1f);
 
-        // 4. 1ÃÊ°¡ Áö³ª¸é ´Ù½Ã ±âº» »ö»ó(Èò»ö)À¸·Î º¯°æÇÕ´Ï´Ù.
+        // 4. 1ì´ˆê°€ ì§€ë‚˜ë©´ ë‹¤ì‹œ ê¸°ë³¸ ìƒ‰ìƒ(í°ìƒ‰)ìœ¼ë¡œ ë³€ê²½í•©ë‹ˆë‹¤.
         warningText.color = defaultWarningColor;
 
-        // 5. ÄÚ·çÆ¾ÀÌ ³¡³µÀ½À» ¾Ë¸³´Ï´Ù.
+        // 5. ì½”ë£¨í‹´ì´ ëë‚¬ìŒì„ ì•Œë¦½ë‹ˆë‹¤.
         warningCoroutine = null;
     }
 }

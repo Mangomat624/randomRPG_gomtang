@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewEquipmentData", menuName = "Data/Equipment Data")]
 public class EquipmentData : ScriptableObject
 {
-    // PartType°ú GradeÀÇ Á¤ÀÇ¸¦ ÀÌ ½ºÅ©¸³Æ® ¾È¿¡¸¸ µÓ´Ï´Ù.
+    // PartTypeê³¼ Gradeì˜ ì •ì˜ë¥¼ ì´ ìŠ¤í¬ë¦½íŠ¸ ì•ˆì—ë§Œ ë‘¡ë‹ˆë‹¤.
     public enum PartType { Head, Torso, Legs, Weapon }
     public enum Grade { F, D, C, B, A, S, SS, SSS, X }
 

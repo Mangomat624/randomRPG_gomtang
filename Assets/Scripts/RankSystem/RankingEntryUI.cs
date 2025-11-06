@@ -4,41 +4,41 @@ using UnityEngine.UI;
 
 public class RankingEntryUI : MonoBehaviour
 {
-    [Header("UI ¿ä¼Ò")]
+    [Header("UI ìš”ì†Œ")]
     public TextMeshProUGUI rankText;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI scoreText;
     public Image backgroundImage;
 
-    public Image isEndImage; // ÀÎ½ºÆåÅÍ¿¡¼­ 'IsEnd' ¿ÀºêÁ§Æ®ÀÇ Image ¿¬°á
-    private Color isEndGrayColor = new Color(0.368f, 0.368f, 0.368f); // #5E5E5E »ö»óÀ» ÀúÀåÇÒ º¯¼ö
+    public Image isEndImage; // ì¸ìŠ¤í™í„°ì—ì„œ 'IsEnd' ì˜¤ë¸Œì íŠ¸ì˜ Image ì—°ê²°
+    private Color isEndGrayColor = new Color(0.368f, 0.368f, 0.368f); // #5E5E5E ìƒ‰ìƒì„ ì €ì¥í•  ë³€ìˆ˜
 
-    [Header("µî¼öº° »ö»ó")]
-    // (Âü°í: new Color(R, G, B) °ªÀº 0~1 »çÀÌÀÇ float °ªÀÔ´Ï´Ù)
-    public Color goldColor = new Color(0.898f, 0.765f, 0.2f, 0.666f); // ±İ»ö (RGB: 255, 215, 0)
-    public Color silverColor = new Color(0.75f, 0.75f, 0.75f, 0.666f); // Àº»ö (RGB: 192, 192, 192)
-    public Color bronzeColor = new Color(0.486f, 0.255f, 0.098f, 0.666f); // ±¸¸®»ö (RGB: 205, 127, 50)
-    public Color defaultColor = new Color(0.231f, 0.231f, 0.231f); // 4µî ÀÌÇÏ ±âº»»ö
+    [Header("ë“±ìˆ˜ë³„ ìƒ‰ìƒ")]
+    // (ì°¸ê³ : new Color(R, G, B) ê°’ì€ 0~1 ì‚¬ì´ì˜ float ê°’ì…ë‹ˆë‹¤)
+    public Color goldColor = new Color(0.898f, 0.765f, 0.2f, 0.666f); // ê¸ˆìƒ‰ (RGB: 255, 215, 0)
+    public Color silverColor = new Color(0.75f, 0.75f, 0.75f, 0.666f); // ì€ìƒ‰ (RGB: 192, 192, 192)
+    public Color bronzeColor = new Color(0.486f, 0.255f, 0.098f, 0.666f); // êµ¬ë¦¬ìƒ‰ (RGB: 205, 127, 50)
+    public Color defaultColor = new Color(0.231f, 0.231f, 0.231f); // 4ë“± ì´í•˜ ê¸°ë³¸ìƒ‰
 
 
     /// <summary>
-    /// RankingSystemÀÌ ÀÌ ÇÔ¼ö¸¦ È£ÃâÇÏ¿© ÅØ½ºÆ® °ªÀ» ¼³Á¤ÇÕ´Ï´Ù.
+    /// RankingSystemì´ ì´ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ í…ìŠ¤íŠ¸ ê°’ì„ ì„¤ì •í•©ë‹ˆë‹¤.
     /// </summary>
-    /// <param name="rank">µî¼ö</param>
-    /// <param name="playerName">ÇÃ·¹ÀÌ¾î ÀÌ¸§</param>
-    /// <param name="score">Á¡¼ö</param>
-    /// <param name="isEnd">Å¬¸®¾îÀ¯¹«</param>
+    /// <param name="rank">ë“±ìˆ˜</param>
+    /// <param name="playerName">í”Œë ˆì´ì–´ ì´ë¦„</param>
+    /// <param name="score">ì ìˆ˜</param>
+    /// <param name="isEnd">í´ë¦¬ì–´ìœ ë¬´</param>
     public void SetData(int rank, string playerName, long score, int isEndValue)
     {
-        // 2. ¿¬°áµÈ ÅØ½ºÆ® ÄÄÆ÷³ÍÆ®ÀÇ ³»¿ëÀ» º¯°æÇÕ´Ï´Ù.
+        // 2. ì—°ê²°ëœ í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸ì˜ ë‚´ìš©ì„ ë³€ê²½í•©ë‹ˆë‹¤.
         if (rankText != null)
-            rankText.text = $"{rank}µî"; // "1µî", "2µî" Çü½ÄÀ¸·Î Ç¥½Ã
+            rankText.text = $"{rank}ë“±"; // "1ë“±", "2ë“±" í˜•ì‹ìœ¼ë¡œ í‘œì‹œ
 
         if (nameText != null)
             nameText.text = playerName;
 
         if (scoreText != null)
-            // "N0"´Â ¼ıÀÚ¿¡ 1,000 ´ÜÀ§ ÄŞ¸¶(,)¸¦ Âï¾îÁİ´Ï´Ù (¿¹: 2,147,483,647)
+            // "N0"ëŠ” ìˆ«ìì— 1,000 ë‹¨ìœ„ ì½¤ë§ˆ(,)ë¥¼ ì°ì–´ì¤ë‹ˆë‹¤ (ì˜ˆ: 2,147,483,647)
             scoreText.text = score.ToString("N0");
 
         if (backgroundImage != null)
@@ -55,36 +55,36 @@ public class RankingEntryUI : MonoBehaviour
                     backgroundImage.color = bronzeColor;
                     break;
                 default:
-                    // 4µî ÀÌÇÏ
+                    // 4ë“± ì´í•˜
                     backgroundImage.color = defaultColor;
                     break;
             }
         }
 
-        // --- (Ãß°¡) isEnd ÀÌ¹ÌÁö »ö»ó ¼³Á¤ ---
+        // --- (ì¶”ê°€) isEnd ì´ë¯¸ì§€ ìƒ‰ìƒ ì„¤ì • ---
         if (isEndImage != null)
         {
             if (isEndValue == 1)
             {
-                // 1ÀÌ¸é Èò»ö
+                // 1ì´ë©´ í°ìƒ‰
                 isEndImage.color = Color.white;
             }
-            else // 0 ¶Ç´Â ±× ¿Ü
+            else // 0 ë˜ëŠ” ê·¸ ì™¸
             {
-                // 0ÀÌ¸é #5E5E5E
+                // 0ì´ë©´ #5E5E5E
                 isEndImage.color = isEndGrayColor;
             }
         }
     }
 
     /// <summary>
-    /// (»õ ÇÔ¼ö) "³» ·©Å·" UI Àü¿ë Ç¥½Ã ÇÔ¼ö
+    /// (ìƒˆ í•¨ìˆ˜) "ë‚´ ë­í‚¹" UI ì „ìš© í‘œì‹œ í•¨ìˆ˜
     /// </summary>
     public void SetMyData(RankingEntry myEntry)
     {
-        // 1. "µî¼ö" ÅØ½ºÆ® ´ë½Å "³» ±â·Ï" µîÀ¸·Î º¯°æ
+        // 1. "ë“±ìˆ˜" í…ìŠ¤íŠ¸ ëŒ€ì‹  "ë‚´ ê¸°ë¡" ë“±ìœ¼ë¡œ ë³€ê²½
         if (rankText != null)
-            rankText.text = "³» ±â·Ï";
+            rankText.text = "ë‚´ ê¸°ë¡";
 
         if (nameText != null)
             nameText.text = myEntry.playerName;
@@ -92,11 +92,11 @@ public class RankingEntryUI : MonoBehaviour
         if (scoreText != null)
             scoreText.text = myEntry.score.ToString("N0");
 
-        // 2. 1,2,3µî ¹è°æ»ö ·ÎÁ÷Àº ÇÊ¿ä ¾øÀ¸¹Ç·Î ±âº»»öÀ¸·Î ¼³Á¤
+        // 2. 1,2,3ë“± ë°°ê²½ìƒ‰ ë¡œì§ì€ í•„ìš” ì—†ìœ¼ë¯€ë¡œ ê¸°ë³¸ìƒ‰ìœ¼ë¡œ ì„¤ì •
         if (backgroundImage != null)
             backgroundImage.color = defaultColor;
 
-        // 3. isEnd ÀÌ¹ÌÁö »ö»ó ¼³Á¤
+        // 3. isEnd ì´ë¯¸ì§€ ìƒ‰ìƒ ì„¤ì •
         if (isEndImage != null)
         {
             if (myEntry.isEnd == 1)

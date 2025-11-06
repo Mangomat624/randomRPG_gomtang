@@ -8,15 +8,15 @@ public class EnhancementManager : MonoBehaviour
 {
     public static EnhancementManager Instance { get; private set; }
 
-    [Header("µ¥ÀÌÅÍ ¿¬°á")]
+    [Header("ë°ì´í„° ì—°ê²°")]
     public EnhancementTable enhancementTable;
 
-    [Header("°­È­ ¼³Á¤")]
+    [Header("ê°•í™” ì„¤ì •")]
     public float totalTimeLimit = 5.0f;
     public float attemptCooldown = 0.1f;
     public float criticalChance = 0.05f;
-    // ½ÇÆĞ Æä³ÎÆ¼ È®·ü (À¯Áö Á¦°Å, ÇÏ¶ô È®·ü¸¸ ¼³Á¤)
-    [Range(0f, 100f)] public float dropPenaltyRate = 50f; // ÇÏ¶ô(-1) È®·ü (³ª¸ÓÁö´Â ÃÊ±âÈ­)
+    // ì‹¤íŒ¨ í˜ë„í‹° í™•ë¥  (ìœ ì§€ ì œê±°, í•˜ë½ í™•ë¥ ë§Œ ì„¤ì •)
+    [Range(0f, 100f)] public float dropPenaltyRate = 50f; // í•˜ë½(-1) í™•ë¥  (ë‚˜ë¨¸ì§€ëŠ” ì´ˆê¸°í™”)
 
     private int currentLevel = 0;
     private int currentBonusAtk = 0;
@@ -57,7 +57,7 @@ public class EnhancementManager : MonoBehaviour
     {
         if (isPhaseStarted) return;
         isPhaseStarted = true;
-        Debug.Log("°­È­ ÆäÀÌÁî ½ÃÀÛ!");
+        Debug.Log("ê°•í™” í˜ì´ì¦ˆ ì‹œì‘!");
     }
 
     public void AttemptEnhance()
@@ -65,7 +65,7 @@ public class EnhancementManager : MonoBehaviour
         if (!canAttempt || isFinished || !isPhaseStarted) return;
         if (currentLevel >= 15)
         {
-            if (WarningUI.Instance != null) WarningUI.Instance.ShowWarning("ÃÖ´ë ·¹º§ÀÔ´Ï´Ù!");
+            if (WarningUI.Instance != null) WarningUI.Instance.ShowWarning("ìµœëŒ€ ë ˆë²¨ì…ë‹ˆë‹¤!");
             return;
         }
 
@@ -90,7 +90,7 @@ public class EnhancementManager : MonoBehaviour
         float criticalValue = UnityEngine.Random.Range(0f, 1f);
         if (criticalValue <= criticalChance && currentLevel < 14)
         {
-            Debug.Log("°­È­ ´ë¼º°ø! ·¹º§ +2");
+            Debug.Log("ê°•í™” ëŒ€ì„±ê³µ! ë ˆë²¨ +2");
             EnhancementTable.EnhancementStep criticalStep = enhancementTable.GetStepInfo(currentLevel + 2);
             if (criticalStep != null)
             {
@@ -101,7 +101,7 @@ public class EnhancementManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("°­È­ ¼º°ø! ·¹º§ +1");
+            Debug.Log("ê°•í™” ì„±ê³µ! ë ˆë²¨ +1");
             currentLevel = successStep.level;
             currentBonusAtk = successStep.bonusAtk;
             currentBonusAcc = successStep.bonusAcc;
@@ -109,15 +109,15 @@ public class EnhancementManager : MonoBehaviour
         UpdateUI();
     }
 
-    // ¡å¡å¡å ½ÇÆĞ Ã³¸® ÇÔ¼ö ¼öÁ¤ (À¯Áö Æä³ÎÆ¼ Á¦°Å) ¡å¡å¡å
+    // â–¼â–¼â–¼ ì‹¤íŒ¨ ì²˜ë¦¬ í•¨ìˆ˜ ìˆ˜ì • (ìœ ì§€ í˜ë„í‹° ì œê±°) â–¼â–¼â–¼
     private void HandleFailure()
     {
         float penaltyRoll = UnityEngine.Random.Range(0f, 100f);
 
         if (penaltyRoll <= dropPenaltyRate)
         {
-            // ÇÏ¶ô (-1)
-            Debug.Log("°­È­ ½ÇÆĞ! (ÇÏ¶ô)");
+            // í•˜ë½ (-1)
+            Debug.Log("ê°•í™” ì‹¤íŒ¨! (í•˜ë½)");
             if (currentLevel > 0)
             {
                 currentLevel--;
@@ -136,23 +136,23 @@ public class EnhancementManager : MonoBehaviour
                     }
                 }
             }
-            // ·¹º§ 0¿¡¼­ ½ÇÆĞÇÏ¸é ±×³É À¯Áö (º¯È­ ¾øÀ½)
+            // ë ˆë²¨ 0ì—ì„œ ì‹¤íŒ¨í•˜ë©´ ê·¸ëƒ¥ ìœ ì§€ (ë³€í™” ì—†ìŒ)
             else
             {
-                Debug.Log("°­È­ ½ÇÆĞ! (0·¹º§¿¡¼­ ½ÇÆĞÇÏ¿© À¯Áö)");
+                Debug.Log("ê°•í™” ì‹¤íŒ¨! (0ë ˆë²¨ì—ì„œ ì‹¤íŒ¨í•˜ì—¬ ìœ ì§€)");
             }
         }
-        else // ³ª¸ÓÁö´Â ¸ğµÎ ÃÊ±âÈ­
+        else // ë‚˜ë¨¸ì§€ëŠ” ëª¨ë‘ ì´ˆê¸°í™”
         {
-            // ÃÊ±âÈ­ (*0)
-            Debug.Log("°­È­ ½ÇÆĞ! (ÃÊ±âÈ­)");
+            // ì´ˆê¸°í™” (*0)
+            Debug.Log("ê°•í™” ì‹¤íŒ¨! (ì´ˆê¸°í™”)");
             currentLevel = 0;
             currentBonusAtk = 0;
             currentBonusAcc = 0;
         }
         UpdateUI();
     }
-    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+    // â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²â–²
 
     private IEnumerator EnhanceCooldown()
     {
@@ -165,7 +165,7 @@ public class EnhancementManager : MonoBehaviour
     {
         isFinished = true;
         canAttempt = false;
-        Debug.Log($"°­È­ Á¾·á! ÃÖÁ¾ ½ºÅÈ: +{currentBonusAtk} ATK, +{currentBonusAcc}% ACC");
+        Debug.Log($"ê°•í™” ì¢…ë£Œ! ìµœì¢… ìŠ¤íƒ¯: +{currentBonusAtk} ATK, +{currentBonusAcc}% ACC");
 
         GameManager.Instance.ApplyPermanentEnhancement(currentBonusAtk, currentBonusAcc);
     }

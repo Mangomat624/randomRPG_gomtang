@@ -1,4 +1,4 @@
-// NoteManager.cs (ÃÖÁ¾ Á¤¸®)
+// NoteManager.cs (ìµœì¢… ì •ë¦¬)
 
 using System;
 using System.Collections;
@@ -8,28 +8,30 @@ using UnityEngine;
 
 public class NoteManager : MonoBehaviour
 {
-    [Header("ÇÁ¸®ÆÕ ¹× À§Ä¡")]
+    [Header("í”„ë¦¬íŒ¹ ë° ìœ„ì¹˜")]
     public GameObject normalNotePrefab;
     public GameObject longNotePrefab;
     public RectTransform canvasRect;
     public Transform deleteLine;
 
-    [Header("½ºÅ×ÀÌÁöº° ½ºÆù Æ÷ÀÎÆ® ±×·ì")]
-    public List<Transform> stage1_3SpawnPoints; // 1~3 ½ºÅ×ÀÌÁö¿ë (2°³ ¿¹»ó)
-    public List<Transform> stage4_6SpawnPoints; // 4~6 ½ºÅ×ÀÌÁö¿ë (3°³ ¿¹»ó)
-    public List<Transform> stage7_10SpawnPoints; // 7~10 ½ºÅ×ÀÌÁö¿ë (4°³ ¿¹»ó)
+    [Header("ìŠ¤í…Œì´ì§€ë³„ ìŠ¤í° í¬ì¸íŠ¸ ê·¸ë£¹")]
+    public List<Transform> stage1_3SpawnPoints; // 1~3 ìŠ¤í…Œì´ì§€ìš© (2ê°œ ì˜ˆìƒ)
+    public List<Transform> stage4_6SpawnPoints; // 4~6 ìŠ¤í…Œì´ì§€ìš© (3ê°œ ì˜ˆìƒ)
+    public List<Transform> stage7_10SpawnPoints; // 7~10 ìŠ¤í…Œì´ì§€ìš© (4ê°œ ì˜ˆìƒ)
 
-    [Header("ÆÇÁ¤ ¼³Á¤")]
+    [Header("íŒì • ì„¤ì •")]
     public Transform judgementLine;
-    public float perfectRange = 0.5f;
-    public float greatRange = 1.3f;
-    public float niceRange = 3.5f;
+    public float perfectTime = 0.033f; // Perfect (Â± 50ms)
 
-    [Header("°ÔÀÓ ¼³Á¤")]
-    public float minWaitTime = 0.3f;
-    public float maxWaitTime = 1.0f;
+    public float greatTime = 0.087f;    // Great (Â± 100ms)
 
-    [Header("»ç¿îµå (ÇÊ¿ä½Ã ÁÖ¼® ÇØÁ¦)")]
+    public float niceTime = 0.233f;
+
+    [Header("ê²Œì„ ì„¤ì •")]
+    public float minWaitTime = 0.175f;
+    public float maxWaitTime = 0.7f;
+
+    [Header("ì‚¬ìš´ë“œ (í•„ìš”ì‹œ ì£¼ì„ í•´ì œ)")]
     //public AudioClip hitSound;
     //private AudioSource audioSource;
 
@@ -42,7 +44,7 @@ public class NoteManager : MonoBehaviour
     private List<string> results = new List<string>();
     private int totalNotes;
     private Coroutine spawnCoroutine;
-    private int activeLaneCount = 0; // ±âº»°ª
+    private int activeLaneCount = 0; // ê¸°ë³¸ê°’
 
     void Awake()
     {
@@ -63,7 +65,7 @@ public class NoteManager : MonoBehaviour
 
     IEnumerator SpawnNotesSequence()
     {
-        int currentStage = GameManager.Instance.GetCurrentStage(); // GameManager ±¸Á¶¿¡ ¸Â°Ô ¼öÁ¤ ÇÊ¿ä
+        int currentStage = GameManager.Instance.GetCurrentStage(); // GameManager êµ¬ì¡°ì— ë§ê²Œ ìˆ˜ì • í•„ìš”
 
         if (currentStage <= 3) activeLaneCount = 2;
         else if (currentStage <= 6) activeLaneCount = 3;
@@ -72,13 +74,13 @@ public class NoteManager : MonoBehaviour
 
         List<Transform> currentActiveSpawners = GetCurrentSpawners(currentStage);
 
-        Debug.Log($"½ºÅ×ÀÌÁö {currentStage}: {activeLaneCount}°³ÀÇ ·¹ÀÎ »ç¿ë (ÁöÁ¤µÈ ±×·ì »ç¿ë)");
+        Debug.Log($"ìŠ¤í…Œì´ì§€ {currentStage}: {activeLaneCount}ê°œì˜ ë ˆì¸ ì‚¬ìš© (ì§€ì •ëœ ê·¸ë£¹ ì‚¬ìš©)");
 
         int bigNoteCount = 5;
         int smallNoteCount = 5;
         totalNotes = bigNoteCount + smallNoteCount;
 
-        // ... (³ëÆ® Â÷Æ® »ı¼º ¹× ¼ÅÇÃ ·ÎÁ÷Àº µ¿ÀÏ) ...
+        // ... (ë…¸íŠ¸ ì°¨íŠ¸ ìƒì„± ë° ì…”í”Œ ë¡œì§ì€ ë™ì¼) ...
         List<GameObject> noteChart = new List<GameObject>();
         for (int i = 0; i < bigNoteCount; i++) noteChart.Add(normalNotePrefab);
         for (int i = 0; i < smallNoteCount; i++) noteChart.Add(longNotePrefab);
@@ -94,12 +96,12 @@ public class NoteManager : MonoBehaviour
 
             RectTransform noteRectTransform = noteGO.GetComponent<RectTransform>();
 
-            // 2. RectTransformÀÌ ÀÖ´ÂÁö È®ÀÎÇÕ´Ï´Ù (¾ÈÀü ÀåÄ¡).
+            // 2. RectTransformì´ ìˆëŠ”ì§€ í™•ì¸í•©ë‹ˆë‹¤ (ì•ˆì „ ì¥ì¹˜).
             if (noteRectTransform != null)
             {
-                float targetHeight = 50f; // ±âº» ³ôÀÌ °ª (¿¹½Ã)
+                float targetHeight = 50f; // ê¸°ë³¸ ë†’ì´ ê°’ (ì˜ˆì‹œ)
 
-                // 3. activeLaneCount °ª¿¡ µû¶ó ¸ñÇ¥ Height °áÁ¤
+                // 3. activeLaneCount ê°’ì— ë”°ë¼ ëª©í‘œ Height ê²°ì •
                 switch (activeLaneCount)
                 {
                     case 2:
@@ -112,20 +114,20 @@ public class NoteManager : MonoBehaviour
                         targetHeight = 37.5f;
                         break;
                     default:
-                        // ¿¹¿Ü Ã³¸®: ±âº» ³ôÀÌ À¯Áö
-                        targetHeight = noteRectTransform.sizeDelta.y; // ÇöÀç ³ôÀÌ À¯Áö
+                        // ì˜ˆì™¸ ì²˜ë¦¬: ê¸°ë³¸ ë†’ì´ ìœ ì§€
+                        targetHeight = noteRectTransform.sizeDelta.y; // í˜„ì¬ ë†’ì´ ìœ ì§€
                         break;
                 }
 
-                // 4. RectTransformÀÇ sizeDelta¸¦ º¯°æÇÕ´Ï´Ù.
-                // sizeDelta´Â Width¿Í Height¸¦ ÇÔ²² °¡Áö´Â Vector2 °ªÀÔ´Ï´Ù.
-                // Width´Â ±×´ë·Î µÎ°í Height¸¸ º¯°æÇÕ´Ï´Ù.
+                // 4. RectTransformì˜ sizeDeltaë¥¼ ë³€ê²½í•©ë‹ˆë‹¤.
+                // sizeDeltaëŠ” Widthì™€ Heightë¥¼ í•¨ê»˜ ê°€ì§€ëŠ” Vector2 ê°’ì…ë‹ˆë‹¤.
+                // WidthëŠ” ê·¸ëŒ€ë¡œ ë‘ê³  Heightë§Œ ë³€ê²½í•©ë‹ˆë‹¤.
                 noteRectTransform.sizeDelta = new Vector2(noteRectTransform.sizeDelta.x, targetHeight);
             }
 
             NoteMovement noteScript = noteGO.GetComponent<NoteMovement>();
 
-            // (º¯°æ) SetDeleteLine È£Ãâ ¿ÏÀü »èÁ¦
+            // (ë³€ê²½) SetDeleteLine í˜¸ì¶œ ì™„ì „ ì‚­ì œ
             noteScript.SetLaneIndex(laneIndex);
             activeNotes.Enqueue(noteScript);
 
@@ -138,7 +140,10 @@ public class NoteManager : MonoBehaviour
     {
         if (stage <= 3) return stage1_3SpawnPoints;
         else if (stage <= 6) return stage4_6SpawnPoints;
-        else return stage7_10SpawnPoints; // 7 ÀÌ»óÀº ¸ğµÎ ÀÌ ¸®½ºÆ® »ç¿ë
+        else { 
+            ChangeWaitTimeHarder();
+            return stage7_10SpawnPoints; 
+        } // 7 ì´ìƒì€ ëª¨ë‘ ì´ ë¦¬ìŠ¤íŠ¸ ì‚¬ìš©
     }
     private int GetMaxLaneCount()
     {
@@ -149,35 +154,41 @@ public class NoteManager : MonoBehaviour
         return max;
     }
 
+    public void ChangeWaitTimeHarder()
+    {
+        minWaitTime = minWaitTime * 0.85f;
+        maxWaitTime = maxWaitTime * 0.5f;
+    }
+
     void Update()
     {
-        // activeLaneCount °ª¿¡ µû¶ó ÀÔ·Â¹ŞÀ» Å°¸¦ ´Ù¸£°Ô Ã³¸®
+        // activeLaneCount ê°’ì— ë”°ë¼ ì…ë ¥ë°›ì„ í‚¤ë¥¼ ë‹¤ë¥´ê²Œ ì²˜ë¦¬
         switch (activeLaneCount)
         {
-            case 2: // ·¹ÀÎ 2°³ (1~3 ½ºÅ×ÀÌÁö)
-                if (Input.GetKeyDown(KeyCode.F)) TryHit(0); // Ã¹ ¹øÂ° ·¹ÀÎ
-                if (Input.GetKeyDown(KeyCode.J)) TryHit(1); // µÎ ¹øÂ° ·¹ÀÎ
+            case 2: // ë ˆì¸ 2ê°œ (1~3 ìŠ¤í…Œì´ì§€)
+                if (Input.GetKeyDown(KeyCode.F)) TryHit(0); // ì²« ë²ˆì§¸ ë ˆì¸
+                if (Input.GetKeyDown(KeyCode.J)) TryHit(1); // ë‘ ë²ˆì§¸ ë ˆì¸
                 break;
-            case 3: // ·¹ÀÎ 3°³ (4~6 ½ºÅ×ÀÌÁö)
-                if (Input.GetKeyDown(KeyCode.F)) TryHit(0); // Ã¹ ¹øÂ° ·¹ÀÎ
-                if (Input.GetKeyDown(KeyCode.Space)) TryHit(1); // µÎ ¹øÂ° ·¹ÀÎ
-                if (Input.GetKeyDown(KeyCode.J)) TryHit(2); // ¼¼ ¹øÂ° ·¹ÀÎ
+            case 3: // ë ˆì¸ 3ê°œ (4~6 ìŠ¤í…Œì´ì§€)
+                if (Input.GetKeyDown(KeyCode.F)) TryHit(0); // ì²« ë²ˆì§¸ ë ˆì¸
+                if (Input.GetKeyDown(KeyCode.Space)) TryHit(1); // ë‘ ë²ˆì§¸ ë ˆì¸
+                if (Input.GetKeyDown(KeyCode.J)) TryHit(2); // ì„¸ ë²ˆì§¸ ë ˆì¸
                 break;
-            case 4: // ·¹ÀÎ 4°³ (7~10 ½ºÅ×ÀÌÁö)
-                if (Input.GetKeyDown(KeyCode.D)) TryHit(0); // Ã¹ ¹øÂ° ·¹ÀÎ
-                if (Input.GetKeyDown(KeyCode.F)) TryHit(1); // µÎ ¹øÂ° ·¹ÀÎ
-                if (Input.GetKeyDown(KeyCode.J)) TryHit(2); // ¼¼ ¹øÂ° ·¹ÀÎ
-                if (Input.GetKeyDown(KeyCode.K)) TryHit(3); // ³× ¹øÂ° ·¹ÀÎ
+            case 4: // ë ˆì¸ 4ê°œ (7~10 ìŠ¤í…Œì´ì§€)
+                if (Input.GetKeyDown(KeyCode.D)) TryHit(0); // ì²« ë²ˆì§¸ ë ˆì¸
+                if (Input.GetKeyDown(KeyCode.F)) TryHit(1); // ë‘ ë²ˆì§¸ ë ˆì¸
+                if (Input.GetKeyDown(KeyCode.J)) TryHit(2); // ì„¸ ë²ˆì§¸ ë ˆì¸
+                if (Input.GetKeyDown(KeyCode.K)) TryHit(3); // ë„¤ ë²ˆì§¸ ë ˆì¸
                 break;
             default:
-                // È¤½Ã ¸ğ¸¦ ¿¹¿Ü Ã³¸® (¸ğµç ·¹ÀÎÀ» F, Space, J·Î Ã³¸®)
+                // í˜¹ì‹œ ëª¨ë¥¼ ì˜ˆì™¸ ì²˜ë¦¬ (ëª¨ë“  ë ˆì¸ì„ F, Space, Jë¡œ ì²˜ë¦¬)
                 if (Input.GetKeyDown(KeyCode.F)) TryHit(0);
                 if (Input.GetKeyDown(KeyCode.Space)) TryHit(1);
                 if (Input.GetKeyDown(KeyCode.J)) TryHit(2);
                 break;
         }
 
-        // --- (º¯°æ) ½Ã°£ ÃÊ°ú Miss ÆÇÁ¤ ·ÎÁ÷ ---
+        // --- (ë³€ê²½) ì‹œê°„ ì´ˆê³¼ Miss íŒì • ë¡œì§ ---
         if (activeNotes.Count > 0)
         {
             NoteMovement nextNote = activeNotes.Peek();
@@ -188,8 +199,24 @@ public class NoteManager : MonoBehaviour
                 return;
             }
 
-            // (º¯°æ) ÆÇÁ¤¼±(judgementLine) ±âÁØÀÌ ¾Æ´Ñ, deleteLine ±âÁØÀ¸·Î ÆÄ±«
-            if (nextNote.transform.position.x <= deleteLine.position.x)
+
+            float distance = nextNote.transform.position.x - judgementLine.position.x;
+
+            // 2. ë‚¨ì€ ì‹œê°„ ê³„ì‚° (ì†ë„ê°€ 0ì´ ì•„ë‹ ë•Œ)
+            if (nextNote.speed != 0)
+            {
+                float timeToArrival = distance / nextNote.speed;
+
+                // 3. íŒì • ì‹œê°„ì„ "ì§€ë‚˜ì³ì„œ" Miss ì²˜ë¦¬ (ì˜ˆ: -0.15ì´ˆë³´ë‹¤ ë” ì™¼ìª½ìœ¼ë¡œ ê°)
+                if (timeToArrival < -niceTime)
+                {
+                    RecordResult("Miss");
+                    Destroy(activeNotes.Dequeue().gameObject);
+                }
+            }
+            // (ì¶”ê°€) DelectLineì„ ì´ìš©í•œ íŒŒê´´ ë¡œì§ (ë°±ì—…)
+            // NoteMovement.csì— íŒŒê´´ ë¡œì§ì´ ì—†ìœ¼ë¯€ë¡œ NoteManagerê°€ deleteLineìœ¼ë¡œë„ ì²´í¬
+            else if (nextNote.transform.position.x <= deleteLine.position.x)
             {
                 RecordResult("Miss");
                 Destroy(activeNotes.Dequeue().gameObject);
@@ -204,46 +231,36 @@ public class NoteManager : MonoBehaviour
         if (activeNotes.Count > 0)
         {
             NoteMovement nextNote = activeNotes.Peek();
-            // (Ãß°¡) À¯·É ³ëÆ® ¹æ¾î
-            if (nextNote == null)
-            {
-                activeNotes.Dequeue();
-                return;
-            }
+            if (nextNote == null) { activeNotes.Dequeue(); return; }
 
-            float distance = Mathf.Abs(nextNote.transform.position.x - judgementLine.position.x);
+            // 1. íŒì •ì„ ê¹Œì§€ì˜ ê±°ë¦¬ ê³„ì‚°
+            float distance = nextNote.transform.position.x - judgementLine.position.x;
 
-            if (distance <= niceRange)
+            // 2. íŒì •ì„ ê¹Œì§€ ë‚¨ì€ ì‹œê°„(ì˜¤ì°¨) ê³„ì‚° (ê±°ë¦¬ / ì†ë„)
+            float timeError = (nextNote.speed == 0) ? float.MaxValue : (distance / nextNote.speed);
+
+            // 3. íŒì • ë²”ìœ„(ì‹œê°„) ì•ˆì— ìˆëŠ”ì§€ í™•ì¸ (Mathf.AbsëŠ” ì ˆëŒ“ê°’)
+            if (Mathf.Abs(timeError) <= niceTime)
             {
                 if (nextNote.laneIndex == keyLaneIndex)
                 {
-                    // (º¯°æ) ¼º°ø ½Ã, Å¥¿¡¼­ Á¦°ÅÇÏ´Â ·ÎÁ÷À» CheckHitÀ¸·Î ÀÌµ¿
-                    CheckHit(nextNote);
+                    // 4. CheckHitìœ¼ë¡œ íŒì • ì‹œê°„(ì˜¤ì°¨) ì „ë‹¬
+                    CheckHit(nextNote, Mathf.Abs(timeError));
                 }
-                // (ÁÖ¼®) À¯Àú ¿äÃ»´ë·Î Àß¸øµÈ Å°´Â ¹«½Ã (¾Æ¹«°Íµµ ¾È ÇÔ)
+                // (ìœ ì € ìš”ì²­: ì˜ëª»ëœ í‚¤ëŠ” ë¬´ì‹œ)
             }
         }
     }
 
-    void CheckHit(NoteMovement note)
+    // --- (ë³€ê²½) íŒì • ì‹¤í–‰ í•¨ìˆ˜ (ì‹œê°„ ê¸°ì¤€) ---
+    void CheckHit(NoteMovement note, float timeError)
     {
         string judgement;
-        float distance = Mathf.Abs(note.transform.position.x - judgementLine.position.x);
 
-        if (distance <= perfectRange)
-        {
-            judgement = "Perfect";
-            Debug.Log("Perfect");
-        }
-        else if (distance <= greatRange) { 
-            judgement = "Great";
-            Debug.Log("Great");
-        }
-
-        else { 
-            judgement = "Nice";
-            Debug.Log("Nice");
-        }
+        // (ë³€ê²½) ì‹œê°„ ì˜¤ì°¨(timeError)ë¡œ íŒì •
+        if (timeError <= perfectTime) judgement = "Perfect";
+        else if (timeError <= greatTime) judgement = "Great";
+        else judgement = "Nice";
 
         if (effect != null)
         {
@@ -254,26 +271,25 @@ public class NoteManager : MonoBehaviour
                 judgementLine.position.z - 1
             );
             effectGO.transform.position = effectPos;
-
             ParticleSystem ps = effectGO.GetComponent<ParticleSystem>();
             if (ps != null) ps.Play();
         }
 
         RecordResult(judgement);
 
-        // (º¯°æ) ¼º°øÇÑ ³ëÆ®¸¦ Å¥¿¡¼­ Á¦°ÅÇÏ°í ÆÄ±«
+        // (ë³€ê²½) ì„±ê³µí•œ ë…¸íŠ¸ë¥¼ íì—ì„œ ì œê±°í•˜ê³  íŒŒê´´
         activeNotes.Dequeue();
         Destroy(note.gameObject);
     }
 
 
-    // °á°ú ±â·Ï
+    // ê²°ê³¼ ê¸°ë¡
     public void RecordResult(string result)
     {
         results.Add(result);
         if (results.Count >= totalNotes)
         {
-            // (º¯°æ) ÀÌ¹Ì ÄÚ·çÆ¾ÀÌ ½ÇÇà ÁßÀÏ ¼ö ÀÖÀ¸´Ï È®ÀÎ
+            // (ë³€ê²½) ì´ë¯¸ ì½”ë£¨í‹´ì´ ì‹¤í–‰ ì¤‘ì¼ ìˆ˜ ìˆìœ¼ë‹ˆ í™•ì¸
             if (spawnCoroutine != null)
             {
                 StopCoroutine(spawnCoroutine);
@@ -283,7 +299,7 @@ public class NoteManager : MonoBehaviour
         }
     }
 
-    // ¹Ì´Ï°ÔÀÓ Á¾·á ¹× °á°ú Àü¼Û
+    // ë¯¸ë‹ˆê²Œì„ ì¢…ë£Œ ë° ê²°ê³¼ ì „ì†¡
     IEnumerator EndMinigame()
     {
         AttackResult finalResult = new AttackResult();
@@ -297,16 +313,16 @@ public class NoteManager : MonoBehaviour
             }
         }
 
-        // 10°³ ³ëÆ® ±âÁØ µ¥¹ÌÁö ¹èÀ² (±âÁ¸ 5°³ ±âÁØ¿¡¼­ È®Àå)
+        // 10ê°œ ë…¸íŠ¸ ê¸°ì¤€ ë°ë¯¸ì§€ ë°°ìœ¨ (ê¸°ì¡´ 5ê°œ ê¸°ì¤€ì—ì„œ í™•ì¥)
         if (successCount <= 0)
         {
             finalResult.damageMultiplier = 0f;
-            finalResult.accuracyBonus = 0; // ÀûÁß·ü º¸³Ê½º ¾øÀ½
+            finalResult.accuracyBonus = 0; // ì ì¤‘ë¥  ë³´ë„ˆìŠ¤ ì—†ìŒ
         }
         else if (successCount <= 2)
         {
             finalResult.damageMultiplier = 0.5f;
-            finalResult.accuracyBonus = 3; // ÀûÁß·ü º¸³Ê½º ¾øÀ½
+            finalResult.accuracyBonus = 3; // ì ì¤‘ë¥  ë³´ë„ˆìŠ¤ ì—†ìŒ
         }
         else if (successCount <= 4)
         {
@@ -325,19 +341,19 @@ public class NoteManager : MonoBehaviour
         }
         else
         {
-            finalResult.damageMultiplier = 1.5f; // 9~10°³ ¼º°ø
+            finalResult.damageMultiplier = 1.5f; // 9~10ê°œ ì„±ê³µ
             finalResult.accuracyBonus = 42; 
         }
 
         finalResult.judgement = $"{successCount} Hits!";
 
-        // BattleSystem¿¡ °á°ú Àü¼Û
+        // BattleSystemì— ê²°ê³¼ ì „ì†¡
         OnMinigameFinished?.Invoke(finalResult);
 
-        // ¸¶Áö¸· ¼Ò¸® Àç»ıÀ» À§ÇØ Àá½Ã ´ë±â
+        // ë§ˆì§€ë§‰ ì†Œë¦¬ ì¬ìƒì„ ìœ„í•´ ì ì‹œ ëŒ€ê¸°
         yield return new WaitForSeconds(0.5f);
 
-        // ÆĞ³Î ºñÈ°¼ºÈ­
+        // íŒ¨ë„ ë¹„í™œì„±í™”
         gameObject.SetActive(false);
     }
 }

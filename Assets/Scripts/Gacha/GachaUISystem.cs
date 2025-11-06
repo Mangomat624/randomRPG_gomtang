@@ -18,11 +18,11 @@ public class GachaUISystem : MonoBehaviour
     void Start()
     {
         rerollButton.onClick.AddListener(OnRerollButtonClicked);
-        //if (GachaManager.Instance != null) GachaManager.Instance.ExecuteReroll(new bool[4]); ÀÌ°Å ½ÇÇèÀû ±â´É..? ³ÖÀ»ÇÊ¿ä ¾øÀ½
+        //if (GachaManager.Instance != null) GachaManager.Instance.ExecuteReroll(new bool[4]); ì´ê±° ì‹¤í—˜ì  ê¸°ëŠ¥..? ë„£ì„í•„ìš” ì—†ìŒ
         InitializeSlotsWithCurrentGear();
     }
 
-    // --- (Ãß°¡) GachaSlotUI°¡ Àá±æ ¶§¸¶´Ù GameManager¿¡ »óÅÂ¸¦ ÀúÀåÇÏ´Â ÇÔ¼ö ---
+    // --- (ì¶”ê°€) GachaSlotUIê°€ ì ê¸¸ ë•Œë§ˆë‹¤ GameManagerì— ìƒíƒœë¥¼ ì €ì¥í•˜ëŠ” í•¨ìˆ˜ ---
     private void SaveCurrentLockStates()
     {
         if (slots == null) return;
@@ -43,35 +43,35 @@ public class GachaUISystem : MonoBehaviour
     {
         if (GameManager.Instance == null)
         {
-            Debug.LogError("GachaUISystem: GameManager ÀÎ½ºÅÏ½º¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+            Debug.LogError("GachaUISystem: GameManager ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
             return;
         }
 
-        // 1. ½ºÅ×ÀÌÁö 1ÀÌ¸é ÃÊ±âÈ­ÇÏÁö ¾ÊÀ½ (ÀÌÀü ·ÎÁ÷)
+        // 1. ìŠ¤í…Œì´ì§€ 1ì´ë©´ ì´ˆê¸°í™”í•˜ì§€ ì•ŠìŒ (ì´ì „ ë¡œì§)
         int currentStage = GameManager.Instance.GetCurrentStage();
         if (currentStage == 1)
         {
-            Debug.Log("GachaUISystem: ½ºÅ×ÀÌÁö 1ÀÌ¹Ç·Î Àåºñ ½½·Ô ÃÊ±âÈ­¸¦ °Ç³Ê¶İ´Ï´Ù.");
+            Debug.Log("GachaUISystem: ìŠ¤í…Œì´ì§€ 1ì´ë¯€ë¡œ ì¥ë¹„ ìŠ¬ë¡¯ ì´ˆê¸°í™”ë¥¼ ê±´ë„ˆëœë‹ˆë‹¤.");
             return;
         }
 
         if (GachaManager.Instance == null || GachaManager.Instance.equipmentDatabase == null)
         {
-            Debug.LogError("GachaUISystem: GachaManager ÀÎ½ºÅÏ½º ¶Ç´Â EquipmentDatabase¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+            Debug.LogError("GachaUISystem: GachaManager ì¸ìŠ¤í„´ìŠ¤ ë˜ëŠ” EquipmentDatabaseë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
             return;
         }
 
-        // 2. (Ãß°¡) GameManager¿¡¼­ ÀúÀåµÈ "Àá±İ »óÅÂ"¸¦ ºÒ·¯¿É´Ï´Ù.
+        // 2. (ì¶”ê°€) GameManagerì—ì„œ ì €ì¥ëœ "ì ê¸ˆ ìƒíƒœ"ë¥¼ ë¶ˆëŸ¬ì˜µë‹ˆë‹¤.
         bool[] savedLocks = GameManager.Instance.GetGachaLocks();
 
-        // 4°³ÀÇ ºÎÀ§ (Head, Torso, Legs, Weapon)¸¦ ¼øÈ¸ÇÕ´Ï´Ù.
+        // 4ê°œì˜ ë¶€ìœ„ (Head, Torso, Legs, Weapon)ë¥¼ ìˆœíšŒí•©ë‹ˆë‹¤.
         for (int i = 0; i < 4; i++)
         {
-            // i °ªÀ» PartTypeÀ¸·Î º¯È¯ÇÕ´Ï´Ù (Head=0, Torso=1...)
+            // i ê°’ì„ PartTypeìœ¼ë¡œ ë³€í™˜í•©ë‹ˆë‹¤ (Head=0, Torso=1...)
             EquipmentData.PartType part = (EquipmentData.PartType)i;
             EquipmentData.Grade currentGrade;
 
-            // GameManager¿¡¼­ ÇØ´ç ºÎÀ§ÀÇ ÇöÀç µî±ŞÀ» °¡Á®¿É´Ï´Ù.
+            // GameManagerì—ì„œ í•´ë‹¹ ë¶€ìœ„ì˜ í˜„ì¬ ë“±ê¸‰ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
             switch (part)
             {
                 case EquipmentData.PartType.Head:
@@ -87,29 +87,29 @@ public class GachaUISystem : MonoBehaviour
                     currentGrade = GameManager.Instance.CurrentWeaponGrade;
                     break;
                 default:
-                    // ÀÌ °æ¿ì´Â ¹ß»ıÇÏÁö ¾Ê¾Æ¾ß ÇÏÁö¸¸, ¾ÈÀüÀ» À§ÇØ Fµî±ŞÀ¸·Î Ã³¸®
+                    // ì´ ê²½ìš°ëŠ” ë°œìƒí•˜ì§€ ì•Šì•„ì•¼ í•˜ì§€ë§Œ, ì•ˆì „ì„ ìœ„í•´ Fë“±ê¸‰ìœ¼ë¡œ ì²˜ë¦¬
                     currentGrade = EquipmentData.Grade.F;
-                    Debug.LogWarning($"GachaUISystem: ¾Ë ¼ö ¾ø´Â PartType ÀÎµ¦½º {i}");
+                    Debug.LogWarning($"GachaUISystem: ì•Œ ìˆ˜ ì—†ëŠ” PartType ì¸ë±ìŠ¤ {i}");
                     break;
             }
 
-            // GachaManagerÀÇ µ¥ÀÌÅÍº£ÀÌ½º¸¦ »ç¿ëÇØ (ºÎÀ§, µî±Ş)¿¡ ¸Â´Â EquipmentData¸¦ °¡Á®¿É´Ï´Ù.
+            // GachaManagerì˜ ë°ì´í„°ë² ì´ìŠ¤ë¥¼ ì‚¬ìš©í•´ (ë¶€ìœ„, ë“±ê¸‰)ì— ë§ëŠ” EquipmentDataë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
             EquipmentData data = GachaManager.Instance.equipmentDatabase.GetData(part, currentGrade);
 
-            // ÇØ´ç ÀÎµ¦½ºÀÇ ½½·Ô UI°¡ Á¸ÀçÇÏ°í, µ¥ÀÌÅÍ¸¦ ¼º°øÀûÀ¸·Î °¡Á®¿Ô´Ù¸é ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+            // í•´ë‹¹ ì¸ë±ìŠ¤ì˜ ìŠ¬ë¡¯ UIê°€ ì¡´ì¬í•˜ê³ , ë°ì´í„°ë¥¼ ì„±ê³µì ìœ¼ë¡œ ê°€ì ¸ì™”ë‹¤ë©´ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
             if (i < slots.Length && slots[i] != null)
             {
                 if (data != null)
                 {
                     slots[i].UpdateSlot(data);
-                    // (¼±ÅÃ »çÇ×) ½ÃÀÛ ½Ã¿¡´Â ¸ğµç ½½·ÔÀ» Àá±İ ÇØÁ¦ »óÅÂ·Î ¸¸µé ¼ö ÀÖ½À´Ï´Ù.
-                    // slots[i].Unlock(); // GachaSlotUI¿¡ Unlock() ÇÔ¼ö°¡ ÇÊ¿ä
+                    // (ì„ íƒ ì‚¬í•­) ì‹œì‘ ì‹œì—ëŠ” ëª¨ë“  ìŠ¬ë¡¯ì„ ì ê¸ˆ í•´ì œ ìƒíƒœë¡œ ë§Œë“¤ ìˆ˜ ìˆìŠµë‹ˆë‹¤.
+                    // slots[i].Unlock(); // GachaSlotUIì— Unlock() í•¨ìˆ˜ê°€ í•„ìš”
                     slots[i].SetLockState(savedLocks[i]);
                 }
                 else
                 {
-                    // µ¥ÀÌÅÍº£ÀÌ½º¿¡ ÇØ´ç ¾ÆÀÌÅÛÀÌ ¾ø´Â °æ¿ì Ã³¸® (¿¹: ½½·Ô ¼û±â±â)
-                    Debug.LogWarning($"EquipmentDatabase¿¡ {part} ({currentGrade}) µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù. ½½·Ô {i}¸¦ ºñÈ°¼ºÈ­ÇÕ´Ï´Ù.");
+                    // ë°ì´í„°ë² ì´ìŠ¤ì— í•´ë‹¹ ì•„ì´í…œì´ ì—†ëŠ” ê²½ìš° ì²˜ë¦¬ (ì˜ˆ: ìŠ¬ë¡¯ ìˆ¨ê¸°ê¸°)
+                    Debug.LogWarning($"EquipmentDatabaseì— {part} ({currentGrade}) ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤. ìŠ¬ë¡¯ {i}ë¥¼ ë¹„í™œì„±í™”í•©ë‹ˆë‹¤.");
                     slots[i].gameObject.SetActive(false);
                 }
             }
@@ -130,7 +130,7 @@ public class GachaUISystem : MonoBehaviour
 
         if (GachaManager.Instance != null) GachaManager.Instance.ExecuteReroll(locks);
     }
-    // ÆÄ¶ó¹ÌÅÍ Å¸ÀÔÀ» 'EquipmentData.PartType'À¸·Î ¸íÈ®È÷ ÁöÁ¤
+    // íŒŒë¼ë¯¸í„° íƒ€ì…ì„ 'EquipmentData.PartType'ìœ¼ë¡œ ëª…í™•íˆ ì§€ì •
     private void UpdateAllSlots(Dictionary<EquipmentData.PartType, EquipmentData> results)
     {
         foreach (var result in results)

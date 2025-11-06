@@ -9,7 +9,7 @@ public class FeatureManager : MonoBehaviour
     void OnEnable() { GachaManager.OnGachaFinished += OnRerollCompleted; }
     void OnDisable() { GachaManager.OnGachaFinished -= OnRerollCompleted; }
 
-    // ÆÄ¶ó¹ÌÅÍ Å¸ÀÔÀ» 'EquipmentData.PartType', 'EquipmentData.Grade'·Î ¸íÈ®È÷ ÁöÁ¤
+    // íŒŒë¼ë¯¸í„° íƒ€ì…ì„ 'EquipmentData.PartType', 'EquipmentData.Grade'ë¡œ ëª…í™•íˆ ì§€ì •
     private void OnRerollCompleted(Dictionary<EquipmentData.PartType, EquipmentData> results)
     {
         foreach (var result in results)
@@ -18,7 +18,7 @@ public class FeatureManager : MonoBehaviour
             EquipmentData itemData = result.Value;
             if (gradesToCelebrate.Contains(itemData.grade))
             {
-                Debug.Log($"ÃàÇÏÇÕ´Ï´Ù! {itemData.grade} µî±Ş ¾ÆÀÌÅÛÀ» »Ì¾Ò½À´Ï´Ù!");
+                Debug.Log($"ì¶•í•˜í•©ë‹ˆë‹¤! {itemData.grade} ë“±ê¸‰ ì•„ì´í…œì„ ë½‘ì•˜ìŠµë‹ˆë‹¤!");
             }
             if (itemData.grade == EquipmentData.Grade.X)
             {

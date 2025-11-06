@@ -1,29 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro; // TextMeshPro¸¦ »ç¿ëÇÏ±â À§ÇØ ²À ÇÊ¿äÇÕ´Ï´Ù.
+using TMPro; // TextMeshProë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ê¼­ í•„ìš”í•©ë‹ˆë‹¤.
 using UnityEngine;
-using UnityEngine.Networking; // UnityWebRequest¸¦ »ç¿ëÇÏ±â À§ÇØ ²À ÇÊ¿äÇÕ´Ï´Ù.
+using UnityEngine.Networking; // UnityWebRequestë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ê¼­ í•„ìš”í•©ë‹ˆë‹¤.
 
 public class RankingSystem : MonoBehaviour
 {
-    [Header("¼­¹ö ¼³Á¤")]
+    [Header("ì„œë²„ ì„¤ì •")]
     private string rankingUrl = "https://server-mango.kro.kr/db/ranking";
     private string apiKey = "MangoKey_43f83185-67e3-4f77-83a9-35b951e0af8d";
-    private string myRankingBaseUrl = "https://server-mango.kro.kr/db/ranking?playerName="; // (»õ API ÁÖ¼Ò)
+    private string myRankingBaseUrl = "https://server-mango.kro.kr/db/ranking?playerName="; // (ìƒˆ API ì£¼ì†Œ)
 
-    [Header("UI ¼³Á¤")]
-    // ·©Å· Ç×¸ñ 1ÁÙÀ» Ç¥½ÃÇÒ UI ÇÁ¸®ÆÕ (¿¹: TextMeshProUGUI ÄÄÆ÷³ÍÆ®¸¸ ÀÖ´Â ¿ÀºêÁ§Æ®)
+    [Header("UI ì„¤ì •")]
+    // ë­í‚¹ í•­ëª© 1ì¤„ì„ í‘œì‹œí•  UI í”„ë¦¬íŒ¹ (ì˜ˆ: TextMeshProUGUI ì»´í¬ë„ŒíŠ¸ë§Œ ìˆëŠ” ì˜¤ë¸Œì íŠ¸)
     public GameObject rankingEntryPrefab;
 
     public Transform contentParent;
 
-    public RankingEntryUI myRankDisplay; // 'MyRankDisplay' ¿ÀºêÁ§Æ® ¿¬°á
+    public RankingEntryUI myRankDisplay; // 'MyRankDisplay' ì˜¤ë¸Œì íŠ¸ ì—°ê²°
 
-    [Header("UI Ç¥½Ã (·Îµù/¿¡·¯)")]
-    public TextMeshProUGUI statusText; // "·Îµù Áß..." ¶Ç´Â "¿¡·¯ ¹ß»ı"À» Ç¥½ÃÇÒ ÅØ½ºÆ®
+    [Header("UI í‘œì‹œ (ë¡œë”©/ì—ëŸ¬)")]
+    public TextMeshProUGUI statusText; // "ë¡œë”© ì¤‘..." ë˜ëŠ” "ì—ëŸ¬ ë°œìƒ"ì„ í‘œì‹œí•  í…ìŠ¤íŠ¸
     void Start()
     {
-        // ¾ÀÀÌ ½ÃÀÛµÇ¸é ·©Å·À» ºÒ·¯¿À´Â ÄÚ·çÆ¾À» ½ÇÇàÇÕ´Ï´Ù.
+        // ì”¬ì´ ì‹œì‘ë˜ë©´ ë­í‚¹ì„ ë¶ˆëŸ¬ì˜¤ëŠ” ì½”ë£¨í‹´ì„ ì‹¤í–‰í•©ë‹ˆë‹¤.
         StartCoroutine(GetRankingsCoroutine(rankingUrl, DisplayRankings));
 
         CheckAndDisplayMyRank();
@@ -33,26 +33,26 @@ public class RankingSystem : MonoBehaviour
     {
         if (GameManager.Instance == null || myRankDisplay == null) return;
 
-        // 1. GameManager¿¡ "»õ ·©Å·" ±ê¹ßÀÌ ÄÑÁ® ÀÖ´ÂÁö È®ÀÎ
+        // 1. GameManagerì— "ìƒˆ ë­í‚¹" ê¹ƒë°œì´ ì¼œì ¸ ìˆëŠ”ì§€ í™•ì¸
         if (GameManager.Instance.hasNewRankToShow)
         {
-            // 2. ±ê¹ßÀÌ ÄÑÁ® ÀÖÀ¸¸é, "³» ·©Å·"À» ¼­¹ö¿¡¼­ °¡Á®¿À´Â ÄÚ·çÆ¾ ½ÃÀÛ
+            // 2. ê¹ƒë°œì´ ì¼œì ¸ ìˆìœ¼ë©´, "ë‚´ ë­í‚¹"ì„ ì„œë²„ì—ì„œ ê°€ì ¸ì˜¤ëŠ” ì½”ë£¨í‹´ ì‹œì‘
             string myName = GameManager.Instance.playerName;
             string myRankUrl = myRankingBaseUrl + UnityWebRequest.EscapeURL(myName);
 
             StartCoroutine(GetMyRankCoroutine(myRankUrl));
 
-            // 3. ±ê¹ßÀ» ´Ù½Ã ³»¸®±â (Áßº¹ ½ÇÇà ¹æÁö)
+            // 3. ê¹ƒë°œì„ ë‹¤ì‹œ ë‚´ë¦¬ê¸° (ì¤‘ë³µ ì‹¤í–‰ ë°©ì§€)
             GameManager.Instance.hasNewRankToShow = false;
         }
         else
         {
-            // 4. ±ê¹ßÀÌ ²¨Á® ÀÖÀ¸¸é "³» ·©Å·" UI¸¦ ¼û±é´Ï´Ù.
+            // 4. ê¹ƒë°œì´ êº¼ì ¸ ìˆìœ¼ë©´ "ë‚´ ë­í‚¹" UIë¥¼ ìˆ¨ê¹ë‹ˆë‹¤.
             myRankDisplay.gameObject.SetActive(false);
         }
     }
 
-    // --- (Ãß°¡) "³» ·©Å·"¸¸ °¡Á®¿À´Â ÄÚ·çÆ¾ ---
+    // --- (ì¶”ê°€) "ë‚´ ë­í‚¹"ë§Œ ê°€ì ¸ì˜¤ëŠ” ì½”ë£¨í‹´ ---
     private IEnumerator GetMyRankCoroutine(string url)
     {
         UnityWebRequest www = UnityWebRequest.Get(url);
@@ -63,36 +63,36 @@ public class RankingSystem : MonoBehaviour
         {
             string rawJson = www.downloadHandler.text;
 
-            // (Áß¿ä) ¼­¹ö°¡ ¹è¿­ [...]·Î ¹İÈ¯ÇÑ´Ù°í °¡Á¤
+            // (ì¤‘ìš”) ì„œë²„ê°€ ë°°ì—´ [...]ë¡œ ë°˜í™˜í•œë‹¤ê³  ê°€ì •
             string wrappedJson = "{\"items\":" + rawJson + "}";
             RankingListWrapper wrapper = JsonUtility.FromJson<RankingListWrapper>(wrappedJson);
 
-            // 1. ¹è¿­¿¡¼­ Ã¹ ¹øÂ° Ç×¸ñ(³» ·©Å·)À» Ã£½À´Ï´Ù.
+            // 1. ë°°ì—´ì—ì„œ ì²« ë²ˆì§¸ í•­ëª©(ë‚´ ë­í‚¹)ì„ ì°¾ìŠµë‹ˆë‹¤.
             if (wrapper.items != null && wrapper.items.Count > 0)
             {
                 RankingEntry myEntry = wrapper.items[0];
 
-                // 2. 'MyRankDisplay' UI¿¡ µ¥ÀÌÅÍ Ã¤¿ì±â (»õ·Î ¸¸µç ÇÔ¼ö È£Ãâ)
+                // 2. 'MyRankDisplay' UIì— ë°ì´í„° ì±„ìš°ê¸° (ìƒˆë¡œ ë§Œë“  í•¨ìˆ˜ í˜¸ì¶œ)
                 myRankDisplay.SetMyData(myEntry);
-                myRankDisplay.gameObject.SetActive(true); // UI ÄÑ±â
+                myRankDisplay.gameObject.SetActive(true); // UI ì¼œê¸°
             }
             else
             {
-                Debug.LogWarning("³» ·©Å·À» GETÇßÀ¸³ª µ¥ÀÌÅÍ°¡ ºñ¾îÀÖ½À´Ï´Ù: " + rawJson);
+                Debug.LogWarning("ë‚´ ë­í‚¹ì„ GETí–ˆìœ¼ë‚˜ ë°ì´í„°ê°€ ë¹„ì–´ìˆìŠµë‹ˆë‹¤: " + rawJson);
                 myRankDisplay.gameObject.SetActive(false);
             }
         }
         else
         {
-            Debug.LogWarning("³» ·©Å· GET ½ÇÆĞ: " + www.error);
+            Debug.LogWarning("ë‚´ ë­í‚¹ GET ì‹¤íŒ¨: " + www.error);
             myRankDisplay.gameObject.SetActive(false);
         }
     }
 
-    // --- (º¯°æ) ±âÁ¸ ·©Å· ¸®½ºÆ® ÄÚ·çÆ¾ (Àç»ç¿ë °¡´ÉÇÏµµ·Ï ¼öÁ¤) ---
+    // --- (ë³€ê²½) ê¸°ì¡´ ë­í‚¹ ë¦¬ìŠ¤íŠ¸ ì½”ë£¨í‹´ (ì¬ì‚¬ìš© ê°€ëŠ¥í•˜ë„ë¡ ìˆ˜ì •) ---
     private IEnumerator GetRankingsCoroutine(string url, System.Action<List<RankingEntry>> onComplete)
     {
-        if (statusText != null) statusText.text = "·©Å·À» ºÒ·¯¿À´Â Áß...";
+        if (statusText != null) statusText.text = "ë­í‚¹ì„ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘...";
 
         UnityWebRequest www = UnityWebRequest.Get(url);
         www.SetRequestHeader("x-api-key", apiKey);
@@ -104,48 +104,48 @@ public class RankingSystem : MonoBehaviour
             string wrappedJson = "{\"items\":" + rawJson + "}";
             RankingListWrapper wrapper = JsonUtility.FromJson<RankingListWrapper>(wrappedJson);
 
-            // (Á¤·Ä)
+            // (ì •ë ¬)
             wrapper.items.Sort((a, b) => b.score.CompareTo(a.score));
 
-            if (statusText != null) statusText.text = "·©Å·";
+            if (statusText != null) statusText.text = "ë­í‚¹";
 
-            // (Äİ¹é ½ÇÇà)
+            // (ì½œë°± ì‹¤í–‰)
             onComplete?.Invoke(wrapper.items);
         }
         else
         {
-            Debug.LogError("·©Å· ·Îµå ½ÇÆĞ: " + www.error);
-            if (statusText != null) statusText.text = "·©Å·À» ºÒ·¯¿Ã ¼ö ¾ø½À´Ï´Ù.\n" + www.error;
+            Debug.LogError("ë­í‚¹ ë¡œë“œ ì‹¤íŒ¨: " + www.error);
+            if (statusText != null) statusText.text = "ë­í‚¹ì„ ë¶ˆëŸ¬ì˜¬ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n" + www.error;
         }
     }
 
     private void DisplayRankings(List<RankingEntry> rankingList)
     {
-        // 1. ±âÁ¸ UI Ç×¸ñµé »èÁ¦
+        // 1. ê¸°ì¡´ UI í•­ëª©ë“¤ ì‚­ì œ
         foreach (Transform child in contentParent)
         {
             Destroy(child.gameObject);
         }
 
-        // 2. Á¤·ÄµÈ ¸®½ºÆ®¸¦ ¼øÈ¸ÇÏ¸ç UI »ı¼º
+        // 2. ì •ë ¬ëœ ë¦¬ìŠ¤íŠ¸ë¥¼ ìˆœíšŒí•˜ë©° UI ìƒì„±
         int rank = 1;
         foreach (RankingEntry entry in rankingList)
         {
-            // 3. ÇÁ¸®ÆÕ »ı¼º (µ¿ÀÏ)
+            // 3. í”„ë¦¬íŒ¹ ìƒì„± (ë™ì¼)
             GameObject entryGO = Instantiate(rankingEntryPrefab, contentParent);
 
-            // 4. (º¯°æ) TextMeshProUGUI ´ë½Å RankingEntryUI ½ºÅ©¸³Æ®¸¦ °¡Á®¿É´Ï´Ù.
+            // 4. (ë³€ê²½) TextMeshProUGUI ëŒ€ì‹  RankingEntryUI ìŠ¤í¬ë¦½íŠ¸ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
             RankingEntryUI entryScript = entryGO.GetComponent<RankingEntryUI>();
 
-            // 5. ½ºÅ©¸³Æ®¸¦ Ã£¾Ò´Ù¸é, SetData ÇÔ¼ö¸¦ È£ÃâÇÏ¿© °ª Àü´Ş
+            // 5. ìŠ¤í¬ë¦½íŠ¸ë¥¼ ì°¾ì•˜ë‹¤ë©´, SetData í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ ê°’ ì „ë‹¬
             if (entryScript != null)
             {
                 entryScript.SetData(rank, entry.playerName, entry.score, entry.isEnd);
-                rank++; // ´ÙÀ½ µî¼ö
+                rank++; // ë‹¤ìŒ ë“±ìˆ˜
             }
             else
             {
-                Debug.LogError("RankingEntryPrefab¿¡ RankingEntryUI ½ºÅ©¸³Æ®°¡ ¾ø½À´Ï´Ù!");
+                Debug.LogError("RankingEntryPrefabì— RankingEntryUI ìŠ¤í¬ë¦½íŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤!");
             }
         }
     }

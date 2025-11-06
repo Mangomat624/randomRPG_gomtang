@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     public int currentStage;
     public int tokens = 4;
-    public string playerName = "ÇÃ·¹ÀÌ¾î"; // ±âº» ÀÌ¸§
+    public string playerName = "í”Œë ˆì´ì–´"; // ê¸°ë³¸ ì´ë¦„
 
     [Header("Player Equipment")]
 
@@ -20,25 +20,25 @@ public class GameManager : MonoBehaviour
     private bool[] gachaLockStates = new bool[4] { false, false, false, false };
 
     [Header("Player Permanent Stats")]
-    // °­È­ ¾À¿¡¼­ ¾òÀº ¿µ±¸ ½ºÅÈÀ» ÀúÀåÇÒ º¯¼ö
+    // ê°•í™” ì”¬ì—ì„œ ì–»ì€ ì˜êµ¬ ìŠ¤íƒ¯ì„ ì €ì¥í•  ë³€ìˆ˜
     public int permanentBonusAtk = 0;
     public int permanentBonusAcc = 0;
     public bool isEnd = false;
 
-    [Header("´©Àû ÀüÅõ ±â·Ï (°ÔÀÓ ¼¼¼Ç)")]
-    private float gameStartTime; // °ÔÀÓ ½ÃÀÛ ½Ã°£
-    private int cumulativeTotalDamageDealt; // ´©Àû ÃÑ ÀÔÈù ´ë¹ÌÁö
-    private int cumulativeTotalDamageTaken; // ´©Àû ÃÑ ¹ŞÀº ´ë¹ÌÁö (¿Ïº®ÁÖÀÇÀÚ¿ë)
+    [Header("ëˆ„ì  ì „íˆ¬ ê¸°ë¡ (ê²Œì„ ì„¸ì…˜)")]
+    private float gameStartTime; // ê²Œì„ ì‹œì‘ ì‹œê°„
+    private int cumulativeTotalDamageDealt; // ëˆ„ì  ì´ ì…íŒ ëŒ€ë¯¸ì§€
+    private int cumulativeTotalDamageTaken; // ëˆ„ì  ì´ ë°›ì€ ëŒ€ë¯¸ì§€ (ì™„ë²½ì£¼ì˜ììš©)
     public int xGradeCount = 0;
 
-    // ÅäÅ« °³¼ö º¯°æ ½Ã UI ½ºÅ©¸³Æ®¿¡ ¾Ë·ÁÁÙ ÀÌº¥Æ®
+    // í† í° ê°œìˆ˜ ë³€ê²½ ì‹œ UI ìŠ¤í¬ë¦½íŠ¸ì— ì•Œë ¤ì¤„ ì´ë²¤íŠ¸
     public static event Action<int> OnTokensChanged;
 
     public bool hasNewRankToShow = false;
 
     void Awake()
     {
-        // ½Ì±ÛÅæ ÆĞÅÏ ¼³Á¤
+        // ì‹±ê¸€í†¤ íŒ¨í„´ ì„¤ì •
         if (Instance == null)
         {
             Instance = this;
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // °ÔÀÓ ½ÃÀÛ ½Ã, ÇöÀç ÅäÅ« °³¼ö·Î UI¸¦ ¾÷µ¥ÀÌÆ®ÇÏµµ·Ï ½ÅÈ£¸¦ º¸³¿
+        // ê²Œì„ ì‹œì‘ ì‹œ, í˜„ì¬ í† í° ê°œìˆ˜ë¡œ UIë¥¼ ì—…ë°ì´íŠ¸í•˜ë„ë¡ ì‹ í˜¸ë¥¼ ë³´ëƒ„
         OnTokensChanged?.Invoke(tokens);
         tokens = 4;
         currentStage = 1;
@@ -62,40 +62,40 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// °ÔÀÓ ¼¼¼ÇÀÌ Ã³À½ ½ÃÀÛµÉ ¶§ Å¸ÀÌ¸Ó¿Í ´©Àû ´ë¹ÌÁö¸¦ 0À¸·Î ¼³Á¤ÇÕ´Ï´Ù.
+    /// ê²Œì„ ì„¸ì…˜ì´ ì²˜ìŒ ì‹œì‘ë  ë•Œ íƒ€ì´ë¨¸ì™€ ëˆ„ì  ëŒ€ë¯¸ì§€ë¥¼ 0ìœ¼ë¡œ ì„¤ì •í•©ë‹ˆë‹¤.
     /// </summary>
     public void InitializeGameSession()
     {
         gameStartTime = Time.time;
         cumulativeTotalDamageDealt = 0;
         cumulativeTotalDamageTaken = 0;
-        // xGradeCount´Â °ÔÀÓ ÀüÃ¼¿¡¼­ ´©ÀûµÇ¹Ç·Î ¿©±â¼­ ÃÊ±âÈ­ÇÏÁö ¾Ê½À´Ï´Ù.
+        // xGradeCountëŠ” ê²Œì„ ì „ì²´ì—ì„œ ëˆ„ì ë˜ë¯€ë¡œ ì—¬ê¸°ì„œ ì´ˆê¸°í™”í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
     }
 
-    // --- 1. ÀÌº¥Æ® ±¸µ¶ ½ÅÃ» ---
-    // ÀÌ ½ºÅ©¸³Æ®(¿ÀºêÁ§Æ®)°¡ È°¼ºÈ­µÉ ¶§ È£ÃâµË´Ï´Ù.
+    // --- 1. ì´ë²¤íŠ¸ êµ¬ë… ì‹ ì²­ ---
+    // ì´ ìŠ¤í¬ë¦½íŠ¸(ì˜¤ë¸Œì íŠ¸)ê°€ í™œì„±í™”ë  ë•Œ í˜¸ì¶œë©ë‹ˆë‹¤.
     void OnEnable()
     {
-        // GachaManagerÀÇ OnGachaFinished ÀÌº¥Æ®¿¡
-        // ³ªÀÇ OnGachaDataReceived ÇÔ¼ö¸¦ "±¸µ¶(+=)"ÇÕ´Ï´Ù.
-        // (GachaManager.Instance°¡ ¾Æ´Ñ Å¬·¡½º ÀÌ¸§À¸·Î Á¢±ÙÇÏ´Â ÀÌÀ¯´Â 'static'ÀÌ±â ¶§¹®ÀÔ´Ï´Ù)
+        // GachaManagerì˜ OnGachaFinished ì´ë²¤íŠ¸ì—
+        // ë‚˜ì˜ OnGachaDataReceived í•¨ìˆ˜ë¥¼ "êµ¬ë…(+=)"í•©ë‹ˆë‹¤.
+        // (GachaManager.Instanceê°€ ì•„ë‹Œ í´ë˜ìŠ¤ ì´ë¦„ìœ¼ë¡œ ì ‘ê·¼í•˜ëŠ” ì´ìœ ëŠ” 'static'ì´ê¸° ë•Œë¬¸ì…ë‹ˆë‹¤)
         GachaManager.OnGachaFinished += OnGachaDataReceived;
     }
 
 
-    // --- 2. ÀÌº¥Æ® ±¸µ¶ ÇØÁö (ÇÊ¼ö!) ---
-    // ÀÌ ½ºÅ©¸³Æ®(¿ÀºêÁ§Æ®)°¡ ºñÈ°¼ºÈ­µÉ ¶§ È£ÃâµË´Ï´Ù.
+    // --- 2. ì´ë²¤íŠ¸ êµ¬ë… í•´ì§€ (í•„ìˆ˜!) ---
+    // ì´ ìŠ¤í¬ë¦½íŠ¸(ì˜¤ë¸Œì íŠ¸)ê°€ ë¹„í™œì„±í™”ë  ë•Œ í˜¸ì¶œë©ë‹ˆë‹¤.
     void OnDisable()
     {
-        // ±¸µ¶À» ÇØÁö(-=)ÇÕ´Ï´Ù.
-        // ÀÌ·¸°Ô ÇÏÁö ¾ÊÀ¸¸é ¸Ş¸ğ¸® ´©¼ö(Memory Leak)°¡ ¹ß»ıÇÒ ¼ö ÀÖ½À´Ï´Ù!
+        // êµ¬ë…ì„ í•´ì§€(-=)í•©ë‹ˆë‹¤.
+        // ì´ë ‡ê²Œ í•˜ì§€ ì•Šìœ¼ë©´ ë©”ëª¨ë¦¬ ëˆ„ìˆ˜(Memory Leak)ê°€ ë°œìƒí•  ìˆ˜ ìˆìŠµë‹ˆë‹¤!
         GachaManager.OnGachaFinished -= OnGachaDataReceived;
     }
 
     public int GetCurrentStage() => currentStage;
     public int GetCurrentTokens() => tokens;
 
-    /// <GachaUISystem>ÀÌ Àá±İ »óÅÂ¸¦ ÀúÀåÇÒ ¶§ È£ÃâÇÕ´Ï´Ù.
+    /// <GachaUISystem>ì´ ì ê¸ˆ ìƒíƒœë¥¼ ì €ì¥í•  ë•Œ í˜¸ì¶œí•©ë‹ˆë‹¤.
     public void UpdateGachaLocks(bool[] locks)
     {
         if (locks.Length == 4)
@@ -104,14 +104,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <GachaUISystem>ÀÌ ¾À¿¡ ´Ù½Ã ·ÎµåµÉ ¶§ Àá±İ »óÅÂ¸¦ ºÒ·¯¿À±â À§ÇØ È£ÃâÇÕ´Ï´Ù.
+    /// <GachaUISystem>ì´ ì”¬ì— ë‹¤ì‹œ ë¡œë“œë  ë•Œ ì ê¸ˆ ìƒíƒœë¥¼ ë¶ˆëŸ¬ì˜¤ê¸° ìœ„í•´ í˜¸ì¶œí•©ë‹ˆë‹¤.
     public bool[] GetGachaLocks()
     {
         return gachaLockStates;
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î°¡ Àû¿¡°Ô ÀÔÈù ´ë¹ÌÁö¸¦ ´©ÀûÇÕ´Ï´Ù.
+    /// í”Œë ˆì´ì–´ê°€ ì ì—ê²Œ ì…íŒ ëŒ€ë¯¸ì§€ë¥¼ ëˆ„ì í•©ë‹ˆë‹¤.
     /// </summary>
     public void AddDamageDealt(int amount)
     {
@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î°¡ Àû¿¡°Ô ¹ŞÀº ´ë¹ÌÁö¸¦ ´©ÀûÇÕ´Ï´Ù.
+    /// í”Œë ˆì´ì–´ê°€ ì ì—ê²Œ ë°›ì€ ëŒ€ë¯¸ì§€ë¥¼ ëˆ„ì í•©ë‹ˆë‹¤.
     /// </summary>
     public void AddDamageTaken(int amount)
     {
@@ -131,16 +131,16 @@ public class GameManager : MonoBehaviour
     public int GetTotalDamageTaken() { return cumulativeTotalDamageTaken; }
 
     /// <summary>
-    /// ÀüÅõ¿¡ ¼Ò¿äµÈ ½Ã°£À» ÃÊ(float) ´ÜÀ§·Î ¹İÈ¯ÇÕ´Ï´Ù.
+    /// ì „íˆ¬ì— ì†Œìš”ëœ ì‹œê°„ì„ ì´ˆ(float) ë‹¨ìœ„ë¡œ ë°˜í™˜í•©ë‹ˆë‹¤.
     /// </summary>
     public float GetGamePlayTime()
     {
-        // ÀüÅõ°¡ ¾ÆÁ÷ ¾È ³¡³µÀ» ¼öµµ ÀÖÀ¸´Ï ÇöÀç ½Ã°£À¸·Î °è»ê
+        // ì „íˆ¬ê°€ ì•„ì§ ì•ˆ ëë‚¬ì„ ìˆ˜ë„ ìˆìœ¼ë‹ˆ í˜„ì¬ ì‹œê°„ìœ¼ë¡œ ê³„ì‚°
         return Time.time - gameStartTime;
     }
 
     /// <summary>
-    /// ÅäÅ«À» »ç¿ëÇÏ°í, º¯°æµÈ °³¼ö¸¦ UI¿¡ ¾Ë¸³´Ï´Ù.
+    /// í† í°ì„ ì‚¬ìš©í•˜ê³ , ë³€ê²½ëœ ê°œìˆ˜ë¥¼ UIì— ì•Œë¦½ë‹ˆë‹¤.
     /// </summary>
     public void UseTokens(int amount)
     {
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ÅäÅ«À» Ãß°¡ÇÏ°í(°ú±İ/Å×½ºÆ®¿ë), º¯°æµÈ °³¼ö¸¦ UI¿¡ ¾Ë¸³´Ï´Ù.
+    /// í† í°ì„ ì¶”ê°€í•˜ê³ (ê³¼ê¸ˆ/í…ŒìŠ¤íŠ¸ìš©), ë³€ê²½ëœ ê°œìˆ˜ë¥¼ UIì— ì•Œë¦½ë‹ˆë‹¤.
     /// </summary>
     public void AddTokens(int amount)
     {
@@ -158,27 +158,27 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// °­È­ ¾À¿¡¼­ ¾òÀº ¿µ±¸ ½ºÅÈÀ» GameManager¿¡ ÀúÀåÇÕ´Ï´Ù.
+    /// ê°•í™” ì”¬ì—ì„œ ì–»ì€ ì˜êµ¬ ìŠ¤íƒ¯ì„ GameManagerì— ì €ì¥í•©ë‹ˆë‹¤.
     /// </summary>
     public void ApplyPermanentEnhancement(int atk, int acc)
     {
         permanentBonusAtk = atk;
         permanentBonusAcc = acc;
-        Debug.Log($"¿µ±¸ ½ºÅÈ ÀúÀå ¿Ï·á: ATK +{permanentBonusAtk}, ACC + {permanentBonusAcc}%");
+        Debug.Log($"ì˜êµ¬ ìŠ¤íƒ¯ ì €ì¥ ì™„ë£Œ: ATK +{permanentBonusAtk}, ACC + {permanentBonusAcc}%");
     }
 
     private void OnGachaDataReceived(Dictionary<EquipmentData.PartType, EquipmentData> gachaResult)
     {
         {
-            // 'gachaResult' º¯¼ö°¡ ¹Ù·Î GachaManager°¡ º¸³½ 'resultData'ÀÔ´Ï´Ù.
-            // ÀÌÁ¦ ÀÌ µ¥ÀÌÅÍ¸¦ ¸¶À½´ë·Î »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù.
+            // 'gachaResult' ë³€ìˆ˜ê°€ ë°”ë¡œ GachaManagerê°€ ë³´ë‚¸ 'resultData'ì…ë‹ˆë‹¤.
+            // ì´ì œ ì´ ë°ì´í„°ë¥¼ ë§ˆìŒëŒ€ë¡œ ì‚¬ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
             foreach (var pair in gachaResult)
             {
 
                 EquipmentData.PartType part = pair.Key;
                 EquipmentData data = pair.Value;
 
-                Debug.Log($"»õ·Î »ÌÀº ºÎÀ§: {part}, µî±Ş: {data.grade}");
+                Debug.Log($"ìƒˆë¡œ ë½‘ì€ ë¶€ìœ„: {part}, ë“±ê¸‰: {data.grade}");
 
                 switch (part)
                 {

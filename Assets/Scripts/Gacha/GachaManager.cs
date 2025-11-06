@@ -8,7 +8,7 @@ public class GachaManager : MonoBehaviour
     public EquipmentDatabase equipmentDatabase;
     public RerollProbabilityTable startTable, midGameTable, lateGameTable;
 
-    // ÀÌº¥Æ®ÀÇ Dictionary Å¸ÀÔµµ 'EquipmentData.PartType'À¸·Î ¸íÈ®È÷ ÁöÁ¤
+    // ì´ë²¤íŠ¸ì˜ Dictionary íƒ€ì…ë„ 'EquipmentData.PartType'ìœ¼ë¡œ ëª…í™•íˆ ì§€ì •
     public static event Action<Dictionary<EquipmentData.PartType, EquipmentData>> OnGachaFinished;
 
     void Awake()
@@ -20,7 +20,7 @@ public class GachaManager : MonoBehaviour
     {
         if (GameManager.Instance.GetCurrentTokens() < 1)
         {
-            if (WarningUI.Instance != null) WarningUI.Instance.ShowWarning("ÅäÅ«ÀÌ ºÎÁ·ÇÕ´Ï´Ù!");
+            if (WarningUI.Instance != null) WarningUI.Instance.ShowWarning("í† í°ì´ ë¶€ì¡±í•©ë‹ˆë‹¤!");
             return;
         }
         GameManager.Instance.UseTokens(1);

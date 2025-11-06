@@ -26,7 +26,7 @@ public class TokenTextUI : MonoBehaviour
     {
         if (tokenText != null)
         {
-            tokenText.text = "ÅäÅ«: " + currentTokens;
+            tokenText.text = "í† í°: " + currentTokens;
         }
     }
 }

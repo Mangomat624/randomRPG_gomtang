@@ -1,19 +1,19 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using UnityEngine.UI; // Image¸¦ »ç¿ëÇÏ±â À§ÇØ ÀÌ ÁÙÀ» Ãß°¡ÇÕ´Ï´Ù.
+using UnityEngine.UI; // Imageë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì´ ì¤„ì„ ì¶”ê°€í•©ë‹ˆë‹¤.
 
 public class BattleSceneLoader : MonoBehaviour
 {
     public Material transitionMaterial;
-    public float transitionSpeed = 1f; // ÀüÈ¯ ¼Óµµ
+    public float transitionSpeed = 1f; // ì „í™˜ ì†ë„
 
     public Texture closingPatternTexture;
 
     public Image flashImage;
-    public float fadeInTime = 0.22f;  // (13ÇÁ·¹ÀÓ)
-    public float fadeOutTime = 0.22f; // (13ÇÁ·¹ÀÓ)
-    public int flashCount = 2;          // ±ôºıÀÏ È½¼ö
+    public float fadeInTime = 0.22f;  // (13í”„ë ˆì„)
+    public float fadeOutTime = 0.22f; // (13í”„ë ˆì„)
+    public int flashCount = 2;          // ê¹œë¹¡ì¼ íšŸìˆ˜
 
 
     void Start()
@@ -23,14 +23,20 @@ public class BattleSceneLoader : MonoBehaviour
 
     public void LoadBattleScene()
     {
-        // "Battle" ¾ÀÀ» ·ÎµåÇÏ´Â ÄÚ·çÆ¾À» ½ÃÀÛÇÕ´Ï´Ù.
-        StartCoroutine(LoadSceneWithTransition("ÀüÅõ"));
+        // "Battle" ì”¬ì„ ë¡œë“œí•˜ëŠ” ì½”ë£¨í‹´ì„ ì‹œì‘í•©ë‹ˆë‹¤.
+        StartCoroutine(LoadSceneWithTransition("ì „íˆ¬"));
     }
+
+    public void LoadEnding2PhaseScene()
+    {
+
+    }
+
     private IEnumerator LoadSceneWithTransition(string sceneName)
     {
         if (flashImage != null)
         {
-            // ¹ß±¤ ÀÌÆåÆ® ÄÚ·çÆ¾À» ½ÇÇàÇÏ°í ³¡³¯ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+            // ë°œê´‘ ì´í™íŠ¸ ì½”ë£¨í‹´ì„ ì‹¤í–‰í•˜ê³  ëë‚  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦½ë‹ˆë‹¤.
             yield return StartCoroutine(FlashScreenFade(flashCount));
         }
 
@@ -39,64 +45,64 @@ public class BattleSceneLoader : MonoBehaviour
             transitionMaterial.SetTexture("_TransitionTex", closingPatternTexture);
         }
 
-        // 2. Cutoff °ªÀ» 0À¸·Î Áï½Ã ¼³Á¤ (¿­¸° »óÅÂ¿¡¼­ ½ÃÀÛ)
+        // 2. Cutoff ê°’ì„ 0ìœ¼ë¡œ ì¦‰ì‹œ ì„¤ì • (ì—´ë¦° ìƒíƒœì—ì„œ ì‹œì‘)
         transitionMaterial.SetFloat("_Cutoff", 0f);
 
         float t = 0;
 
-        // 4. Cutoff °ªÀ» 0¿¡¼­ 1·Î (È­¸é ´İ±â)
+        // 4. Cutoff ê°’ì„ 0ì—ì„œ 1ë¡œ (í™”ë©´ ë‹«ê¸°)
         while (t < 1)
         {
             t += Time.deltaTime * transitionSpeed;
-            // ¼ÎÀÌ´õÀÇ _Cutoff °ªÀ» 0¿¡¼­ 1·Î º¯°æ
+            // ì…°ì´ë”ì˜ _Cutoff ê°’ì„ 0ì—ì„œ 1ë¡œ ë³€ê²½
             transitionMaterial.SetFloat("_Cutoff", t);
             yield return null;
         }
 
-        // 5. ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³ª¸é ¾À ·Îµå
+        // 5. ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚˜ë©´ ì”¬ ë¡œë“œ
         SceneManager.LoadScene(sceneName);
     }
 
     private IEnumerator FlashScreenFade(int count)
     {
-        // 1. ½ÃÀÛÇÏ±â Àü¿¡ »ö»ó º¯¼ö¸¦ ÁØºñÇÏ°í, ¾ËÆÄ°ª 0, ¿ÀºêÁ§Æ® È°¼ºÈ­
+        // 1. ì‹œì‘í•˜ê¸° ì „ì— ìƒ‰ìƒ ë³€ìˆ˜ë¥¼ ì¤€ë¹„í•˜ê³ , ì•ŒíŒŒê°’ 0, ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
         Color flashColor = flashImage.color;
         flashColor.a = 0f;
         flashImage.color = flashColor;
-        flashImage.gameObject.SetActive(true); // ÀÌÆåÆ®°¡ º¸ÀÌµµ·Ï ¿ÀºêÁ§Æ® ÄÔ
+        flashImage.gameObject.SetActive(true); // ì´í™íŠ¸ê°€ ë³´ì´ë„ë¡ ì˜¤ë¸Œì íŠ¸ ì¼¬
 
         for (int i = 0; i < count; i++)
         {
-            // --- ÆäÀÌµå ÀÎ (Á¡Á¡ ¹à¾ÆÁü) ---
+            // --- í˜ì´ë“œ ì¸ (ì ì  ë°ì•„ì§) ---
             float timer = 0f;
             while (timer < fadeInTime)
             {
                 timer += Time.deltaTime;
-                // Lerp¸¦ »ç¿ëÇØ ¾ËÆÄ°ªÀ» 0¿¡¼­ 1·Î ºÎµå·´°Ô º¯°æ
+                // Lerpë¥¼ ì‚¬ìš©í•´ ì•ŒíŒŒê°’ì„ 0ì—ì„œ 1ë¡œ ë¶€ë“œëŸ½ê²Œ ë³€ê²½
                 flashColor.a = Mathf.Lerp(0f, 1f, timer / fadeInTime);
                 flashImage.color = flashColor;
                 yield return null;
             }
-            // ÆäÀÌµå ÀÎ ¿Ï·á (¾ËÆÄ 1·Î °íÁ¤)
+            // í˜ì´ë“œ ì¸ ì™„ë£Œ (ì•ŒíŒŒ 1ë¡œ ê³ ì •)
             flashColor.a = 1f;
             flashImage.color = flashColor;
 
-            // --- ÆäÀÌµå ¾Æ¿ô (Á¡Á¡ ¾îµÎ¿öÁü) ---
-            timer = 0f; // Å¸ÀÌ¸Ó ÃÊ±âÈ­
+            // --- í˜ì´ë“œ ì•„ì›ƒ (ì ì  ì–´ë‘ì›Œì§) ---
+            timer = 0f; // íƒ€ì´ë¨¸ ì´ˆê¸°í™”
             while (timer < fadeOutTime)
             {
                 timer += Time.deltaTime;
-                // Lerp¸¦ »ç¿ëÇØ ¾ËÆÄ°ªÀ» 1¿¡¼­ 0À¸·Î ºÎµå·´°Ô º¯°æ
+                // Lerpë¥¼ ì‚¬ìš©í•´ ì•ŒíŒŒê°’ì„ 1ì—ì„œ 0ìœ¼ë¡œ ë¶€ë“œëŸ½ê²Œ ë³€ê²½
                 flashColor.a = Mathf.Lerp(1f, 0f, timer / fadeOutTime);
                 flashImage.color = flashColor;
                 yield return null;
             }
-            // ÆäÀÌµå ¾Æ¿ô ¿Ï·á (¾ËÆÄ 0À¸·Î °íÁ¤)
+            // í˜ì´ë“œ ì•„ì›ƒ ì™„ë£Œ (ì•ŒíŒŒ 0ìœ¼ë¡œ ê³ ì •)
             flashColor.a = 0f;
             flashImage.color = flashColor;
         }
 
-        // 3. ¸ğµç ±ôºıÀÓÀÌ ³¡³ª¸é ¿ÀºêÁ§Æ®¸¦ ´Ù½Ã ²û
+        // 3. ëª¨ë“  ê¹œë¹¡ì„ì´ ëë‚˜ë©´ ì˜¤ë¸Œì íŠ¸ë¥¼ ë‹¤ì‹œ ë”
         flashImage.gameObject.SetActive(false);
     }
 }

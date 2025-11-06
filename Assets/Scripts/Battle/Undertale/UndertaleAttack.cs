@@ -6,13 +6,13 @@ public class UndertaleAttack : MonoBehaviour
     [Header("UI Elements")]
     public RectTransform indicator;
     public RectTransform perfectZone;
-    public RectTransform greatZone; // »õ·Î Ãß°¡
-    public RectTransform niceZone;  // »õ·Î Ãß°¡
-    public RectTransform normalZone; // ±âÁ¸ TargetZone
+    public RectTransform greatZone; // ìƒˆë¡œ ì¶”ê°€
+    public RectTransform niceZone;  // ìƒˆë¡œ ì¶”ê°€
+    public RectTransform normalZone; // ê¸°ì¡´ TargetZone
     public RectTransform backgroundBar;
 
     [Header("Game Settings")]
-    public float moveSpeed = 400f; // ÀÎµğÄÉÀÌÅÍ ÀÌµ¿ ¼Óµµ
+    public float moveSpeed = 400f; // ì¸ë””ì¼€ì´í„° ì´ë™ ì†ë„
 
     public System.Action<AttackResult> OnMinigameFinished;
 
@@ -20,8 +20,12 @@ public class UndertaleAttack : MonoBehaviour
 
     public void StartMinigame(System.Action<AttackResult> callback)
     {
-        gameObject.SetActive(true); // UI ÆĞ³Î º¸ÀÌ±â
-        OnMinigameFinished = callback; // Äİ¹é ÇÔ¼ö µî·Ï
+        if (GameManager.Instance.currentStage >= 7)
+        {
+            moveSpeed = 800f;
+        }
+        gameObject.SetActive(true); // UI íŒ¨ë„ ë³´ì´ê¸°
+        OnMinigameFinished = callback; // ì½œë°± í•¨ìˆ˜ ë“±ë¡
         if (_moveCoroutine != null) StopCoroutine(_moveCoroutine);
         _moveCoroutine = StartCoroutine(MoveIndicator());
     }
@@ -32,35 +36,35 @@ public class UndertaleAttack : MonoBehaviour
 
         float currentPos = halfWidth;
 
-        // ÀÎµğÄÉÀÌÅÍ°¡ ¿ŞÂÊ ³¡¿¡ µµ´ŞÇÒ ¶§±îÁö ·çÇÁ ¹İº¹
+        // ì¸ë””ì¼€ì´í„°ê°€ ì™¼ìª½ ëì— ë„ë‹¬í•  ë•Œê¹Œì§€ ë£¨í”„ ë°˜ë³µ
         while (currentPos > -halfWidth)
         {
-            // ½ºÆäÀÌ½º ¹Ù ÀÔ·Â °¨Áö
+            // ìŠ¤í˜ì´ìŠ¤ ë°” ì…ë ¥ ê°ì§€
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                CheckHit(); // ÆÇÁ¤ ÇÔ¼ö È£Ãâ
-                yield break; // ÀÔ·ÂÇßÀ¸¹Ç·Î ÄÚ·çÆ¾ Áï½Ã Á¾·á
+                CheckHit(); // íŒì • í•¨ìˆ˜ í˜¸ì¶œ
+                yield break; // ì…ë ¥í–ˆìœ¼ë¯€ë¡œ ì½”ë£¨í‹´ ì¦‰ì‹œ ì¢…ë£Œ
             }
 
-            // ¿ŞÂÊÀ¸·Î ÀÌµ¿
+            // ì™¼ìª½ìœ¼ë¡œ ì´ë™
             currentPos -= moveSpeed * Time.deltaTime;
             indicator.anchoredPosition = new Vector2(currentPos, 0);
 
-            yield return null; // ´ÙÀ½ ÇÁ·¹ÀÓ±îÁö ´ë±â
+            yield return null; // ë‹¤ìŒ í”„ë ˆì„ê¹Œì§€ ëŒ€ê¸°
         }
 
-        // ·çÇÁ°¡ ³¡±îÁö ½ÇÇàµÆ´Ù¸é (Å°¸¦ ¸ø ´­·¶´Ù¸é) ÀÚµ¿À¸·Î Miss Ã³¸®
-        Debug.Log("½Ã°£ ÃÊ°ú! Miss!");
+        // ë£¨í”„ê°€ ëê¹Œì§€ ì‹¤í–‰ëë‹¤ë©´ (í‚¤ë¥¼ ëª» ëˆŒë €ë‹¤ë©´) ìë™ìœ¼ë¡œ Miss ì²˜ë¦¬
+        Debug.Log("ì‹œê°„ ì´ˆê³¼! Miss!");
         ForceMiss();
 
     }
-    // ÆÇÁ¤ ÇÔ¼ö
+    // íŒì • í•¨ìˆ˜
     private void CheckHit()
     {
         float indicatorPos = indicator.anchoredPosition.x;
         AttackResult result = new AttackResult();
 
-        // °¡Àå ÀÛÀº Á¸(Perfect)ºÎÅÍ ¹Ù±ùÂÊÀ¸·Î ¼ø¼­´ë·Î Ã¼Å©ÇÕ´Ï´Ù.
+        // ê°€ì¥ ì‘ì€ ì¡´(Perfect)ë¶€í„° ë°”ê¹¥ìª½ìœ¼ë¡œ ìˆœì„œëŒ€ë¡œ ì²´í¬í•©ë‹ˆë‹¤.
         if (IsHit(indicatorPos, perfectZone))
         {
             result.judgement = "Perfect";
@@ -88,17 +92,17 @@ public class UndertaleAttack : MonoBehaviour
         else
         {
             result.judgement = "Miss";
-            result.accuracyBonus = 0; // Miss´Â ÀûÁß º¸³Ê½º ¾øÀ½
+            result.accuracyBonus = 0; // MissëŠ” ì ì¤‘ ë³´ë„ˆìŠ¤ ì—†ìŒ
             result.damageMultiplier = 0f;
         }
 
-        Debug.Log("ÆÇÁ¤: " + result.judgement);
+        Debug.Log("íŒì •: " + result.judgement);
 
         gameObject.SetActive(false);
         OnMinigameFinished?.Invoke(result);
     }
 
-    // ÀÚµ¿À¸·Î Miss ÆÇÁ¤À» ³»¸®´Â »õ·Î¿î ÇÔ¼ö
+    // ìë™ìœ¼ë¡œ Miss íŒì •ì„ ë‚´ë¦¬ëŠ” ìƒˆë¡œìš´ í•¨ìˆ˜
     private void ForceMiss()
     {
         AttackResult result = new AttackResult

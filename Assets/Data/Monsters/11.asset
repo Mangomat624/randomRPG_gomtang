@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 11
   m_EditorClassIdentifier: 
   stage: 11
-  monsterName: "\uC9C4.\uB9C8\uC655"
+  monsterName: "\uB9C8\uC655"
   hp: 1600
   atk: 140
   eva: 0
