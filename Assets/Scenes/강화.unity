@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enhancementTable: {fileID: 11400000, guid: cc442fae7e747924684aa45a443f5348, type: 2}
-  totalTimeLimit: 5000
+  totalTimeLimit: 5
   attemptCooldown: 0
   criticalChance: 0.05
   dropPenaltyRate: 75
