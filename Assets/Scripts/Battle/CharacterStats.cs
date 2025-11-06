@@ -1,51 +1,83 @@
-using System.Collections; // ÄÚ·çÆ¾ »ç¿ë
+using System.Collections; // ì½”ë£¨í‹´ ì‚¬ìš©
 using UnityEngine;
-using System; // Action »ç¿ë
+using System; // Action ì‚¬ìš©
+using UnityEngine.UI;
+using TMPro;
+
 public class CharacterStats : MonoBehaviour
 {
     public EquipmentDatabase equipmentDB;
     public static GachaManager Instance { get; private set; }
     public MonsterDatabase monsterDB;
 
-    public enum PlayerType { Player , Enemy }
+    public enum PlayerType { Player, Enemy }
 
     [Header("Info")]
     public PlayerType playerType;
-    public string unitName; // À¯´Ö ÀÌ¸§ (¿¹: "ÇÃ·¹ÀÌ¾î", "½½¶óÀÓ")
-    public int currentHP;   // ÇöÀç Ã¼·Â
+    public string unitName; // ìœ ë‹› ì´ë¦„ (ì˜ˆ: "í”Œë ˆì´ì–´", "ìŠ¬ë¼ì„")
+    public int currentHP;   // í˜„ì¬ ì²´ë ¥
 
     [Header("Attack Stats")]
-    public int baseDamage = 5; // ±âº» °ø°İ·Â (±âÁ¸ attackPower)
-    public int maxHP = 100;       // ÃÖ´ë Ã¼·Â
-    public int baseAccuracy = 30; // ±âº» ÀûÁß
-    public int weaponAccuracy = 0; // ¹«±â ÀûÁß
-    public int enhancementAccuracy = 0; // °­È­ ÀûÁß
+    public int baseDamage = 5; // ê¸°ë³¸ ê³µê²©ë ¥ (ê¸°ì¡´ attackPower)
+    public int maxHP = 100;       // ìµœëŒ€ ì²´ë ¥
+    public int baseAccuracy = 30; // ê¸°ë³¸ ì ì¤‘
+    public int weaponAccuracy = 0; // ë¬´ê¸° ì ì¤‘
+    public int enhancementAccuracy = 0; // ê°•í™” ì ì¤‘
 
     [Header("Defense Stats")]
-    public int evasionRate = 1; // È¸ÇÇÀ²
+    public int evasionRate = 1; // íšŒí”¼ìœ¨
     public int defensivePower = 0;
 
     [Header("UI")]
     public BattleUISystem uisysytem;
+    public SpriteRenderer characterImage;
+    public Sprite characterIdle;
+    public Sprite characterAttack;
+    public Sprite characterDied;
 
     [Header("Visual Effect")]
-    public float squashDuration = 1f; // Âî±×·¯Áö´Â µ¥ °É¸®´Â ½Ã°£
+    public float squashDuration = 1f; // ì°Œê·¸ëŸ¬ì§€ëŠ” ë° ê±¸ë¦¬ëŠ” ì‹œê°„
+    public GameObject damageEffectPrefab;
+    // (ì„ íƒ ì‚¬í•­) ì´í™íŠ¸ê°€ í„°ì§ˆ ìœ„ì¹˜ë¥¼ ì§€ì • (ì˜ˆ: ìºë¦­í„°ì˜ ë¨¸ë¦¬)
+    public Transform damageEffectSpawnPoint;
 
+    [Header("Only Enemy")]
+    public string enemyDesc; // ì  ì„¤ëª…
 
     public Action OnDeathAnimationFinished;
 
+    [Header("Animation Settings")]
+    public float shakeDuration = 0.5f;   // ë°ë¯¸ì§€ ì‰ì´í¬ ì‹œê°„
+    public float shakeMagnitude = 0.3f;  // ë°ë¯¸ì§€ ì‰ì´í¬ ê°•ë„
+    public float evadeDistance = 0.8f;   // íšŒí”¼ ì‹œ ì´ë™ ê±°ë¦¬
+    public float evadeDuration = 0.3f;   // íšŒí”¼ ì• ë‹ˆë©”ì´ì…˜ ì´ ì‹œê°„
+
+    private Vector3 originalPosition; // ìºë¦­í„°ì˜ ì›ë˜ ìœ„ì¹˜
+    private Coroutine currentAnimation; // í˜„ì¬ ì¬ìƒ ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜
+    private SpriteRenderer characterSprite;
+
+    public TextMeshProUGUI logtext;
 
     void Awake()
     {
-        if (playerType == PlayerType.Player) {  
-            LoadAllPartsStats_P(); 
+        int currentStage = GameManager.Instance.currentStage;
+        MonsterData monsterdata = monsterDB.GetMonstersByStage(currentStage);
+        originalPosition = transform.position;
+
+        if (playerType == PlayerType.Player)
+        {
+            LoadAllPartsStats_P();
         }
-        else {
-            LoadAllPartsStats_E(); 
+        else
+        {
+            LoadAllPartsStats_E();
         }
+
+        IdleImage();
 
         currentHP = maxHP;
         uisysytem.SetMaxHealth(playerType, maxHP);
+        characterSprite = GetComponent<SpriteRenderer>();
     }
 
     public void LoadAllPartsStats_P()
@@ -53,9 +85,9 @@ public class CharacterStats : MonoBehaviour
         unitName = GameManager.Instance.playerName;
         foreach (EquipmentData.PartType part in System.Enum.GetValues(typeof(EquipmentData.PartType)))
         {
-            EquipmentData.Grade currentPartGrade; // ÀÌ ºÎÀ§ÀÇ ÇöÀç µî±ŞÀ» ÀúÀåÇÒ º¯¼ö
+            EquipmentData.Grade currentPartGrade; // ì´ ë¶€ìœ„ì˜ í˜„ì¬ ë“±ê¸‰ì„ ì €ì¥í•  ë³€ìˆ˜
 
-            // 6. (ÇÙ½É) ºÎÀ§(part)¿¡ ¸Â´Â GameManagerÀÇ µî±Ş º¯¼ö¸¦ °¡Á®¿É´Ï´Ù.
+            // 6. (í•µì‹¬) ë¶€ìœ„(part)ì— ë§ëŠ” GameManagerì˜ ë“±ê¸‰ ë³€ìˆ˜ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
             switch (part)
             {
                 case EquipmentData.PartType.Head:
@@ -71,7 +103,7 @@ public class CharacterStats : MonoBehaviour
                     currentPartGrade = GameManager.Instance.CurrentWeaponGrade;
                     break;
                 default:
-                    // È¤½Ã ¸ğ¸¦ ¿¹¿Ü Ã³¸®
+                    // í˜¹ì‹œ ëª¨ë¥¼ ì˜ˆì™¸ ì²˜ë¦¬
                     currentPartGrade = EquipmentData.Grade.F;
                     break;
             }
@@ -100,7 +132,7 @@ public class CharacterStats : MonoBehaviour
                 }
             }
         }
-        
+
 
 
     }
@@ -108,7 +140,6 @@ public class CharacterStats : MonoBehaviour
     public void LoadAllPartsStats_E()
     {
         int currentStage = GameManager.Instance.currentStage;
-
         MonsterData monsterdata = monsterDB.GetMonstersByStage(currentStage);
 
         if (monsterdata != null)
@@ -117,61 +148,207 @@ public class CharacterStats : MonoBehaviour
             baseDamage = monsterdata.atk;
             evasionRate = monsterdata.eva;
             unitName = monsterdata.monsterName;
+            enemyDesc = monsterdata.des;
+            characterIdle = monsterdata.idle;
+            characterAttack = monsterdata.fight;
+            characterDied = monsterdata.died;
         }
+    }
+
+    public void AttackImage()
+    {
+       characterImage.sprite = characterAttack;
+    }
+
+    public void IdleImage()
+    {
+        characterImage.sprite = characterIdle;
     }
 
     public bool TakeDamage(int damage)
     {
         currentHP -= damage;
-        if (currentHP < 0) currentHP = 0; // HP°¡ À½¼ö°¡ µÇÁö ¾Êµµ·Ï
+        if (currentHP < 0) currentHP = 0; // HPê°€ ìŒìˆ˜ê°€ ë˜ì§€ ì•Šë„ë¡
 
+        // (ë³€ê²½) ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ ì¤‘ì´ë¼ë©´ ì¼ë‹¨ ë©ˆì¶¤
+        if (currentAnimation != null)
+        {
+            StopCoroutine(currentAnimation);
+            transform.position = originalPosition; // ì¦‰ì‹œ ì›ìœ„ì¹˜
+        }
 
-        // Ã¼·ÂÀÌ 0 ÀÌÇÏ·Î ¶³¾îÁ³´ÂÁö È®ÀÎ
+        // ì²´ë ¥ì´ 0 ì´í•˜ë¡œ ë–¨ì–´ì¡ŒëŠ”ì§€ í™•ì¸
         if (currentHP <= 0)
         {
-            Debug.Log(unitName + "ÀÌ(°¡) ¾²·¯Á³½À´Ï´Ù.");
+            Debug.Log(unitName + "ì´(ê°€) ì“°ëŸ¬ì¡ŒìŠµë‹ˆë‹¤.");
+            logtext.text = unitName + "ì´(ê°€) ì“°ëŸ¬ì¡ŒìŠµë‹ˆë‹¤.";
 
-            uisysytem.SetHealth(playerType,currentHP, () => {
+            uisysytem.SetHealth(playerType, currentHP, () =>
+            {
+                if (damageEffectPrefab != null)
+                {
+                    Vector3 spawnPos = (damageEffectSpawnPoint != null) ? damageEffectSpawnPoint.position : transform.position;
+
+                    // 1. ì´í™íŠ¸ ìƒì„±
+                    GameObject effectGO = Instantiate(damageEffectPrefab, spawnPos, Quaternion.identity);
+
+                    if (damageEffectSpawnPoint != null)
+                    {
+                        effectGO.transform.SetParent(damageEffectSpawnPoint);
+                    }
+
+                    // 2. ìƒì„±ëœ ì´í™íŠ¸ì˜ ParticleSystemRendererë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
+                    ParticleSystemRenderer effectRenderer = effectGO.GetComponent<ParticleSystemRenderer>();
+
+                    // 3. ë Œë”ëŸ¬ì™€ ìºë¦­í„° ìŠ¤í”„ë¼ì´íŠ¸ê°€ ëª¨ë‘ ìˆëŠ”ì§€ í™•ì¸
+                    if (effectRenderer != null && characterSprite != null)
+                    {
+                        // 4. ì´í™íŠ¸ì˜ SortingLayerë¥¼ ìºë¦­í„°ì™€ ë˜‘ê°™ì´ ë§ì¶¥ë‹ˆë‹¤.
+                        effectRenderer.sortingLayerID = characterSprite.sortingLayerID;
+
+                        // 5. (í•µì‹¬) ì´í™íŠ¸ì˜ OrderInLayerë¥¼ ìºë¦­í„°ë³´ë‹¤ 1 ë†’ê²Œ ì„¤ì •í•©ë‹ˆë‹¤.
+                        effectRenderer.sortingOrder = characterSprite.sortingOrder + 1;
+                    }
+                }
                 StartCoroutine(SquashEffect(() => OnDeathAnimationFinished?.Invoke()));
             });
 
-            return true; // ¾²·¯Á³À½À» ¾Ë¸²
+            return true; // ì“°ëŸ¬ì¡ŒìŒì„ ì•Œë¦¼
         }
         else
         {
-            // HP°¡ 0º¸´Ù Å¬ ¶§:
-            // ÀÌÀü°ú °°ÀÌ Äİ¹é ¾øÀÌ SetHealth¸¸ È£ÃâÇÕ´Ï´Ù.
-            uisysytem.SetHealth(playerType,currentHP);
-            Debug.Log(unitName + "ÀÌ(°¡) " + damage + "ÀÇ ÇÇÇØ¸¦ ÀÔ¾ú½À´Ï´Ù. ³²Àº Ã¼·Â: " + currentHP);
-            return false; // ¾ÆÁ÷ ¾²·¯ÁöÁö ¾Ê¾ÒÀ½À» ¾Ë¸²
+            if (damageEffectPrefab != null)
+            {
+                Vector3 spawnPos = (damageEffectSpawnPoint != null) ? damageEffectSpawnPoint.position : transform.position;
+
+                // 1. ì´í™íŠ¸ ìƒì„±
+                GameObject effectGO = Instantiate(damageEffectPrefab, spawnPos, Quaternion.identity);
+
+                if (damageEffectSpawnPoint != null)
+                {
+                    effectGO.transform.SetParent(damageEffectSpawnPoint);
+                }   
+
+                // 2. ìƒì„±ëœ ì´í™íŠ¸ì˜ ParticleSystemRendererë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
+                ParticleSystemRenderer effectRenderer = effectGO.GetComponent<ParticleSystemRenderer>();
+
+                // 3. ë Œë”ëŸ¬ì™€ ìºë¦­í„° ìŠ¤í”„ë¼ì´íŠ¸ê°€ ëª¨ë‘ ìˆëŠ”ì§€ í™•ì¸
+                if (effectRenderer != null && characterSprite != null)
+                {
+                    // 4. ì´í™íŠ¸ì˜ SortingLayerë¥¼ ìºë¦­í„°ì™€ ë˜‘ê°™ì´ ë§ì¶¥ë‹ˆë‹¤.
+                    effectRenderer.sortingLayerID = characterSprite.sortingLayerID;
+
+                    // 5. (í•µì‹¬) ì´í™íŠ¸ì˜ OrderInLayerë¥¼ ìºë¦­í„°ë³´ë‹¤ 1 ë†’ê²Œ ì„¤ì •í•©ë‹ˆë‹¤.
+                    effectRenderer.sortingOrder = characterSprite.sortingOrder + 1;
+                }
+            }
+            currentAnimation = StartCoroutine(ShakeAnimation());
+            uisysytem.SetHealth(playerType, currentHP);
+            Debug.Log(unitName + "ì´(ê°€) " + damage + "ì˜ í”¼í•´ë¥¼ ì…ì—ˆìŠµë‹ˆë‹¤. ë‚¨ì€ ì²´ë ¥: " + currentHP);
+            logtext.text = $"{unitName}ì´(ê°€) {damage}ì˜ í”¼í•´ë¥¼ ì…ì—ˆìŠµë‹ˆë‹¤. ë‚¨ì€ ì²´ë ¥: {currentHP}";
+            return false; // ì•„ì§ ì“°ëŸ¬ì§€ì§€ ì•Šì•˜ìŒì„ ì•Œë¦¼
         }
     }
 
-    // Ä³¸¯ÅÍ°¡ Âî±×·¯Áö´Â È¿°ú¸¦ ¿¬ÃâÇÏ´Â ÄÚ·çÆ¾
+    // ìºë¦­í„°ê°€ ì°Œê·¸ëŸ¬ì§€ëŠ” íš¨ê³¼ë¥¼ ì—°ì¶œí•˜ëŠ” ì½”ë£¨í‹´
     private IEnumerator SquashEffect(Action onComplete)
     {
-        Vector3 startScale = transform.localScale; // ÇöÀç Å©±â
-        Vector3 endScale = new Vector3(startScale.x, 0, startScale.z); // ¸ñÇ¥ Å©±â (YÃà¸¸ 0)
+        if (playerType == PlayerType.Enemy)
+        {
+            int currentStage = GameManager.Instance.currentStage;
+
+            MonsterData monsterdata = monsterDB.GetMonstersByStage(currentStage);
+
+            characterImage.sprite = monsterdata.died;
+        }
+
+        yield return new WaitForSeconds(0.6f);
+
+        Vector3 startScale = transform.localScale; // í˜„ì¬ í¬ê¸°
+        Vector3 endScale = new Vector3(startScale.x, 0, startScale.z); // ëª©í‘œ í¬ê¸° (Yì¶•ë§Œ 0)
         float timer = 0f;
 
         while (timer < squashDuration)
         {
             timer += Time.deltaTime;
             float t = timer / squashDuration;
-            t = Mathf.Sin(t * Mathf.PI * 0.5f); // ºÎµå·¯¿î Ease-Out È¿°ú Àû¿ë
+            t = Mathf.Sin(t * Mathf.PI * 0.5f); // ë¶€ë“œëŸ¬ìš´ Ease-Out íš¨ê³¼ ì ìš©
 
-            // Lerp¸¦ »ç¿ëÇØ ½Ã°£¿¡ µû¶ó Å©±â¸¦ ¼­¼­È÷ º¯°æ
+            // Lerpë¥¼ ì‚¬ìš©í•´ ì‹œê°„ì— ë”°ë¼ í¬ê¸°ë¥¼ ì„œì„œíˆ ë³€ê²½
             transform.localScale = Vector3.Lerp(startScale, endScale, t);
 
             yield return null;
         }
 
-        // Á¤È®ÇÑ ¸ñÇ¥ Å©±â·Î ¼³Á¤
+        // ì •í™•í•œ ëª©í‘œ í¬ê¸°ë¡œ ì„¤ì •
         transform.localScale = endScale;
 
         onComplete?.Invoke();
 
-        // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³­ ÈÄ Ä³¸¯ÅÍ ¿ÀºêÁ§Æ®¸¦ ºñÈ°¼ºÈ­.
+        // ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚œ í›„ ìºë¦­í„° ì˜¤ë¸Œì íŠ¸ë¥¼ ë¹„í™œì„±í™”.
         gameObject.SetActive(false);
+    }
+
+    public void PlayEvadeAnimation()
+    {
+        // ë‹¤ë¥¸ ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ ì¤‘ì´ë©´ ë©ˆì¶¤
+        if (currentAnimation != null)
+        {
+            StopCoroutine(currentAnimation);
+        }
+        currentAnimation = StartCoroutine(EvadeAnimation());
+    }
+
+    // --- (ì¶”ê°€) ë°ë¯¸ì§€ (ì¢Œìš° í”ë“¤ê¸°) ì½”ë£¨í‹´ ---
+    private IEnumerator ShakeAnimation()
+    {
+        float timer = 0f;
+        while (timer < shakeDuration)
+        {
+            float t = timer / shakeDuration;
+            float currentMagnitude = shakeMagnitude * (1f - Mathf.Sin(t * Mathf.PI * 0.5f));
+            // Sin í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•´ ë¶€ë“œëŸ½ê³  ë¹ ë¥¸ ì¢Œìš° ì§„ë™ ìƒì„±
+            float x = originalPosition.x + Mathf.Sin(timer * 80f) * currentMagnitude;
+            transform.position = new Vector3(x, originalPosition.y, originalPosition.z);
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        // ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚˜ë©´ ì •í™•íˆ ì›ë˜ ìœ„ì¹˜ë¡œ
+        transform.position = originalPosition;
+        currentAnimation = null; // ì½”ë£¨í‹´ ì¢…ë£Œ
+    }
+    // --- ì—¬ê¸°ê¹Œì§€ ---
+
+    // --- (ì¶”ê°€) íšŒí”¼ (ì™¼ìª½ìœ¼ë¡œ ê°”ë‹¤ê°€ ëŒì•„ì˜¤ê¸°) ì½”ë£¨í‹´ ---
+    private IEnumerator EvadeAnimation()
+    {
+        float timer = 0f;
+        float halfDuration = evadeDuration / 2;
+        Vector3 evadePos = originalPosition - new Vector3(evadeDistance, 0, 0); // ì™¼ìª½ìœ¼ë¡œ ì´ë™í•  ìœ„ì¹˜
+
+        // 1. ì™¼ìª½ìœ¼ë¡œ ì´ë™ (Ease-Out: ë¶€ë“œëŸ½ê²Œ ê°ì†)
+        while (timer < halfDuration)
+        {
+            float t = timer / halfDuration;
+            t = Mathf.Sin(t * Mathf.PI * 0.5f); // Ease-Out
+            transform.position = Vector3.Lerp(originalPosition, evadePos, t);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        // 2. ë‹¤ì‹œ ì˜¤ë¥¸ìª½(ì›ìœ„ì¹˜)ìœ¼ë¡œ ì´ë™ (Ease-In: ë¶€ë“œëŸ½ê²Œ ê°€ì†)
+        timer = 0f; // íƒ€ì´ë¨¸ ë¦¬ì…‹
+        while (timer < halfDuration)
+        {
+            float t = timer / halfDuration;
+            t = 1f - Mathf.Cos(t * Mathf.PI * 0.5f); // Ease-In
+            transform.position = Vector3.Lerp(evadePos, originalPosition, t);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = originalPosition; // ì •í™•íˆ ì›ìœ„ì¹˜
+        currentAnimation = null; // ì½”ë£¨í‹´ ì¢…ë£Œ
     }
 }

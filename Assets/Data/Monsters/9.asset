@@ -17,3 +17,7 @@ MonoBehaviour:
   hp: 1100
   atk: 90
   eva: 45
+  des: "\uCCB4\uB825/1100.\uACF5\uACA9\uB825/90.\uD68C\uD53C/45"
+  idle: {fileID: 0}
+  fight: {fileID: 0}
+  died: {fileID: 0}

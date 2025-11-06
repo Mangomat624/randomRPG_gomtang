@@ -1,30 +1,31 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
 using System.Text;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
 public struct AttackResult
 {
-    public float damageMultiplier; // ÃÖÁ¾ ´ë¹ÌÁö °è»ê ¹èÀ²
-    public int accuracyBonus;      // ÀûÁß·ü º¸³Ê½º
-    public string judgement;       // ÆÇÁ¤ ÀÌ¸§ (Perfect, Great µî)
+    public float damageMultiplier; // ìµœì¢… ëŒ€ë¯¸ì§€ ê³„ì‚° ë°°ìœ¨
+    public int accuracyBonus;      // ì ì¤‘ë¥  ë³´ë„ˆìŠ¤
+    public string judgement;       // íŒì • ì´ë¦„ (Perfect, Great ë“±)
 }
 
 public class BattleSystem : MonoBehaviour
 {
-    public CharacterStats playerStats; // ÇÃ·¹ÀÌ¾îÀÇ CharacterStats ÄÄÆ÷³ÍÆ®
-    public CharacterStats enemyStats;  // ÀûÀÇ CharacterStats ÄÄÆ÷³ÍÆ®
+    public CharacterStats playerStats; // í”Œë ˆì´ì–´ì˜ CharacterStats ì»´í¬ë„ŒíŠ¸
+    public CharacterStats enemyStats;  // ì ì˜ CharacterStats ì»´í¬ë„ŒíŠ¸
 
-    public BattleState state; // ÇöÀç ÀüÅõ »óÅÂ
+    public BattleState state; // í˜„ì¬ ì „íˆ¬ ìƒíƒœ
 
     [Header("UI")]
     public BattleUISystem battleUI;
 
     [Header("Minigames")]
-    // µÎ ¹Ì´Ï°ÔÀÓÀ» ¸ğµÎ ¿¬°áÇÒ º¯¼ö
+    // ë‘ ë¯¸ë‹ˆê²Œì„ì„ ëª¨ë‘ ì—°ê²°í•  ë³€ìˆ˜
     public UndertaleAttack undertaleGame;
     public NoteManager pseckaGame;
 
@@ -32,17 +33,20 @@ public class BattleSystem : MonoBehaviour
     private AttackResult currentAttackResult;
 
     public Material transitionMaterial;
-    public float transitionSpeed = 1f; // ÀüÈ¯ ¼Óµµ
+    public float transitionSpeed = 1f; // ì „í™˜ ì†ë„
 
     public Texture openingPatternTexture;
 
     private long finalScore;
     public GameObject nextbutton;
+    public TextMeshProUGUI logtext;
+    public GameObject logMom;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        logtext.text = $"{playerStats.unitName}(HP: {playerStats.currentHP}) vs {enemyStats.unitName}(HP: {enemyStats.currentHP})";
         undertaleGame.gameObject.SetActive(false);
         pseckaGame.gameObject.SetActive(false );
         nextbutton.gameObject.SetActive(false);
@@ -51,41 +55,71 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle()
     {
+        Scene currentScene = SceneManager.GetActiveScene();
 
-        if (openingPatternTexture != null)
+        // 2. Scene ê°ì²´ì˜ .name ì†ì„±ì— ì ‘ê·¼í•˜ì—¬ ì´ë¦„ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
+        string sceneName = currentScene.name;
+        if (sceneName != "ì „íˆ¬") 
         {
-            transitionMaterial.SetTexture("_TransitionTex", openingPatternTexture);
+            if (openingPatternTexture != null)
+            {
+                transitionMaterial.SetTexture("_TransitionTex", openingPatternTexture);
+                Color black = new Color(0f, 0f, 0f, 1f);
+                transitionMaterial.SetColor("_Color", black);
+            }
+
+            transitionMaterial.SetFloat("_Cutoff", 1f);
+
+            float t = 1;
+            while (t > 0)
+            {
+                float twophasetransitionSpeed = 7f; // ì „í™˜ ì†ë„
+                t -= Time.deltaTime * twophasetransitionSpeed;
+                // 2. ì…°ì´ë”ì˜ _Cutoff ê°’ì„ 1ì—ì„œ 0ìœ¼ë¡œ ë³€ê²½
+                transitionMaterial.SetFloat("_Cutoff", t);
+                yield return null;
+            }
         }
-
-        transitionMaterial.SetFloat("_Cutoff", 1f);
-
-        float t = 1;
-        while (t > 0)
+        else
         {
-            t -= Time.deltaTime * transitionSpeed;
-            // 2. ¼ÎÀÌ´õÀÇ _Cutoff °ªÀ» 1¿¡¼­ 0À¸·Î º¯°æ
-            transitionMaterial.SetFloat("_Cutoff", t);
-            yield return null;
+            if (openingPatternTexture != null)
+            {
+                transitionMaterial.SetTexture("_TransitionTex", openingPatternTexture);
+                Color originalcolor = new Color(0.0753f, 0.0882f, 0.0845f, 1f);
+                transitionMaterial.SetColor("_Color", originalcolor);
+            }
+
+            transitionMaterial.SetFloat("_Cutoff", 1f);
+
+            float t = 1;
+            while (t > 0)
+            {
+                t -= Time.deltaTime * transitionSpeed;
+                // 2. ì…°ì´ë”ì˜ _Cutoff ê°’ì„ 1ì—ì„œ 0ìœ¼ë¡œ ë³€ê²½
+                transitionMaterial.SetFloat("_Cutoff", t);
+                yield return null;
+            }
         }
 
         state = BattleState.START;
 
-        // --- (Ãß°¡) °¢ Ä³¸¯ÅÍÀÇ »ç¸Á ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á ÀÌº¥Æ® ±¸µ¶ ---
-        // ÇÃ·¹ÀÌ¾î°¡ ¾²·¯Áö¸é HandleCharacterDeath ÇÔ¼ö È£Ãâ
+        // --- (ì¶”ê°€) ê° ìºë¦­í„°ì˜ ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ ì´ë²¤íŠ¸ êµ¬ë… ---
+        // í”Œë ˆì´ì–´ê°€ ì“°ëŸ¬ì§€ë©´ HandleCharacterDeath í•¨ìˆ˜ í˜¸ì¶œ
         playerStats.OnDeathAnimationFinished += HandleCharacterDeath;
-        // ÀûÀÌ ¾²·¯Áö¸é HandleCharacterDeath ÇÔ¼ö È£Ãâ
+        // ì ì´ ì“°ëŸ¬ì§€ë©´ HandleCharacterDeath í•¨ìˆ˜ í˜¸ì¶œ
         enemyStats.OnDeathAnimationFinished += HandleCharacterDeath;
-        // --- ¿©±â±îÁö ---
+        // --- ì—¬ê¸°ê¹Œì§€ ---
 
-        Debug.Log("ÀüÅõ ÁØºñ!");
+        Debug.Log("ì „íˆ¬ ì¤€ë¹„!");
 
 
 
         Debug.Log(playerStats.unitName + " (HP: " + playerStats.currentHP + ") vs " + enemyStats.unitName + " (HP: " + enemyStats.currentHP + ")");
+        logtext.text = $"{playerStats.unitName}(HP: {playerStats.currentHP}) vs {enemyStats.unitName}(HP: {enemyStats.currentHP})";
 
         yield return new WaitForSeconds(1f);
 
-        // ÁØºñ°¡ ³¡³ª¸é ÇÃ·¹ÀÌ¾î ÅÏÀ¸·Î ÀüÈ¯ÇÕ´Ï´Ù.
+        // ì¤€ë¹„ê°€ ëë‚˜ë©´ í”Œë ˆì´ì–´ í„´ìœ¼ë¡œ ì „í™˜í•©ë‹ˆë‹¤.
         state = BattleState.PLAYERTURN;
         StartCoroutine(PlayerTurn());
     }
@@ -100,46 +134,55 @@ public class BattleSystem : MonoBehaviour
 
     private void HandleCharacterDeath()
     {
-        // EndBattle ÄÚ·çÆ¾À» ½ÃÀÛ½ÃÅµ´Ï´Ù.
+        // EndBattle ì½”ë£¨í‹´ì„ ì‹œì‘ì‹œí‚µë‹ˆë‹¤.
         StartCoroutine(EndBattleSequence());
     }
 
     IEnumerator PlayerTurn()
     {
-        Debug.Log("ÇÃ·¹ÀÌ¾îÀÇ ÅÏ!");
+        Debug.Log("í”Œë ˆì´ì–´ì˜ í„´!");
+        logtext.text = "í”Œë ˆì´ì–´ì˜ í„´!";
 
         isActionDone = false;
 
 
-        // 0 ¶Ç´Â 1À» ·£´ıÀ¸·Î ¼±ÅÃ
+        // 0 ë˜ëŠ” 1ì„ ëœë¤ìœ¼ë¡œ ì„ íƒ
         int minigameType = Random.Range(0, 2);
 
-        //¾ğ´õÅ×ÀÏ Å×½ºÆ®
+        //ì–¸ë”í…Œì¼ í…ŒìŠ¤íŠ¸
         //int minigameType = Random.Range(0, 1);
 
-        //ÇÁ¼¼Ä« Å×½ºÆ®
+        //í”„ì„¸ì¹´ í…ŒìŠ¤íŠ¸
         // minigameType = Random.Range(1, 2);
 
         if (minigameType == 0)
         {
-            Debug.Log("ÀÌ¹ø ÅÏÀº ¾ğ´õÅ×ÀÏ ¹Ì´Ï°ÔÀÓ!");
+            Debug.Log("ì´ë²ˆ í„´ì€ ì–¸ë”í…Œì¼ ë¯¸ë‹ˆê²Œì„!");
+            logtext.text = "ì´ë²ˆ í„´ì€ ì´ë™í˜• ë°” ë¯¸ë‹ˆê²Œì„!";
+            yield return new WaitForSeconds(1f);
+            logMom.gameObject.SetActive(false);
             undertaleGame.StartMinigame(HandleAttackResult);
         }
         else
         {
-            Debug.Log("ÀÌ¹ø ÅÏÀº ÇÁ¼¼Ä« ¹Ì´Ï°ÔÀÓ!");
+            Debug.Log("ì´ë²ˆ í„´ì€ í”„ì„¸ì¹´ ë¯¸ë‹ˆê²Œì„!");
+            logtext.text = "ì´ë²ˆ í„´ì€ ë„íŠ¸ ë¯¸ë‹ˆê²Œì„!";
+            yield return new WaitForSeconds(1f);
+            logMom.gameObject.SetActive(false);
             pseckaGame.StartMinigame(HandleAttackResult);
         }
 
-        // ¹Ì´Ï°ÔÀÓÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // ë¯¸ë‹ˆê²Œì„ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         while (!isActionDone)
         {
             yield return null;
         }
+        logMom.SetActive(true);
+        playerStats.AttackImage();
 
-        // 1. ÀûÁß·ü °è»ê    
+        // 1. ì ì¤‘ë¥  ê³„ì‚°    
         int totalAccuracy = playerStats.baseAccuracy + playerStats.weaponAccuracy + playerStats.enhancementAccuracy + currentAttackResult.accuracyBonus+GameManager.Instance.permanentBonusAcc;
-        int hitChance = 50; // ±âº»°ª
+        int hitChance = 50; // ê¸°ë³¸ê°’
         if (totalAccuracy < enemyStats.evasionRate) {
             hitChance = 0;
         }
@@ -148,15 +191,16 @@ public class BattleSystem : MonoBehaviour
             hitChance = totalAccuracy - enemyStats.evasionRate;
         }
 
-        // 2. ¸íÁß ÆÇÁ¤ (·£´ı)
-        int roll = Random.Range(1, 101); // 1~100 »çÀÌÀÇ ·£´ı ¼ıÀÚ
+        // 2. ëª…ì¤‘ íŒì • (ëœë¤)
+        int roll = Random.Range(1, 101); // 1~100 ì‚¬ì´ì˜ ëœë¤ ìˆ«ì
         if (roll <= hitChance)
         {
-            // 3. ¸íÁß ½Ã µ¥¹ÌÁö °è»ê ¹× Àû¿ë
-            Debug.Log("¸íÁß! (ÀûÁß·ü: " + hitChance + "%, ÁÖ»çÀ§: " + roll + ")");
+            // 3. ëª…ì¤‘ ì‹œ ë°ë¯¸ì§€ ê³„ì‚° ë° ì ìš©
+            Debug.Log("ëª…ì¤‘! (ì ì¤‘ë¥ : " + hitChance + "%, ì£¼ì‚¬ìœ„: " + roll + ")");
+            logtext.text = "ëª…ì¤‘! (ì ì¤‘ë¥ : " + hitChance + "%, ì£¼ì‚¬ìœ„: " + roll + ")";
             int damage = Mathf.RoundToInt((playerStats.baseDamage+GameManager.Instance.permanentBonusAtk) * currentAttackResult.damageMultiplier);
 
-            // --- (Ãß°¡) GameManager¿¡ ÀÔÈù ´ë¹ÌÁö ±â·Ï ---
+            // --- (ì¶”ê°€) GameManagerì— ì…íŒ ëŒ€ë¯¸ì§€ ê¸°ë¡ ---
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.AddDamageDealt(damage);
@@ -165,22 +209,27 @@ public class BattleSystem : MonoBehaviour
             bool isDead = enemyStats.TakeDamage(damage);
             if (isDead)
             {
+                playerStats.AttackImage();
+                yield return new WaitForSeconds(1.5f);
                 state = BattleState.WON;
-                yield break; // ÀüÅõ Á¾·á
+                playerStats.IdleImage();
+                yield break;
             }
         }
         else
         {
-            Debug.Log("ºø³ª°¨! (ÀûÁß·ü: " + hitChance + "%, ÁÖ»çÀ§: " + roll + ")");
+            Debug.Log("ë¹—ë‚˜ê°! (ì ì¤‘ë¥ : " + hitChance + "%, ì£¼ì‚¬ìœ„: " + roll + ")");
+            logtext.text = "ë¹—ë‚˜ê°! (ì ì¤‘ë¥ : " + hitChance + "%, ì£¼ì‚¬ìœ„: " + roll + ")";
+            enemyStats.PlayEvadeAnimation();
         }
 
         yield return new WaitForSeconds(1.5f);
-
+        playerStats.IdleImage();
         state = BattleState.ENEMYTURN;
         StartCoroutine(EnemyTurn());
     }
 
-    // ¹Ì´Ï°ÔÀÓÀÌ ³¡³ª¸é undertalegame ½ºÅ©¸³Æ®°¡ ÀÌ ÇÔ¼ö¸¦ È£ÃâÇÕ´Ï´Ù.
+    // ë¯¸ë‹ˆê²Œì„ì´ ëë‚˜ë©´ undertalegame ìŠ¤í¬ë¦½íŠ¸ê°€ ì´ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•©ë‹ˆë‹¤.
     public void HandleAttackResult(AttackResult result)
     {
         currentAttackResult = result;
@@ -189,43 +238,55 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EnemyTurn()
     {
-        Debug.Log("ÀûÀÇ ÅÏ!");
-        yield return new WaitForSeconds(1f); // ÀûÀÌ »ı°¢ÇÏ´Â ½Ã°£Ã³·³ Àá½Ã ´ë±â
+        enemyStats.AttackImage();
+        Debug.Log("ì ì˜ í„´!");
+        logtext.text = "ì ì˜ í„´!";
+        yield return new WaitForSeconds(1f); // ì ì´ ìƒê°í•˜ëŠ” ì‹œê°„ì²˜ëŸ¼ ì ì‹œ ëŒ€ê¸°
 
-        // 1. ÇÃ·¹ÀÌ¾îÀÇ 1Â÷ È¸ÇÇ ÆÇÁ¤
-        int monsterAccuracy = 100; // ¸ó½ºÅÍ ÀûÁßÀº 100À¸·Î °íÁ¤
-        int evasionChance = (100 + playerStats.evasionRate) - monsterAccuracy; //È¸ÇÇÀ²
+        // 1. í”Œë ˆì´ì–´ì˜ 1ì°¨ íšŒí”¼ íŒì •
+        int monsterAccuracy = 100; // ëª¬ìŠ¤í„° ì ì¤‘ì€ 100ìœ¼ë¡œ ê³ ì •
+        int evasionChance = (100 + playerStats.evasionRate) - monsterAccuracy; //íšŒí”¼ìœ¨
         int roll = Random.Range(1, 101);
-
+        
         if (roll <= evasionChance)
         {
-            Debug.Log("È¸ÇÇ ¼º°ø! (È¸ÇÇÀ²: " + evasionChance + "%, ÁÖ»çÀ§: " + roll + ")");
+            Debug.Log("íšŒí”¼ ì„±ê³µ! (íšŒí”¼ìœ¨: " + evasionChance + "%, ì£¼ì‚¬ìœ„: " + roll + ")");
+            logtext.text = "íšŒí”¼ ì„±ê³µ! (íšŒí”¼ìœ¨: " + evasionChance + "%, ì£¼ì‚¬ìœ„: " + roll + ")";
+            playerStats.PlayEvadeAnimation();
         }
         else
         {
-            Debug.Log("È¸ÇÇ ½ÇÆĞ. (È¸ÇÇÀ²: " + evasionChance + "%, ÁÖ»çÀ§: " + roll + ")");
-            // 2. 1Â÷ È¸ÇÇ ½ÇÆĞ ½Ã, È¸ÇÇ ¹Ì´Ï°ÔÀÓ µîÀå (ÇöÀç´Â ¹Ù·Î µ¥¹ÌÁö)
-            // TODO: ¿©±â¿¡ ¸Å¿ì ¾î·Á¿î È¸ÇÇ ¹Ì´Ï°ÔÀÓÀ» È£ÃâÇÏ´Â ·ÎÁ÷À» Ãß°¡ÇØ¾ß ÇÕ´Ï´Ù.
-            // ¼º°ø ½Ã return; ÇÏ¿© µ¥¹ÌÁö¸¦ ÀÔÁö ¾Ê°Ô ÇÕ´Ï´Ù.
-
-            Debug.Log("ÇÃ·¹ÀÌ¾î°¡ ÀûÀÇ °ø°İÀ» ¹Ş½À´Ï´Ù.");
+            Debug.Log("íšŒí”¼ ì‹¤íŒ¨. (íšŒí”¼ìœ¨: " + evasionChance + "%, ì£¼ì‚¬ìœ„: " + roll + ")");
+            logtext.text = "íšŒí”¼ ì‹¤íŒ¨. (íšŒí”¼ìœ¨: " + evasionChance + " %, ì£¼ì‚¬ìœ„: " + roll + ")" + "\n" + "í”Œë ˆì´ì–´ê°€ ì ì˜ ê³µê²©ì„ ë°›ìŠµë‹ˆë‹¤.";
+            // 2. 1ì°¨ íšŒí”¼ ì‹¤íŒ¨ ì‹œ, íšŒí”¼ ë¯¸ë‹ˆê²Œì„ ë“±ì¥ (í˜„ì¬ëŠ” ë°”ë¡œ ë°ë¯¸ì§€)
+            // TODO: ì—¬ê¸°ì— ë§¤ìš° ì–´ë ¤ìš´ íšŒí”¼ ë¯¸ë‹ˆê²Œì„ì„ í˜¸ì¶œí•˜ëŠ” ë¡œì§ì„ ì¶”ê°€í•´ì•¼ í•©ë‹ˆë‹¤.
+            // ì„±ê³µ ì‹œ return; í•˜ì—¬ ë°ë¯¸ì§€ë¥¼ ì…ì§€ ì•Šê²Œ í•©ë‹ˆë‹¤.
+            Debug.Log("í”Œë ˆì´ì–´ê°€ ì ì˜ ê³µê²©ì„ ë°›ìŠµë‹ˆë‹¤.");
             int enemydamage = enemyStats.baseDamage - playerStats.defensivePower;
-            if (GameManager.Instance != null)
+            if (enemydamage < 0)
             {
-                GameManager.Instance.AddDamageTaken(enemydamage);
+                enemydamage = 0;
             }
-            bool isDead = playerStats.TakeDamage(enemydamage);
-            if (isDead)
+            else 
             {
-                state = BattleState.LOST;
-                yield break; // ÀüÅõ Á¾·á
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.AddDamageTaken(enemydamage);
+                }
+                bool isDead = playerStats.TakeDamage(enemydamage);
+                if (isDead)
+                {
+                    enemyStats.IdleImage();
+                    state = BattleState.LOST;
+                    yield break; // ì „íˆ¬ ì¢…ë£Œ
+                }
             }
-
         }
 
         yield return new WaitForSeconds(1.5f);
 
-        state = BattleState.PLAYERTURN;
+        enemyStats.IdleImage();
+        state = BattleState.PLAYERTURN;;
         StartCoroutine(PlayerTurn());
     }
 
@@ -237,80 +298,127 @@ public class BattleSystem : MonoBehaviour
         }
         else { GameManager.Instance.isEnd = true; }
 
-        // 1. Á¡¼ö °è»ê
+        // 1. ì ìˆ˜ ê³„ì‚°
         finalScore = CalculateFinalScore(GameManager.Instance.isEnd);
 
         yield break;
     }
 
+    // BattleSystem.csì˜ EndBattleSequence í•¨ìˆ˜ (ìˆ˜ì •ëœ ë²„ì „)
+
     IEnumerator EndBattleSequence()
     {
         if (state == BattleState.WON)
         {
-            Debug.Log("½Â¸®Çß½À´Ï´Ù!");
-            GameManager.Instance.currentStage += 1;
-            if (GameManager.Instance.currentStage >= 11)
+            Debug.Log("ìŠ¹ë¦¬í–ˆìŠµë‹ˆë‹¤!");
+            logtext.text = "ìŠ¹ë¦¬í–ˆìŠµë‹ˆë‹¤!";
+            GameManager.Instance.currentStage += 1; // ìŠ¤í…Œì´ì§€ 1 ì¦ê°€ (ì˜ˆ: 10 -> 11)
+
+            // --- (í•µì‹¬ ë³€ê²½) ---
+            // 1. ìŠ¤í…Œì´ì§€ 11ì´ ë˜ì—ˆëŠ”ì§€ í™•ì¸
+            if (GameManager.Instance.currentStage == 11)
             {
-                Debug.Log("Å¬¸®¾î");
+                Debug.Log("ìŠ¤í…Œì´ì§€ 11 ë„ë‹¬! ì—”ë”© ì”¬ìœ¼ë¡œ ì´ë™í•©ë‹ˆë‹¤.");
+
+                if (openingPatternTexture != null)
+                {
+                    transitionMaterial.SetTexture("_TransitionTex", openingPatternTexture);
+                    Color black = new Color(0f, 0f, 0f, 1f);
+                    transitionMaterial.SetColor("_Color", black);
+                }
+
+                transitionMaterial.SetFloat("_Cutoff", 0f);
+
+                float t = 0;
+
+                // 4. Cutoff ê°’ì„ 0ì—ì„œ 1ë¡œ (í™”ë©´ ë‹«ê¸°)
+                while (t < 1)
+                {
+                    t += Time.deltaTime * transitionSpeed;
+                    // ì…°ì´ë”ì˜ _Cutoff ê°’ì„ 0ì—ì„œ 1ë¡œ ë³€ê²½
+                    transitionMaterial.SetFloat("_Cutoff", t);
+                    yield return null;
+                }
+
+                // 2. "Ending2Phase" ì”¬ìœ¼ë¡œ ë°”ë¡œ ì´ë™
+                SceneManager.LoadScene("Ending2Phase");
+                yield break; // ì½”ë£¨í‹´ ì¦‰ì‹œ ì¢…ë£Œ
+            }
+            // --- ì—¬ê¸°ê¹Œì§€ ë³€ê²½ ---
+
+            // (ì´í•˜ëŠ” 11 ìŠ¤í…Œì´ì§€ê°€ ì•„ë‹ ê²½ìš°ì˜ ê¸°ì¡´ ë¡œì§)
+            if (GameManager.Instance.currentStage >= 12) // (11ì€ ìœ„ì—ì„œ ì²˜ë¦¬í–ˆìœ¼ë¯€ë¡œ ì´ ì¡°ê±´ì€ ì´ì œ 12 ì´ìƒ)
+            {
+                Debug.Log("í´ë¦¬ì–´");
                 StartCoroutine(GameEndSequence());
                 yield return StartCoroutine(PostScoreCoroutine(playerStats.unitName, finalScore));
+                GameManager.Instance.hasNewRankToShow = true;
+
+                // (ì°¸ê³ ) 12 ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ ì‹œ ë­í‚¹ ì”¬ìœ¼ë¡œ ì´ë™í•˜ë„ë¡ ë³€ê²½
+                SceneManager.LoadScene("Ranking");
             }
             else
             {
+                // (ê¸°ì¡´ì˜ ë½‘ê¸° ì”¬ ì´ë™ ë¡œì§)
                 yield return new WaitForSeconds(1f);
                 switch (GameManager.Instance.currentStage)
                 {
                     case 4:
-                        SceneManager.LoadScene("»Ì±â");
+                        SceneManager.LoadScene("ë½‘ê¸°");
                         GameManager.Instance.tokens += 6;
                         break;
                     case 7:
-                        SceneManager.LoadScene("»Ì±â");
+                        SceneManager.LoadScene("ë½‘ê¸°");
                         GameManager.Instance.tokens += 8;
                         break;
                     case 10:
-                        SceneManager.LoadScene("»Ì±â");
+                        SceneManager.LoadScene("ë½‘ê¸°");
                         GameManager.Instance.tokens += 8;
                         break;
                     default:
+                        // (11 ìŠ¤í…Œì´ì§€ê°€ ì•„ë‹ˆë¯€ë¡œ nextbutton í™œì„±í™”)
                         nextbutton.SetActive(true);
                         break;
-
-                        
                 }
             }
         }
         else if (state == BattleState.LOST)
-        {   
-            Debug.Log("ÆĞ¹èÇß½À´Ï´Ù...");
+        {
+            // (íŒ¨ë°° ì‹œ ë¡œì§ì€ ê¸°ì¡´ê³¼ ë™ì¼)
+            Debug.Log("íŒ¨ë°°í–ˆìŠµë‹ˆë‹¤...");
+            logtext.text = "íŒ¨ë°°í–ˆìŠµë‹ˆë‹¤..." + "\n" + "ë­í‚¹ì— ë“±ë¡í•©ë‹ˆë‹¤.";
             StartCoroutine(GameEndSequence());
             yield return StartCoroutine(PostScoreCoroutine(playerStats.unitName, finalScore));
+            GameManager.Instance.hasNewRankToShow = true;
+
+            // (ì°¸ê³ ) íŒ¨ë°° ì‹œ ë­í‚¹ ì”¬ìœ¼ë¡œ ì´ë™í•˜ë„ë¡ ë³€ê²½
+            SceneManager.LoadScene("Ranking");
         }
     }
     private long CalculateFinalScore(bool isClear)
     {
         if (GameManager.Instance == null) return 0;
 
-        // 1. ±âº» Á¡¼ö: °ÔÀÓ ÀüÃ¼¿¡¼­ ÀÔÈù ÃÑ ´ë¹ÌÁö (´©ÀûµÊ)
+        // 1. ê¸°ë³¸ ì ìˆ˜: ê²Œì„ ì „ì²´ì—ì„œ ì…íŒ ì´ ëŒ€ë¯¸ì§€ (ëˆ„ì ë¨)
         long score = GameManager.Instance.GetTotalDamageDealt();
 
         if (isClear)
         {
             score += 3000;
 
-            // 2. ½Ã°£ º¸³Ê½º: (°ÔÀÓ ÀüÃ¼ ÇÃ·¹ÀÌ ½Ã°£)
-            float playTime = GameManager.Instance.GetGamePlayTime(); // <- ÇÔ¼ö ÀÌ¸§ º¯°æ
+            // 2. ì‹œê°„ ë³´ë„ˆìŠ¤: (ê²Œì„ ì „ì²´ í”Œë ˆì´ ì‹œê°„)
+            float playTime = GameManager.Instance.GetGamePlayTime(); // <- í•¨ìˆ˜ ì´ë¦„ ë³€ê²½
             int timeBonus = Mathf.Max(0, 1000 - Mathf.RoundToInt(playTime * 3));
             score += timeBonus;
 
-            // 3. ¿Ïº®ÁÖÀÇÀÚ: (°ÔÀÓ ÀüÃ¼¿¡¼­ ¹ŞÀº ÃÑ ´ë¹ÌÁö) (´©ÀûµÊ)
+            // 3. ì™„ë²½ì£¼ì˜ì: (ê²Œì„ ì „ì²´ì—ì„œ ë°›ì€ ì´ ëŒ€ë¯¸ì§€) (ëˆ„ì ë¨)
             if (GameManager.Instance.GetTotalDamageTaken() <= 777)
             {
                 score += 777;
             }
         }
 
-        // ¼¼Æ® º¸³Ê½º (Fµî±Ş Á¦¿Ü)
+        // ì„¸íŠ¸ ë³´ë„ˆìŠ¤ (Fë“±ê¸‰ ì œì™¸)
         var gm = GameManager.Instance;
         var head = gm.CurrentHeadGrade;
         if (head != EquipmentData.Grade.F &&
@@ -327,11 +435,11 @@ public class BattleSystem : MonoBehaviour
                 case EquipmentData.Grade.S: score += 1000; break;
                 case EquipmentData.Grade.SS: score += 2000; break;
                 case EquipmentData.Grade.SSS: score += 3000; break;
-                    // Xµî±ŞÀº ¼¼Æ® º¸³Ê½º°¡ ÀÖ´ÂÁö ºÒ¸íÈ®ÇÏ¿© Á¦¿Ü
+                    // Xë“±ê¸‰ì€ ì„¸íŠ¸ ë³´ë„ˆìŠ¤ê°€ ìˆëŠ”ì§€ ë¶ˆëª…í™•í•˜ì—¬ ì œì™¸
             }
         }
 
-        // ??? º¸³Ê½º (Xµî±Ş)
+        // ??? ë³´ë„ˆìŠ¤ (Xë“±ê¸‰)
         score += (gm.xGradeCount * 500);
 
         return score;
@@ -345,14 +453,14 @@ public class BattleSystem : MonoBehaviour
         public int isEnd;
     }
 
-    private IEnumerator PostScoreCoroutine(string playerName, long finalScore) // <- isClear ÆÄ¶ó¹ÌÅÍ Ãß°¡
+    private IEnumerator PostScoreCoroutine(string playerName, long finalScore) // <- isClear íŒŒë¼ë¯¸í„° ì¶”ê°€
     {
         string url = "https://server-mango.kro.kr/db/ranking";
         string apiKey = "MangoKey_43f83185-67e3-4f77-83a9-35b951e0af8d";
 
         bool didClear = GameManager.Instance.isEnd;
 
-        // 1. º¸³¾ µ¥ÀÌÅÍ JSONÀ¸·Î »ı¼º (isClear Æ÷ÇÔ)
+        // 1. ë³´ë‚¼ ë°ì´í„° JSONìœ¼ë¡œ ìƒì„± (isClear í¬í•¨)
         PostRankingData data = new PostRankingData
         {
             playerName = playerName,
@@ -362,27 +470,27 @@ public class BattleSystem : MonoBehaviour
         string jsonBody = JsonUtility.ToJson(data);
         byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
 
-        // 2. UnityWebRequest (POST) »ı¼º
+        // 2. UnityWebRequest (POST) ìƒì„±
         UnityWebRequest www = new UnityWebRequest(url, "POST");
         www.uploadHandler = new UploadHandlerRaw(bodyRaw);
         www.downloadHandler = new DownloadHandlerBuffer();
 
-        // 3. Çì´õ ¼³Á¤
+        // 3. í—¤ë” ì„¤ì •
         www.SetRequestHeader("Content-Type", "application/json");
         www.SetRequestHeader("X-Api-Key", apiKey);
 
-        // 4. ¿äÃ» º¸³»±â
-        Debug.Log($"·©Å· Á¡¼ö Àü¼Û ½Ãµµ... Player: {playerName}, Score: {finalScore}, Clear: {didClear}");
+        // 4. ìš”ì²­ ë³´ë‚´ê¸°
+        Debug.Log($"ë­í‚¹ ì ìˆ˜ ì „ì†¡ ì‹œë„... Player: {playerName}, Score: {finalScore}, Clear: {didClear}");
         yield return www.SendWebRequest();
 
-        // 5. °á°ú È®ÀÎ
+        // 5. ê²°ê³¼ í™•ì¸
         if (www.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("·©Å· Àü¼Û ¼º°ø! ÀÀ´ä: " + www.downloadHandler.text);
+            Debug.Log("ë­í‚¹ ì „ì†¡ ì„±ê³µ! ì‘ë‹µ: " + www.downloadHandler.text);
         }
         else
         {
-            Debug.LogWarning("·©Å· Àü¼Û ½ÇÆĞ: " + www.error + "\nÀÀ´ä: " + www.downloadHandler.text);
+            Debug.LogWarning("ë­í‚¹ ì „ì†¡ ì‹¤íŒ¨: " + www.error + "\nì‘ë‹µ: " + www.downloadHandler.text);
         }
     }
 }

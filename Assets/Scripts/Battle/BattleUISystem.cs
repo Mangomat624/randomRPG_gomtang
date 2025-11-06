@@ -1,5 +1,5 @@
-using System; // System.ActionÀ» »ç¿ëÇÏ±â À§ÇØ ÇÊ¿äÇÕ´Ï´Ù.
-using System.Collections; // ÄÚ·çÆ¾ »ç¿ë
+using System; // System.Actionì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í•„ìš”í•©ë‹ˆë‹¤.
+using System.Collections; // ì½”ë£¨í‹´ ì‚¬ìš©
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,54 +11,57 @@ public class BattleUISystem : MonoBehaviour
 {
     [Header("Default Settings")]
     public float changeSpeed = 0.5f;
-    public CharacterStats playerStats; // ÇÃ·¹ÀÌ¾îÀÇ CharacterStats ÄÄÆ÷³ÍÆ®
-    public CharacterStats enemyStats;  // ÀûÀÇ CharacterStats ÄÄÆ÷³ÍÆ®
+    public CharacterStats playerStats; // í”Œë ˆì´ì–´ì˜ CharacterStats ì»´í¬ë„ŒíŠ¸
+    public CharacterStats enemyStats;  // ì ì˜ CharacterStats ì»´í¬ë„ŒíŠ¸
 
     public SpriteRenderer backgroundRenderer;
     public List<Sprite> stageBackgrounds;
 
     [Header("Player")]
 
-    public Slider P_Healthbar; // ÀÎ½ºÆåÅÍ Ã¢¿¡¼­ Slider ÄÄÆ÷³ÍÆ®¸¦ ¿¬°áÇÒ º¯¼ö
+    public Slider P_Healthbar; // ì¸ìŠ¤í™í„° ì°½ì—ì„œ Slider ì»´í¬ë„ŒíŠ¸ë¥¼ ì—°ê²°í•  ë³€ìˆ˜
     public TextMeshProUGUI P_HPText;
     public TextMeshProUGUI PlayerText;
+    public TextMeshProUGUI PlayerDesc;
 
     [Header("Enemy")]
 
-    public Slider E_Healthbar; // ÀÎ½ºÆåÅÍ Ã¢¿¡¼­ Slider ÄÄÆ÷³ÍÆ®¸¦ ¿¬°áÇÒ º¯¼ö
+    public Slider E_Healthbar; // ì¸ìŠ¤í™í„° ì°½ì—ì„œ Slider ì»´í¬ë„ŒíŠ¸ë¥¼ ì—°ê²°í•  ë³€ìˆ˜
     public TextMeshProUGUI E_HPText;
     public TextMeshProUGUI EnemyText;
-
+    public TextMeshProUGUI EnemyDesc;
 
     private Coroutine _healthChangeCoroutine;
 
     void Awake()
     {
         ChangeName(playerStats.unitName, enemyStats.unitName);
+        ChangeDesc(enemyStats.enemyDesc);
 
-        int currentStage = GameManager.Instance.GetCurrentStage(); // ¿¹½Ã È£Ãâ
+
+        int currentStage = GameManager.Instance.GetCurrentStage(); // ì˜ˆì‹œ í˜¸ì¶œ
         SetBackgroundForStage(currentStage);
     }
 
     public void SetBackgroundForStage(int stageNumber)
     {
-        Sprite backgroundToSet = null; // ¼³Á¤ÇÒ ¹è°æ ½ºÇÁ¶óÀÌÆ®
+        Sprite backgroundToSet = null; // ì„¤ì •í•  ë°°ê²½ ìŠ¤í”„ë¼ì´íŠ¸
 
-        // ½ºÅ×ÀÌÁö ¹üÀ§¿¡ µû¶ó ¹è°æ ¼±ÅÃ
-        switch (stageNumber) // ¿¹: 1~3 ½ºÅ×ÀÌÁö
+        // ìŠ¤í…Œì´ì§€ ë²”ìœ„ì— ë”°ë¼ ë°°ê²½ ì„ íƒ
+        switch (stageNumber) // ì˜ˆ: 1~3 ìŠ¤í…Œì´ì§€
         {
             case >= 1 and <= 3:
-                // ¸®½ºÆ®ÀÇ Ã¹ ¹øÂ°(ÀÎµ¦½º 0) ¹è°æ »ç¿ë
+                // ë¦¬ìŠ¤íŠ¸ì˜ ì²« ë²ˆì§¸(ì¸ë±ìŠ¤ 0) ë°°ê²½ ì‚¬ìš©
                 if (stageBackgrounds.Count > 0)
                     backgroundToSet = stageBackgrounds[0];
                 break;
             case >= 4 and <= 6:
-                // ¸®½ºÆ®ÀÇ µÎ ¹øÂ°(ÀÎµ¦½º 1) ¹è°æ »ç¿ë
+                // ë¦¬ìŠ¤íŠ¸ì˜ ë‘ ë²ˆì§¸(ì¸ë±ìŠ¤ 1) ë°°ê²½ ì‚¬ìš©
                 if (stageBackgrounds.Count > 1)
                     backgroundToSet = stageBackgrounds[1];
                 break;
             case >= 7 and <= 9:
-                // ¸®½ºÆ®ÀÇ µÎ ¹øÂ°(ÀÎµ¦½º 1) ¹è°æ »ç¿ë
+                // ë¦¬ìŠ¤íŠ¸ì˜ ë‘ ë²ˆì§¸(ì¸ë±ìŠ¤ 1) ë°°ê²½ ì‚¬ìš©
                 if (stageBackgrounds.Count > 2)
                     backgroundToSet = stageBackgrounds[2];
                 break;
@@ -67,17 +70,17 @@ public class BattleUISystem : MonoBehaviour
                     backgroundToSet = stageBackgrounds[3];
                 break;
             default:
-                // ¸®½ºÆ®¿¡ ¹è°æÀÌ ÀÖ´Ù¸é ¸¶Áö¸· ¹è°æÀ» ±âº»°ªÀ¸·Î »ç¿ëÇÏ°Å³ª,
-                // Æ¯Á¤ ÀÎµ¦½º(¿¹: 0)¸¦ ±âº»°ªÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù.
+                // ë¦¬ìŠ¤íŠ¸ì— ë°°ê²½ì´ ìˆë‹¤ë©´ ë§ˆì§€ë§‰ ë°°ê²½ì„ ê¸°ë³¸ê°’ìœ¼ë¡œ ì‚¬ìš©í•˜ê±°ë‚˜,
+                // íŠ¹ì • ì¸ë±ìŠ¤(ì˜ˆ: 0)ë¥¼ ê¸°ë³¸ê°’ìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
                 if (stageBackgrounds.Count > 0)
-                    backgroundToSet = stageBackgrounds[0]; // ¿¹½Ã: Ã¹ ¹øÂ° ¹è°æÀ» ±âº»°ªÀ¸·Î
+                    backgroundToSet = stageBackgrounds[0]; // ì˜ˆì‹œ: ì²« ë²ˆì§¸ ë°°ê²½ì„ ê¸°ë³¸ê°’ìœ¼ë¡œ
                 break;
         }
 
         backgroundRenderer.sprite = backgroundToSet;
     }
 
-    // Ã¼·Â¹ÙÀÇ ÃÖ´ë°ªÀ» ¼³Á¤ÇÏ´Â ÇÔ¼ö
+    // ì²´ë ¥ë°”ì˜ ìµœëŒ€ê°’ì„ ì„¤ì •í•˜ëŠ” í•¨ìˆ˜
     public void SetMaxHealth(CharacterStats.PlayerType type, int health)
     {
         Slider Healthbar;
@@ -93,10 +96,10 @@ public class BattleUISystem : MonoBehaviour
                 HPText = E_HPText;
                 break;
             default:
-                // (Ãß°¡) Playerµµ Enemyµµ ¾Æ´Ñ °æ¿ì
-                // °æ°í¸¦ Ãâ·ÂÇÏ°í ÇÔ¼ö¸¦ Á¾·áÇÕ´Ï´Ù.
-                Debug.LogWarning("SetMaxHealth: ¾Ë ¼ö ¾ø´Â PlayerTypeÀÔ´Ï´Ù: " + type);
-                return; // <- ÀÌ return ´öºĞ¿¡ ¾Æ·¡ ÄÚµå°¡ ½ÇÇàµÇÁö ¾Ê½À´Ï´Ù.
+                // (ì¶”ê°€) Playerë„ Enemyë„ ì•„ë‹Œ ê²½ìš°
+                // ê²½ê³ ë¥¼ ì¶œë ¥í•˜ê³  í•¨ìˆ˜ë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤.
+                Debug.LogWarning("SetMaxHealth: ì•Œ ìˆ˜ ì—†ëŠ” PlayerTypeì…ë‹ˆë‹¤: " + type);
+                return; // <- ì´ return ë•ë¶„ì— ì•„ë˜ ì½”ë“œê°€ ì‹¤í–‰ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
         }
 
         Healthbar.maxValue = health;
@@ -104,7 +107,7 @@ public class BattleUISystem : MonoBehaviour
         HPText.text = "HP : " + health.ToString();
     }
 
-    // ÇöÀç Ã¼·ÂÀ» ¹Ş¾Æ¼­ ½½¶óÀÌ´õÀÇ °ª¿¡ ¹İ¿µÇÏ´Â ÇÔ¼ö
+    // í˜„ì¬ ì²´ë ¥ì„ ë°›ì•„ì„œ ìŠ¬ë¼ì´ë”ì˜ ê°’ì— ë°˜ì˜í•˜ëŠ” í•¨ìˆ˜
     public void SetHealth(CharacterStats.PlayerType type,int health, Action onAnimationComplete = null)
     {
         if (_healthChangeCoroutine != null)
@@ -122,7 +125,7 @@ public class BattleUISystem : MonoBehaviour
                 break;
         }
 
-        // »õ·Î¿î Ã¼·Â º¯°æ ÄÚ·çÆ¾À» ½ÃÀÛÇÏ°í, º¯¼ö¿¡ ÀúÀåÇØ µÓ´Ï´Ù.
+        // ìƒˆë¡œìš´ ì²´ë ¥ ë³€ê²½ ì½”ë£¨í‹´ì„ ì‹œì‘í•˜ê³ , ë³€ìˆ˜ì— ì €ì¥í•´ ë‘¡ë‹ˆë‹¤.
         _healthChangeCoroutine = StartCoroutine(ChangeHealthSmoothly(type, health, onAnimationComplete));
     }
 
@@ -138,30 +141,30 @@ public class BattleUISystem : MonoBehaviour
                 Healthbar = E_Healthbar;
                 break;
             default:
-                // (Ãß°¡) Playerµµ Enemyµµ ¾Æ´Ñ °æ¿ì
-                // °æ°í¸¦ Ãâ·ÂÇÏ°í ÇÔ¼ö¸¦ Á¾·áÇÕ´Ï´Ù.
-                Debug.LogWarning("SetMaxHealth: ¾Ë ¼ö ¾ø´Â PlayerTypeÀÔ´Ï´Ù: " + type);
+                // (ì¶”ê°€) Playerë„ Enemyë„ ì•„ë‹Œ ê²½ìš°
+                // ê²½ê³ ë¥¼ ì¶œë ¥í•˜ê³  í•¨ìˆ˜ë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤.
+                Debug.LogWarning("SetMaxHealth: ì•Œ ìˆ˜ ì—†ëŠ” PlayerTypeì…ë‹ˆë‹¤: " + type);
                 yield break;
         }
 
         float timer = 0f;
-        float startHealth = Healthbar.value; // ½ÃÀÛ Ã¼·Â (ÇöÀç ½½¶óÀÌ´õ °ª)
-        // timer°¡ changeSpeed¿¡ µµ´ŞÇÒ ¶§±îÁö ¹İº¹ÇÕ´Ï´Ù.
+        float startHealth = Healthbar.value; // ì‹œì‘ ì²´ë ¥ (í˜„ì¬ ìŠ¬ë¼ì´ë” ê°’)
+        // timerê°€ changeSpeedì— ë„ë‹¬í•  ë•Œê¹Œì§€ ë°˜ë³µí•©ë‹ˆë‹¤.
         while (timer < changeSpeed)
         {
-            // ¸Å ÇÁ·¹ÀÓ °æ°ú ½Ã°£À» timer¿¡ ´õÇØÁİ´Ï´Ù.
+            // ë§¤ í”„ë ˆì„ ê²½ê³¼ ì‹œê°„ì„ timerì— ë”í•´ì¤ë‹ˆë‹¤.
             timer += Time.deltaTime;
-            float t = timer / changeSpeed; // 0°ú 1 »çÀÌÀÇ ºñÀ²À» °è»êÇÕ´Ï´Ù.
+            float t = timer / changeSpeed; // 0ê³¼ 1 ì‚¬ì´ì˜ ë¹„ìœ¨ì„ ê³„ì‚°í•©ë‹ˆë‹¤.
 
             t = Mathf.Sin(t * Mathf.PI * 0.5f);
 
-            // Lerp¸¦ »ç¿ëÇØ ½ÃÀÛ Ã¼·Â°ú ¸ñÇ¥ Ã¼·Â »çÀÌÀÇ ÇöÀç ÁöÁ¡ °ªÀ» °è»êÇÏ°í ½½¶óÀÌ´õ¿¡ Àû¿ë
+            // Lerpë¥¼ ì‚¬ìš©í•´ ì‹œì‘ ì²´ë ¥ê³¼ ëª©í‘œ ì²´ë ¥ ì‚¬ì´ì˜ í˜„ì¬ ì§€ì  ê°’ì„ ê³„ì‚°í•˜ê³  ìŠ¬ë¼ì´ë”ì— ì ìš©
             Healthbar.value = Mathf.Lerp(startHealth, newHealth, t);
-            // ´ÙÀ½ ÇÁ·¹ÀÓ±îÁö ±â´Ù¸³´Ï´Ù.
+            // ë‹¤ìŒ í”„ë ˆì„ê¹Œì§€ ê¸°ë‹¤ë¦½ë‹ˆë‹¤.
             yield return null;
         }
 
-        // ·çÇÁ°¡ ³¡³­ ÈÄ, Á¤È®ÇÑ ¸ñÇ¥ Ã¼·Â °ªÀ¸·Î ¸ÂÃçÁİ´Ï´Ù.
+        // ë£¨í”„ê°€ ëë‚œ í›„, ì •í™•í•œ ëª©í‘œ ì²´ë ¥ ê°’ìœ¼ë¡œ ë§ì¶°ì¤ë‹ˆë‹¤.
         Healthbar.value = newHealth;
 
         onAnimationComplete?.Invoke();
@@ -171,5 +174,12 @@ public class BattleUISystem : MonoBehaviour
     {
         PlayerText.text = P_name;
         EnemyText.text = E_name;
+    }
+
+    public void ChangeDesc(string E_desc)
+    {
+        EnemyDesc.text = E_desc;
+
+        PlayerDesc.text = $"ì²´ë ¥/{playerStats.maxHP}. ê³µê²©ë ¥/{playerStats.baseDamage + playerStats.weaponAccuracy}. ì ì¤‘/{(100 + playerStats.evasionRate) - 100}";
     }
 }

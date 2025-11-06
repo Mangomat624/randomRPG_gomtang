@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: 7
   m_EditorClassIdentifier: 
   stage: 7
-  monsterName: "\uD0C0\uB77D\uD55C \uAE30\uC0AC"
+  monsterName: "\uC554\uD751\uAE30\uC0AC"
   hp: 750
   atk: 60
   eva: 35
+  des: "\uCCB4\uB825/750.\uACF5\uACA9\uB825/60.\uD68C\uD53C/35"
+  idle: {fileID: -3279299700307335732, guid: 25873db124e89b240b34c3e0a56ed81c, type: 3}
+  fight: {fileID: -2368713755814515063, guid: ac70804d8f073a04c897ee6f5ccd9ce0, type: 3}
+  died: {fileID: 2406409589824059265, guid: 2c78f098ab46bb5408c5a52fe5dc4a2b, type: 3}

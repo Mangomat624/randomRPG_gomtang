@@ -3,24 +3,30 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System; // ActionÀ» »ç¿ëÇÏ±â À§ÇØ Ãß°¡
+using System; // Actionì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì¶”ê°€
 
 
 public class GachaSlotUI : MonoBehaviour
 {
-    [Header("UI ¿ä¼Ò ¿¬°á")]
+    [Header("UI ìš”ì†Œ ì—°ê²°")]
     public Image itemIconImage;
     public TextMeshProUGUI gradeText;
     public Button lockButton;
+    public Image lockButtonImage;
     public GameObject lockOverlay;
 
     private bool isLocked = false;
     private EquipmentData currentData;
 
     public static event Action OnLockStateChanged;
+    public Sprite invisiableSprite;
+
+    public Color lockedcolor = new Color(0.623f, 0.623f, 0.623f, 1f); // ê¸ˆìƒ‰ (RGB: 255, 215, 0)
+    public Color notlocked = new Color(1f,1f, 1f, 1f);
 
     void Start()
     {
+        itemIconImage.sprite = invisiableSprite;
         lockButton.onClick.AddListener(OnLockButtonClicked);
         UpdateLockVisual();
     }
@@ -31,6 +37,7 @@ public class GachaSlotUI : MonoBehaviour
         if (currentData != null)
         {
             gradeText.text = data.grade.ToString();
+            itemIconImage.sprite = data.itemIcon;
             gameObject.SetActive(true);
         }
         else
@@ -60,22 +67,31 @@ public class GachaSlotUI : MonoBehaviour
         if (lockOverlay != null)
         {
             lockOverlay.SetActive(isLocked);
+            if (isLocked)
+            {
+                lockButtonImage.color = lockedcolor;
+            }
+            else
+            {
+                lockButtonImage.color = notlocked;
+            }
+
         }
     }
 
-    // ¿ÜºÎ¿¡¼­ °­Á¦ Àá±İÀ» ÇÒ ¼ö ÀÖµµ·Ï ForceLock ÇÔ¼ö´Â ³²°ÜµÓ´Ï´Ù.
+    // ì™¸ë¶€ì—ì„œ ê°•ì œ ì ê¸ˆì„ í•  ìˆ˜ ìˆë„ë¡ ForceLock í•¨ìˆ˜ëŠ” ë‚¨ê²¨ë‘¡ë‹ˆë‹¤.
     public void ForceLock()
     {
         isLocked = true;
         UpdateLockVisual();
     }
 
-    // --- (º¯°æ) ForceLock ´ë½Å SetLockState ÇÔ¼ö ---
-    // GachaUISystemÀÌ ¾À ·Îµå ½Ã ÀúÀåµÈ »óÅÂ¸¦ °­Á¦·Î Àû¿ëÇÏ±â À§ÇØ »ç¿ë
+    // --- (ë³€ê²½) ForceLock ëŒ€ì‹  SetLockState í•¨ìˆ˜ ---
+    // GachaUISystemì´ ì”¬ ë¡œë“œ ì‹œ ì €ì¥ëœ ìƒíƒœë¥¼ ê°•ì œë¡œ ì ìš©í•˜ê¸° ìœ„í•´ ì‚¬ìš©
     public void SetLockState(bool state)
     {
         isLocked = state;
         UpdateLockVisual();
     }
-    // --- ¿©±â±îÁö º¯°æ ---
+    // --- ì—¬ê¸°ê¹Œì§€ ë³€ê²½ ---
 }

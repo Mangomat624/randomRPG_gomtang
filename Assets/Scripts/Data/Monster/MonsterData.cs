@@ -8,5 +8,8 @@ public class MonsterData : ScriptableObject
     public int hp;
     public int atk;
     public int eva;
-    // 특성(Trait)을 담을 변수 추가
+    public string des;
+    public Sprite idle;
+    public Sprite fight;
+    public Sprite died;
 }

@@ -1,27 +1,43 @@
-using UnityEngine;
-using UnityEngine.UI; // Button, Image »ç¿ë
-using TMPro; // TextMeshPro InputField »ç¿ë
-using UnityEngine.SceneManagement; // Scene ÀüÈ¯
+// StartMenuManager.cs (ìˆ˜ì •ëœ ì „ì²´ ì½”ë“œ)
 
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro; // TextMeshPro
+using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions; // ì •ê·œì‹(Regex)
+using System.Collections; // ì½”ë£¨í‹´
 
 public class StartMenuManager : MonoBehaviour
 {
-    [Header("UI ¿ä¼Ò ¿¬°á")]
-    public Button startButton; // "°ÔÀÓ ½ÃÀÛ" ¹öÆ°
-    public GameObject nameInputPanel; // "ÀÌ¸§ ÀÔ·ÂÃ¢" ÆĞ³Î
-    public TMP_InputField nameInputField; // ÀÌ¸§ ÀÔ·Â ÇÊµå
-    public Button confirmButton; // ÀÌ¸§ ÀÔ·ÂÃ¢ÀÇ "È®ÀÎ" ¹öÆ°
+    [Header("UI ìš”ì†Œ ì—°ê²°")]
+    public Button startButton;
+    public GameObject nameInputPanel;
+    public TMP_InputField nameInputField;
+    public Button confirmButton;
+    public TextMeshProUGUI warningText; // ê²½ê³  í…ìŠ¤íŠ¸
 
-    public string nextSceneName = "»Ì±â"; // ÀÌ¸§ ÀÔ·Â ÈÄ ³Ñ¾î°¥ ¾À ÀÌ¸§
+    [Header("ì„¤ì •")]
+    public string nextSceneName = "ChapterSelect";
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private const string NameValidationPattern = @"^[a-zA-Z0-9ê°€-í£]{2,10}$";
+    private const string WarningMessage = "ì´ë¦„ì€ ìµœì†Œ 2ìì—ì„œ ìµœëŒ€ 10ìê¹Œì§€ ê°€ëŠ¥í•˜ë©° ì˜ë¬¸ ë˜ëŠ” í•œê¸€ê³¼ ìˆ«ì ì¡°í•©ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.";
+
+    private Coroutine warningCoroutine;
+    private Color defaultWarningColor = Color.white; // ê¸°ë³¸ ìƒ‰ìƒ(í°ìƒ‰) ì €ì¥
+
     void Start()
     {
-        // 1. ½ÃÀÛ ½Ã ÀÌ¸§ ÀÔ·ÂÃ¢Àº ¹«Á¶°Ç ¼û±é´Ï´Ù.
         if (nameInputPanel != null)
             nameInputPanel.SetActive(false);
 
-        // 2. °¢ ¹öÆ°¿¡ Å¬¸¯ ÀÌº¥Æ®¸¦ ¿¬°áÇÕ´Ï´Ù.
+        // (ë³€ê²½) WarningTextë¥¼ ìˆ¨ê¸°ì§€ ì•Šê³ , ê¸°ë³¸ ë©”ì‹œì§€ì™€ ìƒ‰ìƒìœ¼ë¡œ ì„¤ì •í•©ë‹ˆë‹¤.
+        if (warningText != null)
+        {
+            warningText.text = WarningMessage;
+            warningText.color = defaultWarningColor;
+            warningText.gameObject.SetActive(false); // ì´ë¦„ ì…ë ¥ì°½ì´ ëœ° ë•Œê¹Œì§€ëŠ” ìˆ¨ê¹€
+        }
+
         if (startButton != null)
             startButton.onClick.AddListener(OnStartButtonClicked);
 
@@ -29,43 +45,84 @@ public class StartMenuManager : MonoBehaviour
             confirmButton.onClick.AddListener(OnConfirmButtonClicked);
     }
 
-    /// <summary>
-    /// '°ÔÀÓ ½ÃÀÛ' ¹öÆ°À» ´­·¶À» ¶§ È£ÃâµË´Ï´Ù.
-    /// </summary>
     private void OnStartButtonClicked()
     {
-        // ÀÌ¸§ ÀÔ·ÂÃ¢À» ÄÕ´Ï´Ù.
         if (nameInputPanel != null)
             nameInputPanel.SetActive(true);
 
-        // (¼±ÅÃ) ½ÃÀÛ ¹öÆ°Àº ¼û±é´Ï´Ù.
+        // (ë³€ê²½) ì´ë¦„ ì…ë ¥ì°½ì„ ì¼¤ ë•Œ WarningTextë„ í•¨ê»˜ ì¼­ë‹ˆë‹¤.
+        if (warningText != null)
+        {
+            // í˜¹ì‹œ ì´ì „ì— ë¹¨ê°„ìƒ‰ìœ¼ë¡œ ë‚¨ì•„ìˆì—ˆë‹¤ë©´ í°ìƒ‰ìœ¼ë¡œ ë¦¬ì…‹
+            if (warningCoroutine != null)
+            {
+                StopCoroutine(warningCoroutine);
+                warningCoroutine = null;
+            }
+            warningText.text = WarningMessage;
+            warningText.color = defaultWarningColor;
+            warningText.gameObject.SetActive(true); // í…ìŠ¤íŠ¸ë¥¼ ì¼¬
+        }
+
         if (startButton != null)
             startButton.gameObject.SetActive(false);
     }
-    /// <summary>
-    /// ÀÌ¸§ ÀÔ·ÂÃ¢ÀÇ 'È®ÀÎ' ¹öÆ°À» ´­·¶À» ¶§ È£ÃâµË´Ï´Ù.
-    /// </summary>
+
     private void OnConfirmButtonClicked()
     {
-        // 1. ÀÔ·ÂµÈ ÀÌ¸§À» °¡Á®¿É´Ï´Ù.
         string newName = nameInputField.text;
 
-        // 2. ÀÌ¸§ÀÌ ºñ¾îÀÖÁö ¾ÊÀºÁö È®ÀÎÇÕ´Ï´Ù.
-        if (string.IsNullOrEmpty(newName))
+        if (Regex.IsMatch(newName, NameValidationPattern))
         {
-            // (¼±ÅÃ) ¿©±â¿¡ "ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä!" °°Àº °æ°í UI¸¦ ¶ç¿ï ¼ö ÀÖ½À´Ï´Ù.
-            Debug.LogWarning("ÀÌ¸§ÀÌ ºñ¾îÀÖ½À´Ï´Ù!");
-            return;
-        }
+            // --- ìœ íš¨ì„± ê²€ì‚¬ ì„±ê³µ ---
+            if (warningText != null)
+            {
+                if (warningCoroutine != null) // í˜¹ì‹œ ê¹œë¹¡ì´ëŠ” ì¤‘ì´ì—ˆë‹¤ë©´ ì¤‘ì§€
+                {
+                    StopCoroutine(warningCoroutine);
+                    warningCoroutine = null;
+                }
+                warningText.gameObject.SetActive(false); // ì„±ê³µí–ˆìœ¼ë‹ˆ ìˆ¨ê¹€
+            }
 
-        // 3. (ÇÙ½É) GameManager¿¡ ÀÌ¸§À» ÀúÀåÇÕ´Ï´Ù.
-        if (GameManager.Instance != null)
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.playerName = newName;
+            }
+            SceneManager.LoadScene(nextSceneName);
+        }
+        else
         {
-            GameManager.Instance.playerName = newName;
-            Debug.Log($"ÇÃ·¹ÀÌ¾î ÀÌ¸§ÀÌ '{newName}'(À¸)·Î ÀúÀåµÇ¾ú½À´Ï´Ù.");
+            // --- ìœ íš¨ì„± ê²€ì‚¬ ì‹¤íŒ¨ ---
+            if (warningText != null)
+            {
+                // (ë³€ê²½) ì´ë¯¸ ì‹¤í–‰ ì¤‘ì¸ ì½”ë£¨í‹´ì´ ìˆë‹¤ë©´ ë©ˆì¶”ê³  ìƒˆë¡œ ì‹œì‘
+                if (warningCoroutine != null)
+                {
+                    StopCoroutine(warningCoroutine);
+                }
+                warningCoroutine = StartCoroutine(ShowWarningBlink());
+            }
+            Debug.LogWarning($"ì´ë¦„ ìœ íš¨ì„± ê²€ì‚¬ ì‹¤íŒ¨: {newName}");
         }
+    }
 
-        // 4. ´ÙÀ½ ¾À(¿¹: ChapterSelect)À¸·Î ³Ñ¾î°©´Ï´Ù.
-        SceneManager.LoadScene(nextSceneName);
+    // (ë³€ê²½) ê²½ê³  í…ìŠ¤íŠ¸ë¥¼ "ê¹œë¹¡"ì´ê²Œ í•˜ëŠ” ì½”ë£¨í‹´
+    private IEnumerator ShowWarningBlink()
+    {
+        // 1. í…ìŠ¤íŠ¸ê°€ ì¼œì ¸ ìˆëŠ”ì§€ í™•ì¸ (ì´ë¯¸ ì¼œì ¸ ìˆìŒ)
+        warningText.text = WarningMessage;
+
+        // 2. ë¹¨ê°„ìƒ‰ìœ¼ë¡œ ë³€ê²½
+        warningText.color = Color.red;
+
+        // 3. 1ì´ˆ ë™ì•ˆ ê¸°ë‹¤ë¦½ë‹ˆë‹¤.
+        yield return new WaitForSeconds(1f);
+
+        // 4. 1ì´ˆê°€ ì§€ë‚˜ë©´ ë‹¤ì‹œ ê¸°ë³¸ ìƒ‰ìƒ(í°ìƒ‰)ìœ¼ë¡œ ë³€ê²½í•©ë‹ˆë‹¤.
+        warningText.color = defaultWarningColor;
+
+        // 5. ì½”ë£¨í‹´ì´ ëë‚¬ìŒì„ ì•Œë¦½ë‹ˆë‹¤.
+        warningCoroutine = null;
     }
 }

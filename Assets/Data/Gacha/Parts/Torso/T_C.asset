@@ -19,3 +19,4 @@ MonoBehaviour:
   eva: 0
   atk: 0
   acc: 0
+  itemIcon: {fileID: -4669971511985288956, guid: ad3f4374f278cb74594c68f34542c45c, type: 3}
