@@ -1,8 +1,9 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
 using System.Text;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
@@ -38,11 +39,14 @@ public class BattleSystem : MonoBehaviour
 
     private long finalScore;
     public GameObject nextbutton;
+    public TextMeshProUGUI logtext;
+    public GameObject logMom;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        logtext.text = $"{playerStats.unitName}(HP: {playerStats.currentHP}) vs {enemyStats.unitName}(HP: {enemyStats.currentHP})";
         undertaleGame.gameObject.SetActive(false);
         pseckaGame.gameObject.SetActive(false );
         nextbutton.gameObject.SetActive(false);
@@ -111,6 +115,7 @@ public class BattleSystem : MonoBehaviour
 
 
         Debug.Log(playerStats.unitName + " (HP: " + playerStats.currentHP + ") vs " + enemyStats.unitName + " (HP: " + enemyStats.currentHP + ")");
+        logtext.text = $"{playerStats.unitName}(HP: {playerStats.currentHP}) vs {enemyStats.unitName}(HP: {enemyStats.currentHP})";
 
         yield return new WaitForSeconds(1f);
 
@@ -136,6 +141,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerTurn()
     {
         Debug.Log("플레이어의 턴!");
+        logtext.text = "플레이어의 턴!";
 
         isActionDone = false;
 
@@ -152,11 +158,17 @@ public class BattleSystem : MonoBehaviour
         if (minigameType == 0)
         {
             Debug.Log("이번 턴은 언더테일 미니게임!");
+            logtext.text = "이번 턴은 이동형 바 미니게임!";
+            yield return new WaitForSeconds(1f);
+            logMom.gameObject.SetActive(false);
             undertaleGame.StartMinigame(HandleAttackResult);
         }
         else
         {
             Debug.Log("이번 턴은 프세카 미니게임!");
+            logtext.text = "이번 턴은 도트 미니게임!";
+            yield return new WaitForSeconds(1f);
+            logMom.gameObject.SetActive(false);
             pseckaGame.StartMinigame(HandleAttackResult);
         }
 
@@ -165,8 +177,9 @@ public class BattleSystem : MonoBehaviour
         {
             yield return null;
         }
-
+        logMom.SetActive(true);
         playerStats.AttackImage();
+
         // 1. 적중률 계산    
         int totalAccuracy = playerStats.baseAccuracy + playerStats.weaponAccuracy + playerStats.enhancementAccuracy + currentAttackResult.accuracyBonus+GameManager.Instance.permanentBonusAcc;
         int hitChance = 50; // 기본값
@@ -184,6 +197,7 @@ public class BattleSystem : MonoBehaviour
         {
             // 3. 명중 시 데미지 계산 및 적용
             Debug.Log("명중! (적중률: " + hitChance + "%, 주사위: " + roll + ")");
+            logtext.text = "명중! (적중률: " + hitChance + "%, 주사위: " + roll + ")";
             int damage = Mathf.RoundToInt((playerStats.baseDamage+GameManager.Instance.permanentBonusAtk) * currentAttackResult.damageMultiplier);
 
             // --- (추가) GameManager에 입힌 대미지 기록 ---
@@ -195,6 +209,8 @@ public class BattleSystem : MonoBehaviour
             bool isDead = enemyStats.TakeDamage(damage);
             if (isDead)
             {
+                playerStats.AttackImage();
+                yield return new WaitForSeconds(1.5f);
                 state = BattleState.WON;
                 playerStats.IdleImage();
                 yield break;
@@ -203,7 +219,7 @@ public class BattleSystem : MonoBehaviour
         else
         {
             Debug.Log("빗나감! (적중률: " + hitChance + "%, 주사위: " + roll + ")");
-
+            logtext.text = "빗나감! (적중률: " + hitChance + "%, 주사위: " + roll + ")";
             enemyStats.PlayEvadeAnimation();
         }
 
@@ -224,6 +240,7 @@ public class BattleSystem : MonoBehaviour
     {
         enemyStats.AttackImage();
         Debug.Log("적의 턴!");
+        logtext.text = "적의 턴!";
         yield return new WaitForSeconds(1f); // 적이 생각하는 시간처럼 잠시 대기
 
         // 1. 플레이어의 1차 회피 판정
@@ -234,12 +251,13 @@ public class BattleSystem : MonoBehaviour
         if (roll <= evasionChance)
         {
             Debug.Log("회피 성공! (회피율: " + evasionChance + "%, 주사위: " + roll + ")");
-
+            logtext.text = "회피 성공! (회피율: " + evasionChance + "%, 주사위: " + roll + ")";
             playerStats.PlayEvadeAnimation();
         }
         else
         {
             Debug.Log("회피 실패. (회피율: " + evasionChance + "%, 주사위: " + roll + ")");
+            logtext.text = "회피 실패. (회피율: " + evasionChance + " %, 주사위: " + roll + ")" + "\n" + "플레이어가 적의 공격을 받습니다.";
             // 2. 1차 회피 실패 시, 회피 미니게임 등장 (현재는 바로 데미지)
             // TODO: 여기에 매우 어려운 회피 미니게임을 호출하는 로직을 추가해야 합니다.
             // 성공 시 return; 하여 데미지를 입지 않게 합니다.
@@ -293,6 +311,7 @@ public class BattleSystem : MonoBehaviour
         if (state == BattleState.WON)
         {
             Debug.Log("승리했습니다!");
+            logtext.text = "승리했습니다!";
             GameManager.Instance.currentStage += 1; // 스테이지 1 증가 (예: 10 -> 11)
 
             // --- (핵심 변경) ---
@@ -367,6 +386,7 @@ public class BattleSystem : MonoBehaviour
         {
             // (패배 시 로직은 기존과 동일)
             Debug.Log("패배했습니다...");
+            logtext.text = "패배했습니다..." + "\n" + "랭킹에 등록합니다.";
             StartCoroutine(GameEndSequence());
             yield return StartCoroutine(PostScoreCoroutine(playerStats.unitName, finalScore));
             GameManager.Instance.hasNewRankToShow = true;

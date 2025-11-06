@@ -350,10 +350,7 @@ public class NoteManager : MonoBehaviour
         // BattleSystem에 결과 전송
         OnMinigameFinished?.Invoke(finalResult);
 
-        // 마지막 소리 재생을 위해 잠시 대기
-        yield return new WaitForSeconds(0.5f);
-
-        // 패널 비활성화
         gameObject.SetActive(false);
+        yield return new WaitForSeconds(0f);
     }
 }

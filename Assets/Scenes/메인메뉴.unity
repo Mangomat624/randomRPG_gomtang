@@ -1434,7 +1434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b25f4f82cf0e24493e7bac5a503155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetSceneName: "\uB7AD\uD0B9"
+  targetSceneName: Ranking
 --- !u!1 &1208675487
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System.Collections; // 코루틴 사용
 using UnityEngine;
 using System; // Action 사용
 using UnityEngine.UI;
+using TMPro;
 
 public class CharacterStats : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class CharacterStats : MonoBehaviour
     private Vector3 originalPosition; // 캐릭터의 원래 위치
     private Coroutine currentAnimation; // 현재 재생 중인 애니메이션
     private SpriteRenderer characterSprite;
+
+    public TextMeshProUGUI logtext;
 
     void Awake()
     {
@@ -178,9 +181,35 @@ public class CharacterStats : MonoBehaviour
         if (currentHP <= 0)
         {
             Debug.Log(unitName + "이(가) 쓰러졌습니다.");
+            logtext.text = unitName + "이(가) 쓰러졌습니다.";
 
             uisysytem.SetHealth(playerType, currentHP, () =>
             {
+                if (damageEffectPrefab != null)
+                {
+                    Vector3 spawnPos = (damageEffectSpawnPoint != null) ? damageEffectSpawnPoint.position : transform.position;
+
+                    // 1. 이펙트 생성
+                    GameObject effectGO = Instantiate(damageEffectPrefab, spawnPos, Quaternion.identity);
+
+                    if (damageEffectSpawnPoint != null)
+                    {
+                        effectGO.transform.SetParent(damageEffectSpawnPoint);
+                    }
+
+                    // 2. 생성된 이펙트의 ParticleSystemRenderer를 가져옵니다.
+                    ParticleSystemRenderer effectRenderer = effectGO.GetComponent<ParticleSystemRenderer>();
+
+                    // 3. 렌더러와 캐릭터 스프라이트가 모두 있는지 확인
+                    if (effectRenderer != null && characterSprite != null)
+                    {
+                        // 4. 이펙트의 SortingLayer를 캐릭터와 똑같이 맞춥니다.
+                        effectRenderer.sortingLayerID = characterSprite.sortingLayerID;
+
+                        // 5. (핵심) 이펙트의 OrderInLayer를 캐릭터보다 1 높게 설정합니다.
+                        effectRenderer.sortingOrder = characterSprite.sortingOrder + 1;
+                    }
+                }
                 StartCoroutine(SquashEffect(() => OnDeathAnimationFinished?.Invoke()));
             });
 
@@ -216,6 +245,7 @@ public class CharacterStats : MonoBehaviour
             currentAnimation = StartCoroutine(ShakeAnimation());
             uisysytem.SetHealth(playerType, currentHP);
             Debug.Log(unitName + "이(가) " + damage + "의 피해를 입었습니다. 남은 체력: " + currentHP);
+            logtext.text = $"{unitName}이(가) {damage}의 피해를 입었습니다. 남은 체력: {currentHP}";
             return false; // 아직 쓰러지지 않았음을 알림
         }
     }
