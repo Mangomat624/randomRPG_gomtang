@@ -29,7 +29,12 @@ public class NoteManager : MonoBehaviour
 
     [Header("게임 설정")]
     public float minWaitTime = 0.175f;
-    public float maxWaitTime = 0.7f;
+    public float maxWaitTime = 0.4f;
+
+    private float baseMinWaitTime = 0.175f;
+    private float baseMaxWaitTime = 0.4f;
+
+    public CharacterStats playerStats;
 
     [Header("사운드 (필요시 주석 해제)")]
     //public AudioClip hitSound;
@@ -129,6 +134,7 @@ public class NoteManager : MonoBehaviour
 
             // (변경) SetDeleteLine 호출 완전 삭제
             noteScript.SetLaneIndex(laneIndex);
+            noteScript.SetDamageBonus(playerStats);
             activeNotes.Enqueue(noteScript);
 
             float randomWaitTime = UnityEngine.Random.Range(minWaitTime, maxWaitTime);
@@ -156,8 +162,8 @@ public class NoteManager : MonoBehaviour
 
     public void ChangeWaitTimeHarder()
     {
-        minWaitTime = minWaitTime * 0.85f;
-        maxWaitTime = maxWaitTime * 0.5f;
+        minWaitTime = baseMinWaitTime * 0.85f;
+        maxWaitTime = baseMaxWaitTime * 0.5f;
     }
 
     void Update()

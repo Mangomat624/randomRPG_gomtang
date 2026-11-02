@@ -5,6 +5,9 @@ using UnityEngine;
 public class NoteMovement : MonoBehaviour
 {
     public float speed = 15f;
+    float speedPerDamage = 0.13f;
+    float maxBonusSpeed = 17f;
+
     public int laneIndex; // 0=Up, 1=Middle, 2=Bottom
 
     // 노트의 파괴는 NoteManager가 전담하므로
@@ -30,7 +33,21 @@ public class NoteMovement : MonoBehaviour
 
     public void HarderSpped()
     {
-        speed = speed * 1.5f;
+        speed = speed + 1.5f;
+    }
+
+    public void SetDamageBonus(CharacterStats stats)
+    {
+        if(stats == null || stats.playerType != CharacterStats.PlayerType.Player) return;
+
+        float cap = (GameManager.Instance.currentStage >= 7) ? 20f : maxBonusSpeed;
+        float rawBonus = stats.baseDamage * speedPerDamage;
+        float bonus = Mathf.Min(rawBonus, cap);
+
+        if(laneIndex == 0)
+            Debug.Log($"[Note] baseDamage:{stats.baseDamage} / 상한 전 보너스:{rawBonus} / 상한:{maxBonusSpeed} / 실제 보너스:{bonus}");
+
+        speed += bonus;
     }
 
     void Update()

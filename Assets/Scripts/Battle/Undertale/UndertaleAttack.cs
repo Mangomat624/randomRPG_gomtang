@@ -14,18 +14,44 @@ public class UndertaleAttack : MonoBehaviour
     [Header("Game Settings")]
     public float moveSpeed = 400f; // 인디케이터 이동 속도
 
+
+    [Header("Damage Speed Bonus")]
+    public CharacterStats playerStats; // 인스펙터에서 플레이어 연결
+    public float speedPerDamage = 20f;
+    public float maxBonusSpeed = 250f;
+    private float baseMoveSpeed = 250f;
     public System.Action<AttackResult> OnMinigameFinished;
 
     private Coroutine _moveCoroutine;
-
     public void StartMinigame(System.Action<AttackResult> callback)
     {
+        // 매번 원본 속도에서 새로 계산 (누적 방지)
+        moveSpeed = baseMoveSpeed;
+
         if (GameManager.Instance.currentStage >= 7)
         {
             moveSpeed = 800f;
         }
-        gameObject.SetActive(true); // UI 패널 보이기
-        OnMinigameFinished = callback; // 콜백 함수 등록
+
+        if (playerStats != null && playerStats.playerType == CharacterStats.PlayerType.Player)
+        {
+            // 스테이지 7 이상은 상한 100, 그 외는 인스펙터 값
+            float cap = (GameManager.Instance.currentStage >= 7) ? 100f : maxBonusSpeed;
+
+            float rawBonus = playerStats.baseDamage * speedPerDamage;
+            float bonus = Mathf.Min(rawBonus, cap);
+
+            Debug.Log($"[Undertale] baseDamage:{playerStats.baseDamage} / 상한 전:{rawBonus} / 상한:{cap} / 실제 보너스:{bonus} / 최종 속도:{moveSpeed + bonus}");
+
+            moveSpeed += bonus;
+        }
+        else
+        {
+            Debug.LogWarning("[Undertale] playerStats가 비어 있거나 Player 타입이 아니에요. 인스펙터 연결을 확인하세요.");
+        }
+
+        gameObject.SetActive(true);
+        OnMinigameFinished = callback;
         if (_moveCoroutine != null) StopCoroutine(_moveCoroutine);
         _moveCoroutine = StartCoroutine(MoveIndicator());
     }

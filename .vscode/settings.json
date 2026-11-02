@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "bloodmoon_manus.sln"
+    "dotnet.defaultSolution": "randomRPG_gomtang.slnx"
 }
