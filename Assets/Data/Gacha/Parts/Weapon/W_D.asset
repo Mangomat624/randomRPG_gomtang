@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: W_D
   m_EditorClassIdentifier: 
   part: 3
-  grade: 1
+  grade: 2
   hp: 0
   def: 0
   eva: 0

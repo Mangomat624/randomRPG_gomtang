@@ -18,12 +18,12 @@ MonoBehaviour:
   - grade: 2
     probability: 34.99
   - grade: 3
-    probability: 22.5
+    probability: 24.5
   - grade: 4
     probability: 12
   - grade: 5
-    probability: 4
+    probability: 3
   - grade: 6
-    probability: 1.5
+    probability: 1.2
   - grade: 8
     probability: 0.01

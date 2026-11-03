@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   probabilities:
   - grade: 2
-    probability: 44.99
+    probability: 45
   - grade: 3
-    probability: 27
+    probability: 28
   - grade: 4
     probability: 16.5
   - grade: 5
     probability: 8
   - grade: 6
-    probability: 3
+    probability: 2
   - grade: 7
-    probability: 0.5
+    probability: 0.3
   - grade: 8
-    probability: 0.01
+    probability: 0.02

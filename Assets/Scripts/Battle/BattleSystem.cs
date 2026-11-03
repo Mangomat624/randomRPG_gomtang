@@ -265,6 +265,8 @@ public class BattleSystem : MonoBehaviour
             int enemydamage = enemyStats.baseDamage - playerStats.defensivePower;
             if (enemydamage < 0)
             {
+                Debug.Log("방어력이 더 높음");
+                logtext.text = "회피 실패. (회피율: " + evasionChance + " %, 주사위: " + roll + ")" + "\n" + "그러나 데미지를 버텨냈습니다.";
                 enemydamage = 0;
             }
             else 

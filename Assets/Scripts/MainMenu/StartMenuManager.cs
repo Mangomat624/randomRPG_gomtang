@@ -87,6 +87,7 @@ public class StartMenuManager : MonoBehaviour
 
             if (GameManager.Instance != null)
             {
+                GameManager.Instance.ResetGameState(); // 새 게임 시작 시 전체 초기화
                 GameManager.Instance.playerName = newName;
             }
             SceneManager.LoadScene(nextSceneName);

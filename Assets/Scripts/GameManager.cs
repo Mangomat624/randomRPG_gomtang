@@ -31,10 +31,43 @@ public class GameManager : MonoBehaviour
     private int cumulativeTotalDamageTaken; // 누적 총 받은 대미지 (완벽주의자용)
     public int xGradeCount = 0;
 
+    public bool isGameFirst = false;
+
     // 토큰 개수 변경 시 UI 스크립트에 알려줄 이벤트
     public static event Action<int> OnTokensChanged;
 
     public bool hasNewRankToShow = false;
+
+    /// <summary>
+    /// 새 게임(회차)을 시작할 때 모든 상태를 초기값으로 되돌립니다.
+    /// </summary>
+    public void ResetGameState()
+    {
+        currentStage = 1;
+        tokens = 4;
+        isEnd = false;
+
+        // 장비 등급 (enum의 기본값/최하 등급으로 되돌림)
+        CurrentHeadGrade = EquipmentData.Grade.Error;
+        CurrentTorsoGrade = EquipmentData.Grade.Error;
+        CurrentLegsGrade = EquipmentData.Grade.Error;
+        CurrentWeaponGrade = EquipmentData.Grade.Error;
+
+        // 가챠 잠금
+        gachaLockStates = new bool[4] { false, false, false, false };
+
+        // 영구 스탯
+        permanentBonusAtk = 0;
+        permanentBonusAcc = 0;
+
+        // 기록 (필요에 따라 선택)
+        xGradeCount = 0;
+        hasNewRankToShow = false;
+        isGameFirst = true;
+        InitializeGameSession(); // 타이머와 누적 대미지 리셋
+
+        OnTokensChanged?.Invoke(tokens);
+    }
 
     void Awake()
     {

@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Start_RerollTable
   m_EditorClassIdentifier: 
   probabilities:
-  - grade: 0
-    probability: 12
   - grade: 1
-    probability: 28
+    probability: 15
   - grade: 2
-    probability: 33.99
+    probability: 30
   - grade: 3
-    probability: 18
+    probability: 35.99
   - grade: 4
-    probability: 7
+    probability: 16
   - grade: 5
+    probability: 5
+  - grade: 6
     probability: 1
-  - grade: 8
+  - grade: 7
     probability: 0.01

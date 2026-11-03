@@ -24,9 +24,14 @@ public class GachaSlotUI : MonoBehaviour
     public Color lockedcolor = new Color(0.623f, 0.623f, 0.623f, 1f); // 금색 (RGB: 255, 215, 0)
     public Color notlocked = new Color(1f,1f, 1f, 1f);
 
+    void Awake()
+    {
+        itemIconImage.sprite = invisiableSprite;       
+    }
+
+
     void Start()
     {
-        itemIconImage.sprite = invisiableSprite;
         lockButton.onClick.AddListener(OnLockButtonClicked);
         UpdateLockVisual();
     }
@@ -36,7 +41,11 @@ public class GachaSlotUI : MonoBehaviour
         currentData = data;
         if (currentData != null)
         {
-            gradeText.text = data.grade.ToString();
+            if(data.grade == EquipmentData.Grade.Error)
+                gradeText.text = "등급";
+            else
+                gradeText.text = data.grade.ToString();
+            
             itemIconImage.sprite = data.itemIcon;
             gameObject.SetActive(true);
         }
@@ -44,6 +53,12 @@ public class GachaSlotUI : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+    }
+    
+    public void InitSlot()
+    {
+        gradeText.text = "등급";
+        gameObject.SetActive(true);
     }
 
     public EquipmentData GetCurrentData()

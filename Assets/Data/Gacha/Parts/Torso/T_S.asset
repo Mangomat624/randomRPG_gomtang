@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bbe60e6dea2390479fb21175abd02b3, type: 3}
   m_Name: T_S
   m_EditorClassIdentifier: 
-  part: 0
-  grade: 5
+  part: 1
+  grade: 6
   hp: 0
   def: 30
   eva: 0

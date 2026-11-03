@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: H_A
   m_EditorClassIdentifier: 
   part: 0
-  grade: 4
+  grade: 5
   hp: 240
   def: 0
   eva: 0

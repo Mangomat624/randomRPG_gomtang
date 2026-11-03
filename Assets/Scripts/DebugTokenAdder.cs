@@ -4,28 +4,27 @@ using UnityEngine;
 
 public class DebugTokenAdder : MonoBehaviour
 {
-    [Header("¼³Á¤")]
-    [Tooltip("Ã¹ ¹øÂ° º¸Á¶ Å° (¿¹: RightArrow)")]
-    public KeyCode modifierKey1 = KeyCode.RightArrow; // ÀÌ°Íµµ ¼öÁ¤°¡´É
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
+    public KeyCode modifierKey1 = KeyCode.LeftShift;
+    public KeyCode modifierKey2 = KeyCode.RightShift;
+    public KeyCode activationKey = KeyCode.T;
 
-    [Tooltip("µÎ ¹øÂ° º¸Á¶ Å° (¿¹: Insert)")]
-    public KeyCode modifierKey2 = KeyCode.Insert; // ¾ó¸¶µçÁö ¼öÁ¤°¡´É
-
-    [Tooltip("¸ÞÀÎ Å° (¿¹: T)")]
-    public KeyCode activationKey = KeyCode.T; // ¾êµµ. ÀÌ¿ÕÀÌ¸é ¾Öµé ¼Õ²¿ÀÌ°í º¹ÀâÇÏ°Ô ÇØ¼­ ¸ø´©¸£°Ô ÇÏ´Â°Ô ÁÁÀ»µí
-
-    [Tooltip("ÇÑ ¹ø¿¡ Ãß°¡ÇÒ ÅäÅ« °³¼ö")]
+    [Tooltip("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½Å« ï¿½ï¿½ï¿½ï¿½")]
     public int tokensToAdd = 4;
 
     void Update()
     {
-        // µÎ °³ÀÇ º¸Á¶ Å°°¡ '´­·ÁÀÖ´Â µ¿¾È(GetKey)' ¸ÞÀÎ Å°¸¦ '´©¸£´Â ¼ø°£(GetKeyDown)'À» °¨Áö
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ 'ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½(GetKey)' ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(GetKeyDown)'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (Input.GetKey(modifierKey1) && Input.GetKey(modifierKey2) && Input.GetKeyDown(activationKey))
         {
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.AddTokens(tokensToAdd);
-                Debug.Log($" ÅäÅ« {tokensToAdd}°³°¡ Ãß°¡µÇ¾ú½À´Ï´Ù.");
+                Debug.Log($" ï¿½ï¿½Å« {tokensToAdd}ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+            }
+            else
+            {
+                Debug.LogWarning("GameManager.Instanceê°€ nullìž…ë‹ˆë‹¤.");
             }
         }
     }

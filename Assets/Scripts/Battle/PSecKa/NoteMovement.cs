@@ -6,7 +6,7 @@ public class NoteMovement : MonoBehaviour
 {
     public float speed = 15f;
     float speedPerDamage = 0.13f;
-    float maxBonusSpeed = 17f;
+    float maxBonusSpeed = 10f;
 
     public int laneIndex; // 0=Up, 1=Middle, 2=Bottom
 
@@ -33,7 +33,7 @@ public class NoteMovement : MonoBehaviour
 
     public void HarderSpped()
     {
-        speed = speed + 1.5f;
+        speed = speed + 0.5f;
     }
 
     public void SetDamageBonus(CharacterStats stats)
@@ -47,6 +47,7 @@ public class NoteMovement : MonoBehaviour
         if(laneIndex == 0)
             Debug.Log($"[Note] baseDamage:{stats.baseDamage} / 상한 전 보너스:{rawBonus} / 상한:{maxBonusSpeed} / 실제 보너스:{bonus}");
 
+        speed += 1f;
         speed += bonus;
     }
 

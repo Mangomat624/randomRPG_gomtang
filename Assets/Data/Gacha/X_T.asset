@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: X_T
   m_EditorClassIdentifier: 
   part: 1
-  grade: 8
+  grade: 9
   hp: 0
   def: 70
   eva: 0
   atk: 0
   acc: 0
+  itemIcon: {fileID: -5359299661810530624, guid: 9fce736e929fe4743abda863c3bd6ce5, type: 3}

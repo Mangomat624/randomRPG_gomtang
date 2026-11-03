@@ -87,8 +87,8 @@ public class GachaUISystem : MonoBehaviour
                     currentGrade = GameManager.Instance.CurrentWeaponGrade;
                     break;
                 default:
-                    // 이 경우는 발생하지 않아야 하지만, 안전을 위해 F등급으로 처리
-                    currentGrade = EquipmentData.Grade.F;
+                    // 이 경우는 발생하지 않아야 하지만, 안전을 위해 Error등급으로 처리
+                    currentGrade = EquipmentData.Grade.Error;
                     Debug.LogWarning($"GachaUISystem: 알 수 없는 PartType 인덱스 {i}");
                     break;
             }

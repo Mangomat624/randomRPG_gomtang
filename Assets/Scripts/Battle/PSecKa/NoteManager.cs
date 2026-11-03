@@ -56,6 +56,24 @@ public class NoteManager : MonoBehaviour
         //audioSource = GetComponent<AudioSource>();
     }
 
+    private void UpdateSpawnerActiveState(List<Transform> activeSpawners)
+    {
+        SetGroupActive(stage1_3SpawnPoints, activeSpawners);
+        SetGroupActive(stage4_6SpawnPoints, activeSpawners);
+        SetGroupActive(stage7_10SpawnPoints, activeSpawners);
+    }
+
+    private void SetGroupActive(List<Transform> group, List<Transform> activeGroup)
+    {
+        if (group == null) return;
+
+        bool isActiveGroup = (group == activeGroup);
+        foreach (Transform t in group)
+        {
+            if (t != null) t.gameObject.SetActive(isActiveGroup);
+        }
+    }
+
     public void StartMinigame(Action<AttackResult> callback)
     {
         OnMinigameFinished = callback;
@@ -78,7 +96,7 @@ public class NoteManager : MonoBehaviour
         else activeLaneCount = GetMaxLaneCount();
 
         List<Transform> currentActiveSpawners = GetCurrentSpawners(currentStage);
-
+        UpdateSpawnerActiveState(currentActiveSpawners); // ← 추가
         Debug.Log($"스테이지 {currentStage}: {activeLaneCount}개의 레인 사용 (지정된 그룹 사용)");
 
         int bigNoteCount = 5;
