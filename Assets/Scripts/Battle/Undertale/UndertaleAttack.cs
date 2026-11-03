@@ -19,7 +19,7 @@ public class UndertaleAttack : MonoBehaviour
     public CharacterStats playerStats; // 인스펙터에서 플레이어 연결
     public float speedPerDamage = 20f;
     public float maxBonusSpeed = 250f;
-    private float baseMoveSpeed = 250f;
+    private float baseMoveSpeed = 300f;
     public System.Action<AttackResult> OnMinigameFinished;
 
     private Coroutine _moveCoroutine;
@@ -38,10 +38,11 @@ public class UndertaleAttack : MonoBehaviour
             // 스테이지 7 이상은 상한 100, 그 외는 인스펙터 값
             float cap = (GameManager.Instance.currentStage >= 7) ? 100f : maxBonusSpeed;
 
+            speedPerDamage = playerStats.baseDamage / 10;
             float rawBonus = playerStats.baseDamage * speedPerDamage;
             float bonus = Mathf.Min(rawBonus, cap);
 
-            Debug.Log($"[Undertale] baseDamage:{playerStats.baseDamage} / 상한 전:{rawBonus} / 상한:{cap} / 실제 보너스:{bonus} / 최종 속도:{moveSpeed + bonus}");
+            Debug.Log($"[Undertale] baseDamage:{playerStats.baseDamage} / 무브스피드 : {moveSpeed} /상한 전:{rawBonus} / 상한:{cap} / 실제 보너스:{bonus} / 최종 속도:{moveSpeed + bonus}");
 
             moveSpeed += bonus;
         }
